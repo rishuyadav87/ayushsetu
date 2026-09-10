@@ -1,0 +1,210 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// Role: STUDENT, INDUSTRY, ACADEMICIAN, INSTITUTION, ADMIN
+// OpportunityType: INTERNSHIP, JOB, PROJECT, FDP, RESEARCH
+// ApplicationStatus: APPLIED, SHORTLISTED, INTERVIEWED, SELECTED, REJECTED
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  role      String   // STUDENT, INDUSTRY, ACADEMICIAN, INSTITUTION, ADMIN
+  name      String
+  phone     String?
+  avatar    String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  studentProfile     StudentProfile?
+  industryProfile    IndustryProfile?
+  academicianProfile AcademicianProfile?
+  institutionProfile InstitutionProfile?
+
+  opportunities PostedOpportunity[]
+  applications  Application[]
+  notifications Notification[]
+}
+
+model StudentProfile {
+  id             String  @id @default(uuid())
+  user           User    @relation(fields: [userId], references: [id])
+  userId         String  @unique
+  specialization String?
+  institution    String?
+  enrollmentYear Int?
+  bio            String?
+  resumeUrl      String?
+  skills         String? // Storing as comma-separated or JSON string
+
+  assessmentResults AssessmentResult[]
+  certificates      Certificate[]
+  projects          Project[]
+  mentorFeedbacks   MentorFeedback[]
+}
+
+model IndustryProfile {
+  id          String  @id @default(uuid())
+  user        User    @relation(fields: [userId], references: [id])
+  userId      String  @unique
+  companyName String
+  industry    String?
+  website     String?
+  description String?
+  location    String?
+  logo        String?
+}
+
+model AcademicianProfile {
+  id          String  @id @default(uuid())
+  user        User    @relation(fields: [userId], references: [id])
+  userId      String  @unique
+  institution String?
+  department  String?
+  designation String?
+  expertise   String? // Storing as JSON string
+  bio         String?
+}
+
+model InstitutionProfile {
+  id              String  @id @default(uuid())
+  user            User    @relation(fields: [userId], references: [id])
+  userId          String  @unique
+  institutionName String
+  type            String?
+  accreditation   String?
+  location        String?
+  website         String?
+  description     String?
+}
+
+model SkillCategory {
+  id          String  @id @default(uuid())
+  name        String  @unique // Ayurveda, Yoga, Unani, Siddha, Homeopathy, Naturopathy
+  description String?
+  skills      Skill[]
+  assessments Assessment[]
+}
+
+model Skill {
+  id          String        @id @default(uuid())
+  category    SkillCategory @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  name        String
+  description String?
+  nsqfLevel   Int // 1-10
+}
+
+model Assessment {
+  id          String        @id @default(uuid())
+  title       String
+  description String?
+  category    SkillCategory @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  questions   String // JSON array of questions
+  duration    Int // minutes
+  totalMarks  Int
+
+  results AssessmentResult[]
+}
+
+model AssessmentResult {
+  id           String         @id @default(uuid())
+  student      StudentProfile @relation(fields: [studentId], references: [id])
+  studentId    String
+  assessment   Assessment     @relation(fields: [assessmentId], references: [id])
+  assessmentId String
+  score        Int
+  maxScore     Int
+  answers      String // JSON string
+  skillScores  String? // JSON string
+  completedAt  DateTime       @default(now())
+}
+
+model PostedOpportunity {
+  id             String          @id @default(uuid())
+  postedBy       User            @relation(fields: [postedById], references: [id])
+  postedById     String
+  title          String
+  description    String
+  type           String          // INTERNSHIP, JOB, PROJECT, FDP, RESEARCH
+  location       String?
+  isRemote       Boolean         @default(false)
+  skillsRequired String? // JSON string
+  stipend        String?
+  deadline       DateTime?
+  status         String          @default("OPEN")
+  applications   Application[]
+  createdAt      DateTime        @default(now())
+}
+
+model Application {
+  id            String            @id @default(uuid())
+  student       User              @relation(fields: [studentId], references: [id]) // Linking to User instead of StudentProfile to simplify query
+  studentId     String
+  opportunity   PostedOpportunity @relation(fields: [opportunityId], references: [id])
+  opportunityId String
+  status        String            @default("APPLIED") // APPLIED, SHORTLISTED, INTERVIEWED, SELECTED, REJECTED
+  coverLetter   String?
+  appliedAt     DateTime          @default(now())
+}
+
+model Certificate {
+  id              String         @id @default(uuid())
+  student         StudentProfile @relation(fields: [studentId], references: [id])
+  studentId       String
+  title           String
+  issuer          String
+  issueDate       DateTime
+  verificationUrl String?
+  description     String?
+}
+
+model Project {
+  id           String         @id @default(uuid())
+  student      StudentProfile @relation(fields: [studentId], references: [id])
+  studentId    String
+  title        String
+  description  String?
+  technologies String? // JSON string
+  projectUrl   String?
+  startDate    DateTime?
+  endDate      DateTime?
+}
+
+model MentorFeedback {
+  id        String         @id @default(uuid())
+  mentorId  String
+  student   StudentProfile @relation(fields: [studentId], references: [id])
+  studentId String
+  rating    Int
+  feedback  String?
+  createdAt DateTime       @default(now())
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  title     String
+  message   String
+  type      String?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Badge {
+  id          String   @id @default(uuid())
+  studentId   String
+  name        String   // e.g. "Ayurveda Starter", "Assessment Champion"
+  description String
+  icon        String   // emoji or icon name
+  awardedAt   DateTime @default(now())
+}

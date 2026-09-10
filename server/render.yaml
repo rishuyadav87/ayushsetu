@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: ayush-setu-api
+    env: node
+    buildCommand: npm install && npx prisma generate && npx prisma db push
+    startCommand: node src/app.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        value: file:./prisma/prod.db
+      - key: AI_ENGINE_URL
+        value: https://ayush-setu-ai.onrender.com
