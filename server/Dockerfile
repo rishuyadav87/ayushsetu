@@ -15,4 +15,4 @@ RUN npx prisma generate
 
 EXPOSE 5000
 
-CMD ["node", "src/app.js"]
+CMD ["sh", "-c", "node src/initDb.js && npx prisma db push --skip-generate && node prisma/seed.js && node src/app.js"]
