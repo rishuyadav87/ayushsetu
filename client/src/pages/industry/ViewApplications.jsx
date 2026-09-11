@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import ApplicationStatusBadge from '../../components/common/ApplicationStatusBadge';
 import { Download, CheckCircle, XCircle, ArrowLeft, AlertCircle } from 'lucide-react';
 import { applicationAPI } from '../../services/api';
+import toast from 'react-hot-toast';
 
 const ViewApplications = () => {
   const { id } = useParams(); // Opportunity ID (optional, but handled)
@@ -109,7 +110,7 @@ const ViewApplications = () => {
                       </td>
                       <td className="px-6 py-4 text-right">
                         <div className="flex justify-end gap-2">
-                          <button className="p-1.5 text-gray-500 hover:text-primary hover:bg-primary/10 rounded" title="View Portfolio">
+                          <button onClick={() => toast('Feature coming soon!', { icon: '🚧' })} className="p-1.5 text-gray-500 hover:text-primary hover:bg-primary/10 rounded" title="View Portfolio">
                             <Download size={18} />
                           </button>
                           <button 

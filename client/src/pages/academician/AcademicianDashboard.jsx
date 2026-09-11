@@ -1,6 +1,7 @@
 import React from 'react';
 import StatCard from '../../components/common/StatCard';
 import { Users, BookOpen, GraduationCap, FileText } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const AcademicianDashboard = () => {
   return (
@@ -23,7 +24,7 @@ const AcademicianDashboard = () => {
               <div>
                 <h3 className="font-semibold text-gray-800">John Doe</h3>
                 <p className="text-sm text-gray-600">Completed Advanced Clinical Diagnosis Assessment with 85%.</p>
-                <button className="text-xs text-primary mt-1 hover:underline">View Result & Endorse</button>
+                <button onClick={() => toast('Feature coming soon!', { icon: '🚧' })} className="text-xs text-primary mt-1 hover:underline">View Result & Endorse</button>
               </div>
             </div>
             <div className="flex items-start gap-4 p-3 hover:bg-gray-50 rounded-lg">
@@ -31,7 +32,7 @@ const AcademicianDashboard = () => {
               <div>
                 <h3 className="font-semibold text-gray-800">Aarav Sharma</h3>
                 <p className="text-sm text-gray-600">Updated their portfolio with a new research paper.</p>
-                <button className="text-xs text-primary mt-1 hover:underline">Review Paper</button>
+                <button onClick={() => toast('Feature coming soon!', { icon: '🚧' })} className="text-xs text-primary mt-1 hover:underline">Review Paper</button>
               </div>
             </div>
           </div>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import SearchBar from '../../components/common/SearchBar';
 import SkillBadge from '../../components/common/SkillBadge';
 import { MapPin, GraduationCap, Award } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const CandidateSearch = () => {
   const candidates = [
@@ -66,7 +67,7 @@ const CandidateSearch = () => {
               ))}
             </div>
 
-            <button className="w-full border border-primary text-primary hover:bg-primary hover:text-white py-2 rounded-lg font-medium transition-colors">
+            <button onClick={() => toast('Feature coming soon!', { icon: '🚧' })} className="w-full border border-primary text-primary hover:bg-primary hover:text-white py-2 rounded-lg font-medium transition-colors">
               View Full Profile
             </button>
           </div>

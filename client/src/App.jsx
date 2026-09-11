@@ -41,6 +41,8 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import UserManagement from './pages/admin/UserManagement';
 import SkillTaxonomy from './pages/admin/SkillTaxonomy';
 
+import { Toaster } from 'react-hot-toast';
+
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const { user } = useAuth();
   if (!user) return <Navigate to="/login" replace />;
@@ -50,54 +52,57 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Landing />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      
-      {/* Student Routes */}
-      <Route path="/student" element={<ProtectedRoute allowedRoles={['student']}><DashboardLayout /></ProtectedRoute>}>
-        <Route index element={<StudentDashboard />} />
-        <Route path="skills" element={<SkillProfile />} />
-        <Route path="assessments" element={<Assessments />} />
-        <Route path="assessments/take/:id" element={<TakeAssessment />} />
-        <Route path="opportunities" element={<Opportunities />} />
-        <Route path="portfolio" element={<Portfolio />} />
-        <Route path="applications" element={<Applications />} />
-      </Route>
+    <>
+      <Toaster position="top-right" />
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        
+        {/* Student Routes */}
+        <Route path="/student" element={<ProtectedRoute allowedRoles={['student']}><DashboardLayout /></ProtectedRoute>}>
+          <Route index element={<StudentDashboard />} />
+          <Route path="skills" element={<SkillProfile />} />
+          <Route path="assessments" element={<Assessments />} />
+          <Route path="assessments/take/:id" element={<TakeAssessment />} />
+          <Route path="opportunities" element={<Opportunities />} />
+          <Route path="portfolio" element={<Portfolio />} />
+          <Route path="applications" element={<Applications />} />
+        </Route>
 
-      {/* Industry Routes */}
-      <Route path="/industry" element={<ProtectedRoute allowedRoles={['industry']}><DashboardLayout /></ProtectedRoute>}>
-        <Route index element={<IndustryDashboard />} />
-        <Route path="post-opportunity" element={<PostOpportunity />} />
-        <Route path="manage-opportunities" element={<ManageOpportunities />} />
-        <Route path="candidate-search" element={<CandidateSearch />} />
-        <Route path="applications/:id" element={<ViewApplications />} />
-      </Route>
+        {/* Industry Routes */}
+        <Route path="/industry" element={<ProtectedRoute allowedRoles={['industry']}><DashboardLayout /></ProtectedRoute>}>
+          <Route index element={<IndustryDashboard />} />
+          <Route path="post-opportunity" element={<PostOpportunity />} />
+          <Route path="manage-opportunities" element={<ManageOpportunities />} />
+          <Route path="candidate-search" element={<CandidateSearch />} />
+          <Route path="applications/:id" element={<ViewApplications />} />
+        </Route>
 
-      {/* Academician Routes */}
-      <Route path="/academician" element={<ProtectedRoute allowedRoles={['academician']}><DashboardLayout /></ProtectedRoute>}>
-        <Route index element={<AcademicianDashboard />} />
-        <Route path="mentoring" element={<Mentoring />} />
-        <Route path="research-hub" element={<ResearchHub />} />
-        <Route path="fdp-access" element={<FDPAccess />} />
-      </Route>
+        {/* Academician Routes */}
+        <Route path="/academician" element={<ProtectedRoute allowedRoles={['academician']}><DashboardLayout /></ProtectedRoute>}>
+          <Route index element={<AcademicianDashboard />} />
+          <Route path="mentoring" element={<Mentoring />} />
+          <Route path="research-hub" element={<ResearchHub />} />
+          <Route path="fdp-access" element={<FDPAccess />} />
+        </Route>
 
-      {/* Institution Routes */}
-      <Route path="/institution" element={<ProtectedRoute allowedRoles={['institution']}><DashboardLayout /></ProtectedRoute>}>
-        <Route index element={<InstitutionDashboard />} />
-        <Route path="readiness" element={<ReadinessDashboard />} />
-        <Route path="outcomes" element={<OutcomeTracking />} />
-        <Route path="students" element={<StudentManagement />} />
-      </Route>
+        {/* Institution Routes */}
+        <Route path="/institution" element={<ProtectedRoute allowedRoles={['institution']}><DashboardLayout /></ProtectedRoute>}>
+          <Route index element={<InstitutionDashboard />} />
+          <Route path="readiness" element={<ReadinessDashboard />} />
+          <Route path="outcomes" element={<OutcomeTracking />} />
+          <Route path="students" element={<StudentManagement />} />
+        </Route>
 
-      {/* Admin Routes */}
-      <Route path="/admin" element={<ProtectedRoute allowedRoles={['admin']}><DashboardLayout /></ProtectedRoute>}>
-        <Route index element={<AdminDashboard />} />
-        <Route path="users" element={<UserManagement />} />
-        <Route path="taxonomy" element={<SkillTaxonomy />} />
-      </Route>
-    </Routes>
+        {/* Admin Routes */}
+        <Route path="/admin" element={<ProtectedRoute allowedRoles={['admin']}><DashboardLayout /></ProtectedRoute>}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="users" element={<UserManagement />} />
+          <Route path="taxonomy" element={<SkillTaxonomy />} />
+        </Route>
+      </Routes>
+    </>
   );
 }
 

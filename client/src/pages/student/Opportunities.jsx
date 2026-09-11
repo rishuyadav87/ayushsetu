@@ -4,6 +4,7 @@ import SearchBar from '../../components/common/SearchBar';
 import { Filter, AlertCircle, X, CheckCircle } from 'lucide-react';
 import { opportunityAPI, applicationAPI } from '../../services/api';
 import { useLanguage } from '../../context/LanguageContext';
+import toast from 'react-hot-toast';
 
 const Opportunities = () => {
   const { t } = useLanguage();
@@ -129,7 +130,7 @@ const Opportunities = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <button className="p-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 flex items-center justify-center">
+          <button onClick={() => toast('Feature coming soon!', { icon: '🚧' })} className="p-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 flex items-center justify-center">
             <Filter size={20} />
           </button>
         </div>

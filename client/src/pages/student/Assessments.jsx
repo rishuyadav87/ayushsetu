@@ -3,6 +3,7 @@ import AssessmentCard from '../../components/common/AssessmentCard';
 import SearchBar from '../../components/common/SearchBar';
 import { assessmentAPI } from '../../services/api';
 import { AlertCircle } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const Assessments = () => {
   const [assessments, setAssessments] = useState([]);
@@ -52,10 +53,10 @@ const Assessments = () => {
       )}
 
       <div className="flex gap-2 overflow-x-auto pb-2">
-        <button className="px-4 py-2 bg-primary text-white rounded-full text-sm font-medium whitespace-nowrap">All Categories</button>
-        <button className="px-4 py-2 bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 rounded-full text-sm font-medium whitespace-nowrap">Clinical</button>
-        <button className="px-4 py-2 bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 rounded-full text-sm font-medium whitespace-nowrap">Research</button>
-        <button className="px-4 py-2 bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 rounded-full text-sm font-medium whitespace-nowrap">Tech Tools</button>
+        <button onClick={() => toast('Feature coming soon!', { icon: '🚧' })} className="px-4 py-2 bg-primary text-white rounded-full text-sm font-medium whitespace-nowrap">All Categories</button>
+        <button onClick={() => toast('Feature coming soon!', { icon: '🚧' })} className="px-4 py-2 bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 rounded-full text-sm font-medium whitespace-nowrap">Clinical</button>
+        <button onClick={() => toast('Feature coming soon!', { icon: '🚧' })} className="px-4 py-2 bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 rounded-full text-sm font-medium whitespace-nowrap">Research</button>
+        <button onClick={() => toast('Feature coming soon!', { icon: '🚧' })} className="px-4 py-2 bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 rounded-full text-sm font-medium whitespace-nowrap">Tech Tools</button>
       </div>
 
       {loading ? (

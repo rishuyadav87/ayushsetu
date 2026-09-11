@@ -1,12 +1,13 @@
 import React from 'react';
 import { PlusCircle, Search } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const ResearchHub = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-dark">Research Hub</h1>
-        <button className="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 flex items-center gap-2">
+        <button onClick={() => toast('Feature coming soon!', { icon: '🚧' })} className="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 flex items-center gap-2">
           <PlusCircle size={18} /> Propose Project
         </button>
       </div>
@@ -24,7 +25,7 @@ const ResearchHub = () => {
               <span>Funding: Available</span>
               <span>Duration: 12 Months</span>
             </div>
-            <button className="mt-4 text-primary hover:underline font-medium text-sm">Express Interest</button>
+            <button onClick={() => toast('Feature coming soon!', { icon: '🚧' })} className="mt-4 text-primary hover:underline font-medium text-sm">Express Interest</button>
           </div>
         </div>
       </div>

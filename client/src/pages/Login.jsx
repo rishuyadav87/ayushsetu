@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Mail, Lock, LogIn, AlertCircle } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -79,7 +80,7 @@ const Login = () => {
                 <input type="checkbox" className="rounded border-gray-300 text-primary focus:ring-primary" />
                 <span className="ml-2 text-gray-600">Remember me</span>
               </label>
-              <a href="#" className="text-primary font-medium hover:underline">Forgot password?</a>
+              <button type="button" onClick={() => toast.error('Password reset not configured in demo.')} className="text-primary font-medium hover:underline">Forgot password?</button>
             </div>
 
             <button

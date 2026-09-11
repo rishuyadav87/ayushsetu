@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Edit2, Eye, Trash2, Users, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { opportunityAPI } from '../../services/api';
+import toast from 'react-hot-toast';
 
 const ManageOpportunities = () => {
   const [opportunities, setOpportunities] = useState([]);
@@ -83,10 +84,10 @@ const ManageOpportunities = () => {
                         <Link to={`/industry/applications`} className="text-primary hover:text-primary/80" title="View Applications">
                           <Eye size={18} />
                         </Link>
-                        <button className="text-blue-600 hover:text-blue-800" title="Edit">
+                        <button onClick={() => toast('Feature coming soon!', { icon: '🚧' })} className="text-blue-600 hover:text-blue-800" title="Edit">
                           <Edit2 size={18} />
                         </button>
-                        <button className="text-red-600 hover:text-red-800" title="Delete">
+                        <button onClick={() => toast('Feature coming soon!', { icon: '🚧' })} className="text-red-600 hover:text-red-800" title="Delete">
                           <Trash2 size={18} />
                         </button>
                       </div>

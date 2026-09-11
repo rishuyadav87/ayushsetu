@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { adminAPI } from '../../services/api';
 import { Search, Filter, AlertCircle, CheckCircle, XCircle, MoreVertical } from 'lucide-react';
 import SearchBar from '../../components/common/SearchBar';
+import toast from 'react-hot-toast';
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
@@ -190,7 +191,7 @@ const UserManagement = () => {
                       </button>
                     </td>
                     <td className="px-6 py-4">
-                      <button className="text-gray-400 hover:text-primary transition-colors p-1">
+                      <button onClick={() => toast('Feature coming soon!', { icon: '🚧' })} className="text-gray-400 hover:text-primary transition-colors p-1">
                         <MoreVertical size={18} />
                       </button>
                     </td>

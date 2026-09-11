@@ -1,5 +1,6 @@
 import React from 'react';
 import { PlayCircle, Clock, Calendar } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const FDPAccess = () => {
   return (
@@ -19,7 +20,7 @@ const FDPAccess = () => {
               <div className="flex items-center"><Clock size={16} className="mr-2 text-gray-400" /> Duration: {fdp.duration}</div>
               <div className="flex items-center"><Calendar size={16} className="mr-2 text-gray-400" /> {fdp.date}</div>
             </div>
-            <button className="w-full bg-primary/10 hover:bg-primary text-primary hover:text-white py-2 rounded-lg font-medium transition-colors flex items-center justify-center gap-2">
+            <button onClick={() => toast('Feature coming soon!', { icon: '🚧' })} className="w-full bg-primary/10 hover:bg-primary text-primary hover:text-white py-2 rounded-lg font-medium transition-colors flex items-center justify-center gap-2">
               <PlayCircle size={18} /> {fdp.date === 'Completed' ? 'View Certificate' : 'Enroll / Start'}
             </button>
           </div>

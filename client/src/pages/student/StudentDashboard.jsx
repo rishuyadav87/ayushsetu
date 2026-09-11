@@ -5,6 +5,7 @@ import OpportunityCard from '../../components/common/OpportunityCard';
 import { Award, Briefcase, BookOpen, Star, AlertCircle } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { analyticsAPI, opportunityAPI } from '../../services/api';
+import toast from 'react-hot-toast';
 
 const StudentDashboard = () => {
   const { user } = useAuth();
@@ -46,7 +47,7 @@ const StudentDashboard = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-dark">Welcome back, {user?.name || 'Student'}!</h1>
-        <button className="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90">
+        <button onClick={() => toast('Feature coming soon!', { icon: '🚧' })} className="bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90">
           Take Assessment
         </button>
       </div>

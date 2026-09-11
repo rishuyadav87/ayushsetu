@@ -1,5 +1,6 @@
 import React from 'react';
 import { Search, ChevronRight } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const Mentoring = () => {
   const mentees = [
@@ -43,8 +44,8 @@ const Mentoring = () => {
             </div>
 
             <div className="flex gap-2">
-              <button className="flex-1 bg-white border border-gray-300 text-gray-700 py-2 rounded-lg text-sm font-medium hover:bg-gray-50">View Profile</button>
-              <button className="flex-1 bg-primary text-white py-2 rounded-lg text-sm font-medium hover:bg-primary/90">Add Feedback</button>
+              <button onClick={() => toast('Feature coming soon!', { icon: '🚧' })} className="flex-1 bg-white border border-gray-300 text-gray-700 py-2 rounded-lg text-sm font-medium hover:bg-gray-50">View Profile</button>
+              <button onClick={() => toast('Feature coming soon!', { icon: '🚧' })} className="flex-1 bg-primary text-white py-2 rounded-lg text-sm font-medium hover:bg-primary/90">Add Feedback</button>
             </div>
           </div>
         ))}

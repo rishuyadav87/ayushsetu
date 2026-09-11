@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ApplicationStatusBadge from '../../components/common/ApplicationStatusBadge';
 import { Building, MapPin, Calendar, ArrowRight, AlertCircle } from 'lucide-react';
 import { applicationAPI } from '../../services/api';
+import toast from 'react-hot-toast';
 
 const Applications = () => {
   const [applications, setApplications] = useState([]);
@@ -84,7 +85,7 @@ const Applications = () => {
                         <ApplicationStatusBadge status={app.status || 'applied'} />
                       </td>
                       <td className="px-6 py-4 text-right">
-                        <button className="text-primary hover:text-primary/80 font-medium text-sm inline-flex items-center">
+                        <button onClick={() => toast('Feature coming soon!', { icon: '🚧' })} className="text-primary hover:text-primary/80 font-medium text-sm inline-flex items-center">
                           View Details <ArrowRight size={16} className="ml-1" />
                         </button>
                       </td>

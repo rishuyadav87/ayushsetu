@@ -4,6 +4,7 @@ import { useLanguage } from '../../context/LanguageContext';
 import { Bell, User, LogOut, Globe } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { notificationAPI } from '../../services/api';
+import toast from 'react-hot-toast';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -43,7 +44,7 @@ const Navbar = () => {
 
         {user && (
           <>
-            <button className="hover:text-accent transition-colors relative">
+            <button onClick={() => toast('Feature coming soon!', { icon: '🚧' })} className="hover:text-accent transition-colors relative">
               <Bell size={20} />
               {unreadCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-secondary text-xs rounded-full h-4 w-4 flex items-center justify-center">
