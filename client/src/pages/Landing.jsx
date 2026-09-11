@@ -25,7 +25,7 @@ const Landing = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6 bg-gradient-to-br from-primary/5 via-light to-secondary/5">
+      <section id="about" className="pt-32 pb-20 px-6 bg-gradient-to-br from-primary/5 via-light to-secondary/5">
         <div className="max-w-7xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary font-semibold text-sm mb-6">
             <ShieldCheck size={16} /> Empowering the AYUSH Ecosystem
@@ -108,7 +108,7 @@ const Landing = () => {
       </section>
 
       {/* Stakeholders Section */}
-      <section className="py-20 px-6 bg-gray-50">
+      <section id="impact" className="py-20 px-6 bg-gray-50">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-dark mb-4">Who is it for?</h2>
