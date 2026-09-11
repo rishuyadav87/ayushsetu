@@ -27,17 +27,52 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-// AI recommended opportunities (mocked)
+// AI recommended opportunities (Real Semantic Matching via pgvector + Sentence-Transformers)
 router.get('/recommended', authMiddleware, roleCheck(['STUDENT']), async (req, res, next) => {
   try {
-    const profile = await prisma.studentProfile.findUnique({ where: { userId: req.user.userId } });
-    // In a real scenario, use ML or vector search. For now, return top 3.
-    const opportunities = await prisma.postedOpportunity.findMany({
+    const aiEngineUrl = process.env.AI_ENGINE_URL || 'http://localhost:8000';
+    try {
+      const aiResponse = await fetch(`${aiEngineUrl}/api/ai/match-opportunities/${req.user.userId}`);
+      if (aiResponse.ok) {
+        const aiData = await aiResponse.json();
+        if (aiData.matches && aiData.matches.length > 0) {
+          // Fetch full opportunity details including postedBy
+          const oppIds = aiData.matches.map(m => m.opportunity_id);
+          const opps = await prisma.postedOpportunity.findMany({
+            where: { id: { in: oppIds }, status: 'OPEN' },
+            include: { postedBy: { select: { name: true, email: true } } }
+          });
+          const oppMap = new Map(opps.map(o => [o.id, o]));
+          // Merge AI match scores and explainable reasons in ranked order
+          const ranked = aiData.matches
+            .map(m => {
+              const opp = oppMap.get(m.opportunity_id);
+              if (!opp) return null;
+              return {
+                ...opp,
+                matchScore: m.match_score,
+                semanticSimilarity: m.semantic_similarity,
+                eligibilityScore: m.eligibility_score,
+                isEligible: m.is_eligible,
+                matchReasons: m.match_reasons
+              };
+            })
+            .filter(Boolean);
+          return res.json(ranked);
+        }
+      }
+    } catch (aiErr) {
+      console.warn('AI Engine matching service unavailable, using database fallback:', aiErr.message);
+    }
+
+    // Database fallback if AI service is starting
+    const fallbackOpps = await prisma.postedOpportunity.findMany({
       where: { status: 'OPEN' },
-      take: 3,
+      take: 4,
+      include: { postedBy: { select: { name: true, email: true } } },
       orderBy: { createdAt: 'desc' }
     });
-    res.json(opportunities);
+    res.json(fallbackOpps);
   } catch (error) {
     next(error);
   }

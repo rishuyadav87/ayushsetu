@@ -1,31 +1,48 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
+import api from '../../services/api';
+import { useLanguage } from '../../context/LanguageContext';
 
-const SkillTaxonomy = () => {
+export default function SkillTaxonomy() {
+  const { t } = useLanguage();
+  const [taxonomies, setTaxonomies] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTaxonomy = async () => {
+      try {
+        const { data } = await api.get('/api/analytics/skills');
+        setTaxonomies(data);
+      } catch (error) {
+        console.error('Failed to fetch taxonomy', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTaxonomy();
+  }, []);
+
+  if (loading) {
+    return <div className="p-6 text-gray-500">Loading taxonomy...</div>;
+  }
+
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-dark mb-6">NSQF Skill Taxonomy</h1>
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-         <p className="text-gray-500 mb-4">Manage skill categories, tags, and mapping to NSQF levels.</p>
-         <div className="space-y-4">
-           <div className="border p-4 rounded flex justify-between items-center">
-             <div>
-               <h3 className="font-bold">Clinical Diagnosis</h3>
-               <p className="text-sm text-gray-500">Parent Category: Clinical Practice • NSQF Level: 4-7</p>
-             </div>
-             <button className="text-primary text-sm font-bold">Edit</button>
-           </div>
-           <div className="border p-4 rounded flex justify-between items-center">
-             <div>
-               <h3 className="font-bold">Herbal Formulations</h3>
-               <p className="text-sm text-gray-500">Parent Category: Pharmacy • NSQF Level: 3-6</p>
-             </div>
-             <button className="text-primary text-sm font-bold">Edit</button>
-           </div>
-         </div>
-         <button className="mt-4 bg-primary text-white px-4 py-2 rounded">Add New Skill</button>
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-4">{t('Skill Taxonomy')}</h1>
+      <div className="bg-white rounded-lg shadow p-6">
+        <h2 className="text-lg font-medium text-gray-900 mb-4">NSQF Aligned Roles</h2>
+        <div className="space-y-6">
+          {taxonomies.map(tax => (
+            <div key={tax.id} className="border-b pb-4 last:border-b-0 last:pb-0">
+              <h3 className="font-semibold text-lg text-primary">{tax.name}</h3>
+              <p className="text-sm text-gray-600 mb-2">QP Code: {tax.id} | NSQF Level: {tax.nsqfLevel}</p>
+              <div className="flex justify-between items-center text-sm mt-2">
+                <span className="text-gray-500">Assessments linked: {tax.assessmentCount}</span>
+                <span className="text-green-600 font-medium">Avg Readiness: {tax.avgScore}%</span>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
-};
-
-export default SkillTaxonomy;
+}

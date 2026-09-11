@@ -5,69 +5,79 @@ import bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('Seeding database...');
+  console.log('Clearing old transaction data for deterministic seed...');
+  await prisma.application.deleteMany();
+  await prisma.assessmentResult.deleteMany();
+  await prisma.assessment.deleteMany();
+  await prisma.postedOpportunity.deleteMany();
+  await prisma.certificate.deleteMany();
+  await prisma.project.deleteMany();
+  await prisma.mentorFeedback.deleteMany();
+  await prisma.badge.deleteMany();
+  await prisma.notification.deleteMany();
+  await prisma.studentProfile.deleteMany();
+  await prisma.industryProfile.deleteMany();
+  await prisma.academicianProfile.deleteMany();
+  await prisma.institutionProfile.deleteMany();
+  await prisma.user.deleteMany();
 
-  // 1. Categories & Skills
-  const categoriesData = [
-    { name: 'Ayurveda', desc: 'Traditional Indian system of medicine' },
-    { name: 'Yoga', desc: 'Physical, mental, and spiritual practices' },
-    { name: 'Unani', desc: 'Perso-Arabic traditional medicine' },
-    { name: 'Siddha', desc: 'Traditional medicine originating in South India' },
-    { name: 'Homeopathy', desc: 'Alternative medicine system' },
-    { name: 'Naturopathy', desc: 'System of alternative medicine based on natural healing' },
+  console.log('Seeding database with verified NSQF taxonomy...');
+
+  // 1. Skill Taxonomy (Real NQR/HSSC Data)
+  const taxonomyData = [
+    {
+      qpCode: "HSS/Q3601",
+      roleName: "Panchakarma Technician",
+      nsqfLevel: 4,
+      competencyUnits: [
+        { code: "HSS/N3601", name: "Prepare for panchakarma therapy session" },
+        { code: "HSS/N3602", name: "Provide panchakarma therapy as per guidance/prescription" },
+        { code: "HSS/N3603", name: "Carry out post panchakarma therapy procedures" },
+        { code: "HSS/N9617", name: "Maintain a safe, healthy and secure working environment" },
+        { code: "HSS/N9618", name: "Follow biomedical waste disposal and infection control policies" }
+      ]
+    },
+    {
+      qpCode: "HSS/Q3901",
+      roleName: "Ayurveda Ahar and Poshan Sahayak",
+      nsqfLevel: 3,
+      competencyUnits: [
+        { code: "HSS/N3901", name: "Provide support to Ayurveda Dietician in administrative work" },
+        { code: "HSS/N3902", name: "Support during cooking procedures in line with Ayurveda principles" },
+        { code: "HSS/N3903", name: "Carry out routine activities in the kitchen" },
+        { code: "HSS/N9615", name: "Maintain interpersonal relationship with client, colleagues, and others" },
+        { code: "HSS/N9617", name: "Maintain a safe, healthy and secure working environment" },
+        { code: "HSS/N9620", name: "Comply with infection control and biomedical waste disposal policies" }
+      ]
+    },
+    {
+      qpCode: "HSS/Q3902",
+      roleName: "Ayurveda Dietician",
+      nsqfLevel: 5,
+      competencyUnits: [
+        { code: "HSS/N3904", name: "Prepare an ayurvedic diet plan as per client's health and medical conditions" },
+        { code: "HSS/N3905", name: "Educate the client on customized diet plan in accordance with ayurvedic principles" },
+        { code: "HSS/N3906", name: "Evaluate the effectiveness of the diet plan" },
+        { code: "HSS/N3907", name: "Document and maintain the dietetic records for follow up activities" },
+        { code: "HSS/N9617", name: "Maintain a safe, healthy and secure working environment" },
+        { code: "HSS/N9620", name: "Comply infection control & biomedical waste disposal policies" }
+      ]
+    }
   ];
 
-  const createdCategories = [];
-  for (const cat of categoriesData) {
-    const createdCat = await prisma.skillCategory.upsert({
-      where: { name: cat.name },
-      update: {},
-      create: { name: cat.name, description: cat.desc },
-    });
-    createdCategories.push(createdCat);
-  }
-
-  const skillsData = [
-    { category: 'Ayurveda', name: 'Panchakarma Therapy', level: 5 },
-    { category: 'Ayurveda', name: 'Ayurvedic Dietetics', level: 4 },
-    { category: 'Ayurveda', name: 'Herbology', level: 6 },
-    { category: 'Ayurveda', name: 'Nadi Pariksha', level: 7 },
-    { category: 'Ayurveda', name: 'Marma Therapy', level: 8 },
-    { category: 'Yoga', name: 'Asana Practice', level: 3 },
-    { category: 'Yoga', name: 'Pranayama Techniques', level: 4 },
-    { category: 'Yoga', name: 'Meditation Guidance', level: 5 },
-    { category: 'Yoga', name: 'Yoga Therapy', level: 7 },
-    { category: 'Yoga', name: 'Anatomy and Physiology', level: 6 },
-    { category: 'Unani', name: 'Ilaj-bil-Tadbeer', level: 6 },
-    { category: 'Unani', name: 'Pharmacognosy', level: 5 },
-    { category: 'Unani', name: 'Mizaj Assessment', level: 7 },
-    { category: 'Unani', name: 'Kulliyat', level: 8 },
-    { category: 'Unani', name: 'Moalajat', level: 9 },
-    { category: 'Siddha', name: 'Varmam Therapy', level: 7 },
-    { category: 'Siddha', name: 'Thokkanam', level: 6 },
-    { category: 'Siddha', name: 'Siddha Pharmacology', level: 8 },
-    { category: 'Siddha', name: 'Naadi Diagnosis', level: 7 },
-    { category: 'Siddha', name: 'Yogam', level: 5 },
-    { category: 'Homeopathy', name: 'Materia Medica', level: 6 },
-    { category: 'Homeopathy', name: 'Repertory', level: 7 },
-    { category: 'Homeopathy', name: 'Pharmacy', level: 5 },
-    { category: 'Homeopathy', name: 'Organon of Medicine', level: 8 },
-    { category: 'Homeopathy', name: 'Case Taking', level: 6 },
-    { category: 'Naturopathy', name: 'Hydrotherapy', level: 5 },
-    { category: 'Naturopathy', name: 'Mud Therapy', level: 4 },
-    { category: 'Naturopathy', name: 'Fasting Therapy', level: 6 },
-    { category: 'Naturopathy', name: 'Chromotherapy', level: 5 },
-    { category: 'Naturopathy', name: 'Diet Therapy', level: 6 },
-  ];
-
-  for (const skill of skillsData) {
-    const cat = createdCategories.find(c => c.name === skill.category);
-    await prisma.skill.create({
-      data: {
-        categoryId: cat.id,
-        name: skill.name,
-        nsqfLevel: skill.level,
-        description: `Proficiency in ${skill.name}`
+  for (const t of taxonomyData) {
+    await prisma.skillTaxonomy.upsert({
+      where: { qpCode: t.qpCode },
+      update: {
+        roleName: t.roleName,
+        nsqfLevel: t.nsqfLevel,
+        competencyUnits: t.competencyUnits
+      },
+      create: {
+        qpCode: t.qpCode,
+        roleName: t.roleName,
+        nsqfLevel: t.nsqfLevel,
+        competencyUnits: t.competencyUnits
       }
     });
   }
@@ -76,7 +86,7 @@ async function main() {
   const hashedPassword = await bcrypt.hash('password123', 10);
   const adminPassword = await bcrypt.hash('admin123', 10);
 
-  const admin = await prisma.user.create({
+  await prisma.user.create({
     data: {
       email: 'admin@ayush.gov.in',
       password: adminPassword,
@@ -95,15 +105,14 @@ async function main() {
       phone: '9876543210',
       studentProfile: {
         create: {
-          specialization: 'BAMS',
+          specialization: 'Ayurveda Dietetics',
           institution: 'National Institute of Ayurveda',
           enrollmentYear: 2021,
-          bio: 'Passionate about integrating ancient wisdom with modern science.',
-          skills: JSON.stringify(['Panchakarma Therapy', 'Herbology']),
+          bio: 'Final year BAMS student specializing in Ayurvedic dietetics, Prakriti assessment, and therapeutic nutrition planning.',
+          skills: JSON.stringify(['Ahara Vijnana', 'Diet Planning', 'Prakriti Assessment', 'Pathya Apathya', 'Nutritional Counseling'])
         }
       }
-    },
-    include: { studentProfile: true }
+    }
   });
 
   const industryUser = await prisma.user.create({
@@ -111,14 +120,13 @@ async function main() {
       email: 'industry@ayush.com',
       password: hashedPassword,
       role: 'INDUSTRY',
-      name: 'Dabur India Rep',
-      phone: '1234567890',
+      name: 'Patanjali Research Foundation',
       industryProfile: {
         create: {
-          companyName: 'Dabur India',
-          industry: 'Ayurvedic Pharmaceuticals',
-          website: 'https://dabur.com',
-          location: 'Delhi NCR'
+          companyName: 'Patanjali Research Foundation',
+          industry: 'Ayurveda Pharmaceuticals & Clinical Wellness',
+          location: 'Haridwar, Uttarakhand',
+          description: 'Pioneering evidence-based Ayurvedic formulations, clinical dietetics, and therapeutic patient care.'
         }
       }
     }
@@ -129,13 +137,13 @@ async function main() {
       email: 'academician@ayush.edu',
       password: hashedPassword,
       role: 'ACADEMICIAN',
-      name: 'Dr. Anita Sharma',
+      name: 'Dr. Vasant Lad',
       academicianProfile: {
         create: {
-          institution: 'All India Institute of Ayurveda',
-          department: 'Dravyaguna',
+          institution: 'Ayurvedic Institute',
+          department: 'Dravyaguna & Ahara Vijnana',
           designation: 'Professor',
-          expertise: JSON.stringify(['Pharmacognosy', 'Clinical Research'])
+          expertise: JSON.stringify(['Ahara Vijnana', 'Panchakarma', 'Nadi Pariksha'])
         }
       }
     }
@@ -146,146 +154,125 @@ async function main() {
       email: 'institution@ayush.edu',
       password: hashedPassword,
       role: 'INSTITUTION',
-      name: 'NIA Admin',
+      name: 'All India Institute of Ayurveda',
       institutionProfile: {
         create: {
-          institutionName: 'National Institute of Ayurveda',
-          type: 'Government',
-          location: 'Jaipur',
-          website: 'https://nia.nic.in'
+          institutionName: 'All India Institute of Ayurveda (AIIA)',
+          type: 'Government Apex Institute',
+          location: 'New Delhi'
         }
       }
     }
   });
 
   // 3. Assessments
-  const sampleQuestions = JSON.stringify([
-    { question: 'What is the primary concept in Ayurveda?', options: ['Tridosha', 'Yin-Yang', 'Humors', 'Qi'], correctIndex: 0 },
-    { question: 'Which of these is NOT a dosha?', options: ['Vata', 'Pitta', 'Kapha', 'Agni'], correctIndex: 3 },
-    { question: 'What is the literal meaning of Ayurveda?', options: ['Science of life', 'Science of herbs', 'Science of diet', 'Science of body'], correctIndex: 0 },
-    { question: 'What is the standard text of Ayurveda?', options: ['Charaka Samhita', 'Rig Veda', 'Upanishads', 'Mahabharata'], correctIndex: 0 },
-    { question: 'What is the primary treatment in Ayurveda?', options: ['Panchakarma', 'Surgery', 'Acupuncture', 'Chemotherapy'], correctIndex: 0 },
-    { question: 'What dosha is associated with fire?', options: ['Vata', 'Pitta', 'Kapha', 'None'], correctIndex: 1 },
-    { question: 'Which herb is commonly used for immunity?', options: ['Ashwagandha', 'Neem', 'Tulsi', 'All of the above'], correctIndex: 3 },
-    { question: 'What is the digestive fire called in Ayurveda?', options: ['Agni', 'Ojas', 'Ama', 'Prana'], correctIndex: 0 },
-    { question: 'Which sense organ is related to Vata?', options: ['Skin', 'Eyes', 'Tongue', 'Nose'], correctIndex: 0 },
-    { question: 'What is the end product of perfect digestion?', options: ['Ojas', 'Ama', 'Mala', 'Rasa'], correctIndex: 0 },
-  ]);
-
-  const ayurvedaCat = createdCategories.find(c => c.name === 'Ayurveda');
-  const yogaCat = createdCategories.find(c => c.name === 'Yoga');
-
-  await prisma.assessment.create({
+  const assessmentDiet = await prisma.assessment.create({
     data: {
-      title: 'Ayurveda Basics NSQF Level 4',
-      description: 'Fundamental assessment of Ayurvedic principles.',
-      categoryId: ayurvedaCat.id,
-      questions: sampleQuestions,
+      title: 'Ayurveda Dietetics & Nutrition Planning (Level 5)',
+      description: 'Comprehensive evaluation of Ahara Vijnana, client Prakriti analysis, customized diet plan preparation, and pathya guidelines.',
+      qpCode: 'HSS/Q3902',
       duration: 30,
-      totalMarks: 100
+      totalMarks: 50,
+      questions: JSON.stringify([
+        { q: 'What is Ahara Vijnana?', options: ['Dietetics & Nutrition Science', 'Surgical Technique', 'Bone Setting', 'Yoga Postures'], correctIndex: 0 },
+        { q: 'Which factor is most critical when designing an individualized Ayurvedic diet plan?', options: ['Client Prakriti & Agni status', 'Caloric deficit only', 'Time of sunrise', 'Blood type'], correctIndex: 0 },
+        { q: 'Which of the following is considered the primary seat of Agni in Ahara metabolism?', options: ['Grahani', 'Hridaya', 'Kanta', 'Sirah'], correctIndex: 0 }
+      ])
     }
   });
 
-  await prisma.assessment.create({
+  const assessmentPancha = await prisma.assessment.create({
     data: {
-      title: 'Advanced Panchakarma NSQF Level 7',
-      description: 'Test on detoxification procedures.',
-      categoryId: ayurvedaCat.id,
-      questions: sampleQuestions, // Reusing for demo
+      title: 'Panchakarma Protocol & Procedures (Level 4)',
+      description: 'Assessment of Snehana, Swedana, Shirodhara setup, and biomedical waste compliance.',
+      qpCode: 'HSS/Q3601',
       duration: 45,
-      totalMarks: 100
+      totalMarks: 100,
+      questions: JSON.stringify([
+        { q: 'What is the preparatory procedure before Pradhana Karma in Panchakarma?', options: ['Purvakarma (Snehana & Swedana)', 'Paschatkarma', 'Samsarjana Krama', 'Langhana'], correctIndex: 0 },
+        { q: 'Which color-coded bin is mandated for infectious biomedical waste?', options: ['Yellow', 'Green', 'Blue', 'Black'], correctIndex: 0 }
+      ])
     }
   });
 
-  await prisma.assessment.create({
-    data: {
-      title: 'Yoga Instructor Foundation',
-      description: 'Basic asana and pranayama theory.',
-      categoryId: yogaCat.id,
-      questions: sampleQuestions, // Reusing for demo
-      duration: 30,
-      totalMarks: 100
-    }
-  });
-
-  // 4. Opportunities
-  await prisma.postedOpportunity.createMany({
-    data: [
-      {
-        postedById: industryUser.id,
-        title: 'Junior Ayurvedic Pharmacist',
-        description: 'Looking for a fresh graduate to join our formulation team.',
-        type: 'JOB',
-        location: 'Delhi',
-        isRemote: false,
-        skillsRequired: JSON.stringify(['Herbology', 'Ayurvedic Dietetics']),
-        stipend: '30000 INR/month',
-      },
-      {
-        postedById: industryUser.id,
-        title: 'Research Intern - Medicinal Plants',
-        description: '3-month internship to study local flora.',
-        type: 'INTERNSHIP',
-        location: 'Remote',
-        isRemote: true,
-        skillsRequired: JSON.stringify(['Pharmacognosy']),
-        stipend: '10000 INR/month',
-      },
-      {
-        postedById: academicianUser.id,
-        title: 'Research Assistant for Clinical Trial',
-        description: 'Assisting in data collection for new formulation.',
-        type: 'RESEARCH',
-        location: 'Jaipur',
-        isRemote: false,
-        skillsRequired: JSON.stringify(['Clinical Research', 'Data Entry']),
-        stipend: '20000 INR/month',
-      },
-      {
-        postedById: institutionUser.id,
-        title: 'Faculty Development Program on Tele-Medicine',
-        description: '1-week online workshop for faculty.',
-        type: 'FDP',
-        location: 'Online',
-        isRemote: true,
-        skillsRequired: JSON.stringify(['Basic IT skills']),
-      },
-      {
-        postedById: industryUser.id,
-        title: 'Yoga Therapist for Corporate Wellness',
-        description: 'Part-time project leading yoga sessions.',
-        type: 'PROJECT',
-        location: 'Mumbai',
-        isRemote: false,
-        skillsRequired: JSON.stringify(['Asana Practice', 'Yoga Therapy']),
-        stipend: '15000 INR/project',
+  // 4. Seed Assessment Result for Student (Demonstrating verified competency in Dietetics)
+  const studentProfile = await prisma.studentProfile.findUnique({ where: { userId: studentUser.id } });
+  if (studentProfile) {
+    await prisma.assessmentResult.create({
+      data: {
+        studentId: studentProfile.id,
+        assessmentId: assessmentDiet.id,
+        score: 48,
+        maxScore: 50,
+        answers: JSON.stringify({ 0: 0, 1: 0, 2: 0 }),
+        skillScores: JSON.stringify({
+          "Prepare ayurvedic diet plan": 96,
+          "Client Prakriti assessment": 95,
+          "Nutritional counseling": 92
+        })
       }
-    ]
-  });
+    });
+  }
 
-  // 5. Sample Certificates & Projects for Student
-  await prisma.certificate.create({
+  // 5. Opportunities (Differentiated across semantic relevance and qualification packs)
+
+  // Opportunity 1: Exceptional semantic match for student targeting Ayurveda Dietician
+  await prisma.postedOpportunity.create({
     data: {
-      studentId: studentUser.studentProfile.id,
-      title: 'Certificate in Advanced Panchakarma',
-      issuer: 'National Institute of Ayurveda',
-      issueDate: new Date('2023-05-15'),
-      description: 'Completed 6-month hands-on training.',
+      postedById: industryUser.id,
+      title: 'Clinical Ayurveda Dietician & Nutritionist Intern',
+      description: 'Seeking a dedicated intern in Ayurvedic Clinical Nutrition. You will work alongside certified Ayurveda Dieticians to assess patient Prakriti, formulate personalized Ahara dietary regimens according to medical conditions, maintain clinical dietetic documentation, and counsel patients on pathya and apathya nutrition principles.',
+      type: 'INTERNSHIP',
+      location: 'Haridwar, Uttarakhand',
+      requiredQpCodes: JSON.stringify(['HSS/Q3902']),
+      stipend: '₹18,000/month',
+      deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
     }
   });
 
-  await prisma.project.create({
+  // Opportunity 2: Moderate semantic match - Assistant in dietary kitchen
+  await prisma.postedOpportunity.create({
     data: {
-      studentId: studentUser.studentProfile.id,
-      title: 'Efficacy of Ashwagandha in Stress Management',
-      description: 'A literature review and small-scale survey study.',
-      technologies: JSON.stringify(['SurveyMonkey', 'SPSS']),
-      startDate: new Date('2023-01-01'),
-      endDate: new Date('2023-06-01')
+      postedById: industryUser.id,
+      title: 'Ayurveda Ahara & Poshan Kitchen Assistant',
+      description: 'Support the hospital dietary department with administrative records, standard herbal food preparation in accordance with classical Ayurveda principles, maintaining safe sanitary kitchen standards, and assisting senior nutritionists with routine food distribution.',
+      type: 'INTERNSHIP',
+      location: 'New Delhi',
+      requiredQpCodes: JSON.stringify(['HSS/Q3901']),
+      stipend: '₹12,000/month',
+      deadline: new Date(Date.now() + 45 * 24 * 60 * 60 * 1000)
     }
   });
 
-  console.log('Seeding completed successfully!');
+  // Opportunity 3: Low semantic match for dietetics - Therapy / Panchakarma procedures
+  await prisma.postedOpportunity.create({
+    data: {
+      postedById: industryUser.id,
+      title: 'Panchakarma Therapy Assistant',
+      description: 'Perform authentic Panchakarma clinical procedures including Snehana, Swedana, Shirodhara, and Basti under the direct supervision of Senior Vaidyas. Prepare therapeutic decoctions and oils, maintain treatment table sanitation, and manage biomedical waste according to HSSC infection control protocols.',
+      type: 'JOB',
+      location: 'Rishikesh, Uttarakhand',
+      requiredQpCodes: JSON.stringify(['HSS/Q3601']),
+      stipend: '₹22,000/month',
+      deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000)
+    }
+  });
+
+  // Opportunity 4: General AYUSH wellness - Yoga & lifestyle meditation
+  await prisma.postedOpportunity.create({
+    data: {
+      postedById: industryUser.id,
+      title: 'Yoga & Holistic Lifestyle Wellness Counselor',
+      description: 'Conduct morning yoga asana sessions, pranayama breathwork, and general relaxation meditation classes for wellness retreat guests. Guide clients in stress reduction techniques and healthy daily living routines without clinical dietary intervention.',
+      type: 'JOB',
+      location: 'Goa (Hybrid)',
+      requiredQpCodes: JSON.stringify([]),
+      stipend: '₹25,000/month',
+      deadline: new Date(Date.now() + 20 * 24 * 60 * 60 * 1000)
+    }
+  });
+
+  console.log('Seeding completed successfully with real verified NSQF data!');
 }
 
 main()

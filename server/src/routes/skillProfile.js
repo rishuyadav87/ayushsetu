@@ -18,7 +18,7 @@ router.get('/', authMiddleware, async (req, res, next) => {
           include: {
             assessment: {
               include: {
-                category: true
+                taxonomy: true
               }
             }
           }
@@ -30,18 +30,18 @@ router.get('/', authMiddleware, async (req, res, next) => {
       return res.status(404).json({ message: 'Student profile not found' });
     }
 
-    const categoryStats = {};
+    const taxonomyStats = {};
     let totalScore = 0;
     let totalMaxScore = 0;
     let lastUpdated = null;
 
     for (const result of studentProfile.assessmentResults) {
-      const categoryName = result.assessment.category.name;
-      if (!categoryStats[categoryName]) {
-        categoryStats[categoryName] = { score: 0, maxScore: 0 };
+      const roleName = result.assessment.taxonomy.roleName;
+      if (!taxonomyStats[roleName]) {
+        taxonomyStats[roleName] = { score: 0, maxScore: 0 };
       }
-      categoryStats[categoryName].score += result.score;
-      categoryStats[categoryName].maxScore += result.maxScore;
+      taxonomyStats[roleName].score += result.score;
+      taxonomyStats[roleName].maxScore += result.maxScore;
 
       totalScore += result.score;
       totalMaxScore += result.maxScore;
@@ -51,8 +51,8 @@ router.get('/', authMiddleware, async (req, res, next) => {
       }
     }
 
-    const categories = Object.keys(categoryStats).map(name => {
-      const stats = categoryStats[name];
+    const categories = Object.keys(taxonomyStats).map(name => {
+      const stats = taxonomyStats[name];
       return {
         name,
         score: stats.score,
@@ -83,7 +83,7 @@ router.get('/gap-analysis', authMiddleware, async (req, res, next) => {
           include: {
             assessment: {
               include: {
-                category: true
+                taxonomy: true
               }
             }
           }
@@ -95,17 +95,17 @@ router.get('/gap-analysis', authMiddleware, async (req, res, next) => {
       return res.status(404).json({ message: 'Student profile not found' });
     }
 
-    const categoryStats = {};
+    const taxonomyStats = {};
     let totalScore = 0;
     let totalMaxScore = 0;
 
     for (const result of studentProfile.assessmentResults) {
-      const categoryName = result.assessment.category.name;
-      if (!categoryStats[categoryName]) {
-        categoryStats[categoryName] = { score: 0, maxScore: 0 };
+      const roleName = result.assessment.taxonomy.roleName;
+      if (!taxonomyStats[roleName]) {
+        taxonomyStats[roleName] = { score: 0, maxScore: 0 };
       }
-      categoryStats[categoryName].score += result.score;
-      categoryStats[categoryName].maxScore += result.maxScore;
+      taxonomyStats[roleName].score += result.score;
+      taxonomyStats[roleName].maxScore += result.maxScore;
 
       totalScore += result.score;
       totalMaxScore += result.maxScore;
@@ -114,22 +114,22 @@ router.get('/gap-analysis', authMiddleware, async (req, res, next) => {
     const benchmark = 70;
     const gaps = [];
 
-    for (const [category, stats] of Object.entries(categoryStats)) {
+    for (const [roleName, stats] of Object.entries(taxonomyStats)) {
       const studentScore = stats.maxScore > 0 ? (stats.score / stats.maxScore) * 100 : 0;
       if (studentScore < benchmark) {
         const gap = benchmark - studentScore;
         let severity = 'low';
-        let recommendation = `Consider taking beginner courses in ${category}.`;
+        let recommendation = `Consider taking beginner courses in ${roleName}.`;
         if (gap > 30) {
           severity = 'high';
-          recommendation = `Urgent need for foundational training in ${category}.`;
+          recommendation = `Urgent need for foundational training in ${roleName}.`;
         } else if (gap > 15) {
           severity = 'medium';
-          recommendation = `Targeted practice needed in ${category}.`;
+          recommendation = `Targeted practice needed in ${roleName}.`;
         }
         
         gaps.push({
-          category,
+          category: roleName,
           studentScore,
           benchmark,
           gap,

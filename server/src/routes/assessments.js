@@ -10,7 +10,7 @@ const router = express.Router();
 router.get('/', async (req, res, next) => {
   try {
     const assessments = await prisma.assessment.findMany({
-      include: { category: true }
+      include: { taxonomy: true }
     });
     // Don't send answers in list
     const safeAssessments = assessments.map(a => {
@@ -28,7 +28,7 @@ router.get('/:id', authMiddleware, async (req, res, next) => {
   try {
     const assessment = await prisma.assessment.findUnique({
       where: { id: req.params.id },
-      include: { category: true }
+      include: { taxonomy: true }
     });
     
     if (!assessment) return res.status(404).json({ message: 'Assessment not found' });

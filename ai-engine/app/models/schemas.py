@@ -35,8 +35,11 @@ class EligibilityResponse(BaseModel):
     factors: Dict[str, float]
 
 class MatchRequest(BaseModel):
-    user_id: str
-    skills: List[Skill]
+    user_id: Optional[str] = None
+    target_role: Optional[str] = None
+    skills: Optional[List[Skill]] = []
+    education_level: Optional[str] = "Bachelor"
+    experience_months: Optional[int] = 12
     preferences: Optional[Dict[str, str]] = None
 
 class Opportunity(BaseModel):

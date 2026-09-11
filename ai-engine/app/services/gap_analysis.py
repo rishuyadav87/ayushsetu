@@ -1,15 +1,16 @@
 from typing import List, Dict, Tuple
 from app.models.schemas import Skill
-from app.data.nsqf_taxonomy import NSQF_ROLES
+from app.data.db import get_taxonomy
 
 def perform_gap_analysis(target_role: str, current_skills: List[Skill]) -> Tuple[float, List[str], Dict[str, float], List[str]]:
     """
     Analyzes the gap between a user's current skills and a target role.
     """
-    if target_role not in NSQF_ROLES:
+    nsqf_roles = get_taxonomy()
+    if target_role not in nsqf_roles:
         raise ValueError(f"Role '{target_role}' not found in taxonomy.")
     
-    required_skills = NSQF_ROLES[target_role]
+    required_skills = nsqf_roles[target_role]
     current_skill_dict = {s.name: s.proficiency for s in current_skills}
     
     total_required_weight = sum(required_skills.values())

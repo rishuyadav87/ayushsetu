@@ -1,63 +1,80 @@
-import numpy as np
-from sklearn.metrics.pairwise import cosine_similarity
-from typing import List, Dict, Any
-from app.models.schemas import Skill, Opportunity
-from app.data.nsqf_taxonomy import NSQF_ROLES
+import logging
+from typing import List, Dict, Any, Optional
+from app.models.schemas import Skill
+from app.data.db import get_taxonomy, SessionLocal
+from app.services.embedding import generate_embedding, get_embedding_model
+from app.services.scoring import match_opportunities_for_student
+from sqlalchemy import text
 
-def compute_similarity(profile_skills: List[Skill], opportunities: List[Opportunity]) -> List[Dict[str, Any]]:
+logger = logging.getLogger(__name__)
+
+def match_opportunities(
+    user_id: Optional[str] = None,
+    target_role: Optional[str] = None,
+    skills: Optional[List[Skill]] = None,
+    education_level: str = "Bachelor",
+    experience_months: int = 12
+) -> List[Dict[str, Any]]:
     """
-    Matches student profile to opportunities using cosine similarity and rule-based boosting.
+    Unified AI matching service using pgvector and sentence-transformers.
+    Queries PostedOpportunity, SkillTaxonomy, and StudentProfile directly from PostgreSQL.
     """
-    if not opportunities:
-        return []
-        
-    all_skills = set(s.name for s in profile_skills)
-    for opp in opportunities:
-        all_skills.update(opp.required_skills.keys())
-        
-    skill_list = list(all_skills)
-    
-    # Vectorize profile
-    profile_vector = np.zeros(len(skill_list))
-    profile_dict = {s.name: s.proficiency for s in profile_skills}
-    for i, skill in enumerate(skill_list):
-        profile_vector[i] = profile_dict.get(skill, 0.0)
-        
-    results = []
-    profile_vec_2d = profile_vector.reshape(1, -1)
-    
-    for opp in opportunities:
-        opp_vector = np.zeros(len(skill_list))
-        for i, skill in enumerate(skill_list):
-            opp_vector[i] = opp.required_skills.get(skill, 0.0)
-            
-        opp_vec_2d = opp_vector.reshape(1, -1)
-        
-        if np.sum(opp_vector) == 0:
-            sim = 0.0
-        else:
-            sim = cosine_similarity(profile_vec_2d, opp_vec_2d)[0][0]
-            
-        # Rule-based boosting: if they perfectly match a highly weighted skill
-        boost = 0.0
-        for req_skill, req_weight in opp.required_skills.items():
-            if req_weight >= 4.0 and profile_dict.get(req_skill, 0.0) >= req_weight:
-                boost += 0.05
-                
-        final_score = min(1.0, sim + boost)
-        results.append({
-            "opportunity_id": opp.id,
-            "title": opp.title,
-            "match_score": float(final_score)
-        })
-        
-    # Sort by score
-    results.sort(key=lambda x: x["match_score"], reverse=True)
-    return results
+    student_profile = {}
+    if skills:
+        student_profile["skills"] = [s.name if hasattr(s, "name") else str(s) for s in skills]
+    student_profile["education_level"] = education_level
+    student_profile["experience_months"] = experience_months
+
+    return match_opportunities_for_student(
+        user_id=user_id,
+        target_role=target_role,
+        student_profile=student_profile
+    )
 
 def get_career_paths(profile_skills: List[Skill]) -> List[Dict[str, Any]]:
-    opps = [
-        Opportunity(id=role, title=role, required_skills=skills)
-        for role, skills in NSQF_ROLES.items()
-    ]
-    return compute_similarity(profile_skills, opps)
+    """
+    Matches student's skill profile against all NSQF roles in SkillTaxonomy
+    using semantic embedding similarity.
+    """
+    db = SessionLocal()
+    try:
+        query = text('SELECT "qpCode", "roleName", "nsqfLevel", "competencyUnits" FROM "SkillTaxonomy"')
+        rows = db.execute(query).fetchall()
+        if not rows:
+            return []
+
+        # Build profile text
+        skill_names = [s.name for s in profile_skills] if profile_skills else []
+        profile_text = f"AYUSH Practitioner with skills: {', '.join(skill_names)}." if skill_names else "AYUSH Healthcare Student"
+        model = get_embedding_model()
+        profile_vec = model.encode(profile_text, normalize_embeddings=True)
+
+        results = []
+        for row in rows:
+            qp_code = row[0]
+            role_name = row[1]
+            level = row[2]
+            role_title = f"{role_name} (Level {level})"
+            
+            # Semantic text for the taxonomy role
+            comps = row[3] or []
+            comp_names = [c.get("name", "") for c in comps if isinstance(c, dict)]
+            role_text = f"NSQF Role: {role_name}. Qualification Pack: {qp_code}. Level: {level}. Competencies: {', '.join(comp_names)}."
+            role_vec = model.encode(role_text, normalize_embeddings=True)
+
+            # Cosine similarity between normalized vectors is dot product
+            sim = float(profile_vec @ role_vec)
+            sim = max(0.0, min(1.0, sim))
+
+            results.append({
+                "opportunity_id": role_title,
+                "title": role_title,
+                "qp_code": qp_code,
+                "nsqf_level": level,
+                "match_score": round(sim, 3)
+            })
+
+        results.sort(key=lambda x: x["match_score"], reverse=True)
+        return results
+    finally:
+        db.close()

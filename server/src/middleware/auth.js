@@ -1,5 +1,13 @@
 import jwt from 'jsonwebtoken';
 
+const getJwtSecret = () => {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error('FATAL: JWT_SECRET environment variable is not set. Server cannot verify tokens.');
+  }
+  return secret;
+};
+
 export const authMiddleware = (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
@@ -8,7 +16,7 @@ export const authMiddleware = (req, res, next) => {
     }
 
     const token = authHeader.split(' ')[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'ayush-setu-super-secret-key-2024');
+    const decoded = jwt.verify(token, getJwtSecret());
     
     req.user = decoded; // { userId, role }
     next();

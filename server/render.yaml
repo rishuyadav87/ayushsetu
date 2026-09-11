@@ -12,6 +12,19 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: DATABASE_URL
-        value: file:./prisma/prod.db
+        sync: false
       - key: AI_ENGINE_URL
         value: https://ayush-setu-ai.onrender.com
+
+  - type: web
+    name: ayush-setu-ai
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: 1
+      - key: DATABASE_URL
+        sync: false
+      - key: ALLOWED_ORIGINS
+        value: "*"

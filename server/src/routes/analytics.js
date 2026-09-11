@@ -118,7 +118,7 @@ router.get('/dashboard', authMiddleware, async (req, res, next) => {
       ]);
 
       // Skill category readiness for bar chart
-      const categories = await prisma.skillCategory.findMany({
+      const taxonomies = await prisma.skillTaxonomy.findMany({
         include: {
           assessments: {
             include: {
@@ -128,12 +128,12 @@ router.get('/dashboard', authMiddleware, async (req, res, next) => {
         }
       });
 
-      const readinessChart = categories.map(cat => {
-        const allResults = cat.assessments.flatMap(a => a.results);
+      const readinessChart = taxonomies.map(tax => {
+        const allResults = tax.assessments.flatMap(a => a.results);
         const avg = allResults.length
           ? Math.round(allResults.reduce((sum, r) => sum + (r.score / r.maxScore) * 100, 0) / allResults.length)
           : Math.floor(50 + Math.random() * 35); // seeded mock if no data
-        return { name: cat.name, readiness: avg, benchmark: 70 };
+        return { name: tax.roleName, readiness: avg, benchmark: 70 };
       });
 
       stats = {
@@ -200,25 +200,25 @@ router.get('/dashboard', authMiddleware, async (req, res, next) => {
 
 router.get('/skills', async (req, res, next) => {
   try {
-    const categories = await prisma.skillCategory.findMany({
+    const taxonomies = await prisma.skillTaxonomy.findMany({
       include: {
-        _count: { select: { skills: true, assessments: true } },
+        _count: { select: { assessments: true } },
         assessments: {
           include: { results: { select: { score: true, maxScore: true } } }
         }
       }
     });
 
-    const enriched = categories.map(cat => {
-      const allResults = cat.assessments.flatMap(a => a.results);
+    const enriched = taxonomies.map(tax => {
+      const allResults = tax.assessments.flatMap(a => a.results);
       const avgScore = allResults.length
         ? Math.round(allResults.reduce((s, r) => s + (r.score / r.maxScore) * 100, 0) / allResults.length)
         : 0;
       return {
-        id: cat.id,
-        name: cat.name,
-        skillCount: cat._count.skills,
-        assessmentCount: cat._count.assessments,
+        id: tax.qpCode,
+        name: tax.roleName,
+        nsqfLevel: tax.nsqfLevel,
+        assessmentCount: tax._count.assessments,
         avgScore,
         demandScore: Math.floor(60 + Math.random() * 35), // simulated industry demand
       };

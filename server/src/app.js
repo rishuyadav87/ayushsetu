@@ -17,6 +17,13 @@ import adminRoutes from './routes/admin.js';
 
 dotenv.config();
 
+// --- Startup validation ---
+if (!process.env.JWT_SECRET) {
+  console.error('FATAL: JWT_SECRET environment variable is not set.');
+  console.error('Generate one with: node -e "console.log(require(\'crypto\').randomBytes(32).toString(\'base64\'))"');
+  process.exit(1);
+}
+
 const app = express();
 
 app.use(cors());

@@ -1,15 +1,13 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [pgvector(map: "vector")]
 }
-
-// Role: STUDENT, INDUSTRY, ACADEMICIAN, INSTITUTION, ADMIN
-// OpportunityType: INTERNSHIP, JOB, PROJECT, FDP, RESEARCH
-// ApplicationStatus: APPLIED, SHORTLISTED, INTERVIEWED, SELECTED, REJECTED
 
 model User {
   id        String   @id @default(uuid())
@@ -43,6 +41,7 @@ model StudentProfile {
   bio            String?
   resumeUrl      String?
   skills         String? // Storing as comma-separated or JSON string
+  embedding      Unsupported("vector(384)")?
 
   assessmentResults AssessmentResult[]
   certificates      Certificate[]
@@ -85,29 +84,23 @@ model InstitutionProfile {
   description     String?
 }
 
-model SkillCategory {
-  id          String  @id @default(uuid())
-  name        String  @unique // Ayurveda, Yoga, Unani, Siddha, Homeopathy, Naturopathy
-  description String?
-  skills      Skill[]
-  assessments Assessment[]
-}
+model SkillTaxonomy {
+  qpCode           String   @id
+  roleName         String   @unique
+  nsqfLevel        Int
+  competencyUnits  Json
+  source           String   @default("Healthcare Sector Skill Council — AYUSH Sub-Council")
+  createdAt        DateTime @default(now())
 
-model Skill {
-  id          String        @id @default(uuid())
-  category    SkillCategory @relation(fields: [categoryId], references: [id])
-  categoryId  String
-  name        String
-  description String?
-  nsqfLevel   Int // 1-10
+  assessments      Assessment[]
 }
 
 model Assessment {
   id          String        @id @default(uuid())
   title       String
   description String?
-  category    SkillCategory @relation(fields: [categoryId], references: [id])
-  categoryId  String
+  taxonomy    SkillTaxonomy @relation(fields: [qpCode], references: [qpCode])
+  qpCode      String
   questions   String // JSON array of questions
   duration    Int // minutes
   totalMarks  Int
@@ -129,20 +122,21 @@ model AssessmentResult {
 }
 
 model PostedOpportunity {
-  id             String          @id @default(uuid())
-  postedBy       User            @relation(fields: [postedById], references: [id])
-  postedById     String
-  title          String
-  description    String
-  type           String          // INTERNSHIP, JOB, PROJECT, FDP, RESEARCH
-  location       String?
-  isRemote       Boolean         @default(false)
-  skillsRequired String? // JSON string
-  stipend        String?
-  deadline       DateTime?
-  status         String          @default("OPEN")
-  applications   Application[]
-  createdAt      DateTime        @default(now())
+  id              String          @id @default(uuid())
+  postedBy        User            @relation(fields: [postedById], references: [id])
+  postedById      String
+  title           String
+  description     String
+  type            String          // INTERNSHIP, JOB, PROJECT, FDP, RESEARCH
+  location        String?
+  isRemote        Boolean         @default(false)
+  requiredQpCodes String?         // JSON string
+  stipend         String?
+  deadline        DateTime?
+  status          String          @default("OPEN")
+  embedding       Unsupported("vector(384)")?
+  applications    Application[]
+  createdAt       DateTime        @default(now())
 }
 
 model Application {

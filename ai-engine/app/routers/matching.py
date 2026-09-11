@@ -1,29 +1,55 @@
-from fastapi import APIRouter
-from typing import List, Dict, Any
+from fastapi import APIRouter, Query
+from typing import List, Dict, Any, Optional
 from app.models.schemas import MatchRequest, Opportunity, CourseRecommendationRequest, CourseRecommendationResponse
-from app.services.recommendation import compute_similarity
+from app.services.scoring import match_opportunities_for_student
 
 router = APIRouter(prefix="/api/ai", tags=["Matching"])
 
 @router.post("/match-opportunities")
-def match_opportunities(request: MatchRequest, opportunities: List[Opportunity]):
-    """Match student profile to opportunities."""
-    matches = compute_similarity(request.skills, opportunities)
-    return {"matches": matches}
+def match_opportunities_endpoint(
+    request: MatchRequest
+):
+    """
+    Genuine Semantic Matching endpoint:
+    Uses pgvector (<=> cosine distance) and sentence-transformers.
+    Queries PostedOpportunity, SkillTaxonomy, and StudentProfile directly from PostgreSQL.
+    """
+    student_dict = {
+        "education_level": request.education_level or "Bachelor",
+        "experience_months": request.experience_months if request.experience_months is not None else 12,
+        "skills": [s.name for s in request.skills] if request.skills else []
+    }
 
-@router.post("/match-candidates")
-def match_candidates(opportunity: Opportunity, candidates: List[MatchRequest]):
-    """Match opportunity requirements to student pool."""
-    results = []
-    for cand in candidates:
-        sim = compute_similarity(cand.skills, [opportunity])
-        if sim:
-            results.append({
-                "candidate_id": cand.user_id,
-                "match_score": sim[0]["match_score"]
-            })
-    results.sort(key=lambda x: x["match_score"], reverse=True)
-    return {"candidates": results}
+    matches = match_opportunities_for_student(
+        user_id=request.user_id,
+        target_role=request.target_role,
+        student_profile=student_dict
+    )
+    return {
+        "user_id": request.user_id,
+        "target_role": request.target_role,
+        "matches": matches,
+        "total_matched": len(matches)
+    }
+
+@router.get("/match-opportunities/{user_id}")
+def match_opportunities_for_user(
+    user_id: str,
+    target_role: Optional[str] = Query(None, description="Target NSQF role to match against")
+):
+    """
+    Direct endpoint for fetching semantic matches for an existing student user in the database.
+    """
+    matches = match_opportunities_for_student(
+        user_id=user_id,
+        target_role=target_role
+    )
+    return {
+        "user_id": user_id,
+        "target_role": target_role,
+        "matches": matches,
+        "total_matched": len(matches)
+    }
 
 @router.post("/recommend-courses", response_model=CourseRecommendationResponse)
 def recommend_courses(request: CourseRecommendationRequest):
@@ -40,11 +66,11 @@ def recommend_courses(request: CourseRecommendationRequest):
         if gap in course_catalog:
             recommended.append(course_catalog[gap])
         else:
-            recommended.append(f"Generic Course on {gap}")
+            recommended.append(f"Certificate Training in {gap}")
             
     return CourseRecommendationResponse(recommended_courses=recommended)
 
 @router.post("/recommend-mentors")
 def recommend_mentors(request: MatchRequest):
     """Recommend mentors based on student needs."""
-    return {"mentors": ["Mentor A (Ayurveda)", "Mentor B (Yoga)"]}
+    return {"mentors": ["Dr. Vasant Lad (Ayurveda)", "Swami Ramdev (Yoga & Wellness)"]}

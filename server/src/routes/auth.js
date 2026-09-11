@@ -6,8 +6,16 @@ import { authMiddleware } from '../middleware/auth.js';
 
 const router = express.Router();
 
+const getJwtSecret = () => {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error('FATAL: JWT_SECRET environment variable is not set. Server cannot issue tokens.');
+  }
+  return secret;
+};
+
 const generateToken = (userId, role) => {
-  return jwt.sign({ userId, role }, process.env.JWT_SECRET || 'ayush-setu-super-secret-key-2024', { expiresIn: '7d' });
+  return jwt.sign({ userId, role }, getJwtSecret(), { expiresIn: '7d' });
 };
 
 router.post('/register', async (req, res, next) => {
