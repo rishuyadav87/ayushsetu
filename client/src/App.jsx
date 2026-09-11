@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import DashboardLayout from './components/layout/DashboardLayout';
+import { Toaster } from 'react-hot-toast';
 
 // Pages - lazy load or direct import later
 import Landing from './pages/Landing';
@@ -40,8 +41,6 @@ import StudentManagement from './pages/institution/StudentManagement';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import UserManagement from './pages/admin/UserManagement';
 import SkillTaxonomy from './pages/admin/SkillTaxonomy';
-
-import { Toaster } from 'react-hot-toast';
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const { user } = useAuth();
