@@ -2,7 +2,7 @@ import React from 'react';
 
 const StatCard = ({ title, value, icon, trend, trendValue, colorClass = "text-primary bg-primary/10" }) => {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex flex-col hover:shadow-md hover:-translate-y-1 transition-all duration-300">
       <div className="flex justify-between items-start mb-4">
         <div>
           <p className="text-gray-500 text-sm font-medium">{title}</p>

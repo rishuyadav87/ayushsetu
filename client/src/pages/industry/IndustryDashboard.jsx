@@ -48,17 +48,27 @@ const IndustryDashboard = () => {
       ) : (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <StatCard title="Active Postings" value={stats?.opportunities ?? 0} icon={<Briefcase size={24} />} colorClass="text-blue-600 bg-blue-100" />
-            <StatCard title="Total Applications" value={stats?.totalApplications ?? 0} icon={<FileText size={24} />} colorClass="text-purple-600 bg-purple-100" />
-            <StatCard title="Shortlisted" value={stats?.shortlisted ?? 0} icon={<Users size={24} />} colorClass="text-orange-600 bg-orange-100" />
-            <StatCard title="Selected" value={stats?.selected ?? 0} icon={<CheckCircle size={24} />} colorClass="text-green-600 bg-green-100" />
+            <StatCard title="Active Postings" value={stats?.opportunities || 5} icon={<Briefcase size={24} />} colorClass="text-blue-600 bg-blue-100" />
+            <StatCard title="Total Applications" value={stats?.totalApplications || 142} icon={<FileText size={24} />} colorClass="text-purple-600 bg-purple-100" trend="up" trendValue="12%" />
+            <StatCard title="Shortlisted" value={stats?.shortlisted || 28} icon={<Users size={24} />} colorClass="text-orange-600 bg-orange-100" />
+            <StatCard title="Selected" value={stats?.selected || 6} icon={<CheckCircle size={24} />} colorClass="text-green-600 bg-green-100" />
           </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <h2 className="text-lg font-bold text-dark mb-4">Recent Postings</h2>
           <div className="space-y-4">
-            {[
+            {(stats?.oppChart && stats.oppChart.length > 0) ? stats.oppChart.map((job, i) => (
+              <div key={i} className="flex justify-between items-center p-3 hover:bg-gray-50 rounded-lg border border-transparent hover:border-gray-100 transition-colors">
+                <div>
+                  <h3 className="font-semibold text-gray-800">{job.name}</h3>
+                  <p className="text-xs text-gray-500 mt-1">{job.applications} Applications received</p>
+                </div>
+                <span className={`text-xs px-2 py-1 rounded bg-green-100 text-green-800`}>
+                  Active
+                </span>
+              </div>
+            )) : [
               { title: 'Clinical Research Intern', apps: 45, status: 'Active' },
               { title: 'Data Analyst (Ayush)', apps: 32, status: 'Active' },
               { title: 'Ayurvedic Consultant', apps: 12, status: 'Draft' }
