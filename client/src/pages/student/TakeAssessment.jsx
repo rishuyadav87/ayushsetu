@@ -239,6 +239,19 @@ const TakeAssessment = () => {
         </div>
       )}
 
+      {/* AI Proctoring Notice */}
+      <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-start gap-3 animate-in fade-in slide-in-from-top-4">
+        <div className="text-blue-500 mt-0.5">
+          <AlertCircle size={20} />
+        </div>
+        <div>
+          <h4 className="text-blue-800 font-semibold text-sm">AI Proctoring Active</h4>
+          <p className="text-blue-600 text-xs mt-1">
+            Your webcam and microphone are being monitored. Tab switching or exiting full-screen will result in immediate disqualification. 
+          </p>
+        </div>
+      </div>
+
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         {/* Header */}
         <div className="bg-primary px-6 py-4 flex justify-between items-center text-white">

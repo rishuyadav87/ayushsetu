@@ -49,6 +49,23 @@ const InstitutionDashboard = () => {
             <StatCard title="Assessments" value={stats?.totalAssessments || "45K+"} icon={<CheckCircle size={24} />} colorClass="text-orange-600 bg-orange-100" />
           </div>
 
+          {/* AI Curriculum Alert */}
+          <div className="bg-gradient-to-r from-orange-50 to-red-50 border border-orange-100 rounded-xl p-5 flex items-start gap-4">
+            <div className="p-2 bg-orange-100 text-orange-600 rounded-lg">
+              <AlertCircle size={24} />
+            </div>
+            <div>
+              <h3 className="font-bold text-orange-900 text-lg">AI Curriculum Insights Alert</h3>
+              <p className="text-orange-800 mt-1">
+                Our analysis shows that <strong>78% of your final-year students</strong> are scoring below industry expectations in <strong>"Modern Tech Tools Integration"</strong>. 
+                Industry demand for this skill has increased by 45% this quarter.
+              </p>
+              <button className="mt-3 text-sm bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                View Suggested Syllabus Updates
+              </button>
+            </div>
+          </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
           <h2 className="text-lg font-bold text-dark mb-4">Aggregate Readiness by Skill</h2>

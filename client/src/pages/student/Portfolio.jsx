@@ -156,9 +156,12 @@ const Portfolio = () => {
               <h2 className="text-xl font-bold text-dark">{displayData.name}</h2>
               <p className="text-gray-500 text-sm">{displayData.education}</p>
               <p className="text-gray-600 mt-2">{displayData.institution}</p>
-              <div className="mt-4 flex justify-center gap-2">
+              <div className="mt-4 flex flex-col items-center gap-2">
                 <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full flex items-center gap-1">
-                  <CheckCircle size={12} /> Verified Student
+                  <CheckCircle size={12} /> KYC Verified via DigiLocker
+                </span>
+                <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                  <FileText size={12} /> ABC ID: 124-543-987
                 </span>
               </div>
             </div>
@@ -171,6 +174,20 @@ const Portfolio = () => {
                 {(displayData.skills || fallbackData.skills).map((skill, idx) => (
                   <SkillBadge key={idx} skill={skill.name} level={skill.level} />
                 ))}
+              </div>
+            </div>
+            
+            {/* Mentor Endorsement */}
+            <div className="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-xl shadow-sm border border-indigo-100 p-6">
+              <h3 className="font-bold text-indigo-900 mb-3 flex items-center gap-2">
+                <CheckCircle size={18} className="text-indigo-600" /> Guru-Shishya Endorsement
+              </h3>
+              <p className="text-sm text-indigo-800 italic mb-3">
+                "An exceptional student with a deep understanding of Tridosha analysis. Highly recommended for clinical research roles."
+              </p>
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 rounded-full bg-indigo-200 text-indigo-700 flex items-center justify-center text-xs font-bold">DS</div>
+                <div className="text-xs text-indigo-900 font-medium">— Dr. Sharma (Academician, AIIA)</div>
               </div>
             </div>
             
