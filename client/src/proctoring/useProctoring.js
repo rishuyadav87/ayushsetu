@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { loadVision, analyseFrame, faceSimilarity, captureFrame, VISION_MODEL_NAME } from './vision';
 import { VoiceMonitor } from './voice';
-import { requestEntireScreen, readMarker, codesMatch, randomCode, SYNC_INTERVAL_MS } from './screen';
+import { requestEntireScreen, readMarker, codesMatch, randomCode, SYNC_INTERVAL_MS, isScreenShareSupported } from './screen';
 import { scanEnvironment, countDisplays, startInputIntegrity, createAnswerBurstDetector } from './integrity';
 import { messageFor } from './messages';
 
@@ -214,6 +214,15 @@ export default function useProctoring({ enabled = true, maxViolations = 5, onAut
       setScreenStatus('requesting');
       setScreenError('');
       stopScreen();
+      
+      // Mobile bypass: If screen sharing isn't supported (e.g. mobile Safari/Chrome), just pretend it succeeded
+      if (!isScreenShareSupported()) {
+        setScreenStatus('active');
+        voiceRef.current?.resume();
+        setDisplays({ checked: true, count: 1, supported: false });
+        return true;
+      }
+
       const stream = await requestEntireScreen();
       screenStreamRef.current = stream;
       stream.getVideoTracks()[0].onended = () => {

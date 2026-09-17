@@ -73,7 +73,8 @@ export const scanEnvironment = async () => {
   };
 
   if (MOBILE_UA.test(ua) || navigator.userAgentData?.mobile) {
-    risks.push({ type: 'MOBILE_DEVICE', severity: 'high', blocking: true, message: 'Proctored tests must be taken on a laptop or desktop computer.' });
+    // Disabled mobile blocking for demo purposes as requested by user
+    risks.push({ type: 'MOBILE_DEVICE', severity: 'low', blocking: false, message: 'Taking proctored tests on mobile may limit some anti-cheating features.' });
   }
   if (report.webdriver || /HeadlessChrome/.test(ua)) {
     risks.push({ type: 'AUTOMATION_DETECTED', severity: 'high', blocking: false, message: 'Browser automation / bot control detected.' });
