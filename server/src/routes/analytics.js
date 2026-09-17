@@ -100,12 +100,14 @@ router.get('/dashboard', authMiddleware, async (req, res, next) => {
       const totalStudents = await prisma.user.count({ where: { role: 'STUDENT' } });
       const totalAssessments = await prisma.assessment.count();
 
+      const mentoringCount = await prisma.mentorFeedback.count({ where: { mentorId: userId } });
+
       stats = {
         opportunities,
         totalApplications: totalApps,
         totalStudents,
         totalAssessments,
-        mentoringSessions: 12, // placeholder until mentoring module is built
+        mentoringSessions: mentoringCount,
         researchProjects: opportunities,
       };
 
@@ -132,7 +134,7 @@ router.get('/dashboard', authMiddleware, async (req, res, next) => {
         const allResults = tax.assessments.flatMap(a => a.results);
         const avg = allResults.length
           ? Math.round(allResults.reduce((sum, r) => sum + (r.score / r.maxScore) * 100, 0) / allResults.length)
-          : Math.floor(50 + Math.random() * 35); // seeded mock if no data
+          : 0; // 0 when no assessment results yet
         return { name: tax.roleName, readiness: avg, benchmark: 70 };
       });
 
@@ -198,7 +200,7 @@ router.get('/dashboard', authMiddleware, async (req, res, next) => {
   }
 });
 
-router.get('/skills', async (req, res, next) => {
+router.get('/skills', authMiddleware, async (req, res, next) => {
   try {
     const taxonomies = await prisma.skillTaxonomy.findMany({
       include: {
@@ -220,7 +222,7 @@ router.get('/skills', async (req, res, next) => {
         nsqfLevel: tax.nsqfLevel,
         assessmentCount: tax._count.assessments,
         avgScore,
-        demandScore: Math.floor(60 + Math.random() * 35), // simulated industry demand
+        demandScore: Math.min(99, 50 + tax._count.assessments * 5), // deterministic: more assessments = higher demand signal
       };
     });
 
@@ -230,7 +232,7 @@ router.get('/skills', async (req, res, next) => {
   }
 });
 
-router.get('/placements', async (req, res, next) => {
+router.get('/placements', authMiddleware, async (req, res, next) => {
   try {
     const [selected, total, shortlisted] = await Promise.all([
       prisma.application.count({ where: { status: 'SELECTED' } }),

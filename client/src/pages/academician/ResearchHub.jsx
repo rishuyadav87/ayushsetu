@@ -1,26 +1,46 @@
 import React, { useState, useEffect } from 'react';
-import { PlusCircle, Search, X } from 'lucide-react';
+import { PlusCircle, Search, X, Loader2 } from 'lucide-react';
+import { academicianAPI } from '../../services/api';
 import toast from 'react-hot-toast';
 
 const ResearchHub = () => {
-  const [projects, setProjects] = useState(() => {
-    const saved = localStorage.getItem('ayush_research');
-    return saved ? JSON.parse(saved) : [
-      { id: 1, title: 'Standardization of Ayurvedic Formulations', partner: 'Patanjali Research Institute', desc: 'Looking for academic partners to conduct clinical trials on specific multi-herb formulations.', funding: 'Available', duration: '12 Months' }
-    ];
-  });
-
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState({ title: '', partner: 'Your Institute', desc: '', funding: 'TBD', duration: '6 Months' });
 
-  useEffect(() => {
-    localStorage.setItem('ayush_research', JSON.stringify(projects));
-  }, [projects]);
+  const fetchProjects = async () => {
+    try {
+      setLoading(true);
+      const res = await academicianAPI.getOpportunities();
+      setProjects(res.data.filter(o => o.type === 'RESEARCH'));
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to load projects');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const handlePropose = () => {
-    setProjects([{ id: Date.now(), ...form }, ...projects]);
-    setShowModal(false);
-    toast.success('Research project proposed successfully!');
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
+  const handlePropose = async () => {
+    try {
+      await academicianAPI.addOpportunity({
+        title: form.title,
+        description: form.desc,
+        type: 'RESEARCH',
+        funding: form.funding,
+        duration: form.duration
+      });
+      setShowModal(false);
+      toast.success('Research project proposed successfully!');
+      fetchProjects();
+    } catch (err) {
+      toast.error('Failed to propose project');
+    }
   };
 
   return (
@@ -35,17 +55,19 @@ const ResearchHub = () => {
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
         <h2 className="text-lg font-bold text-dark mb-4">Open Collaborations</h2>
         <div className="space-y-4">
+          {projects.length === 0 && !loading && (
+            <div className="text-gray-500 text-center py-4">No open collaborations found.</div>
+          )}
           {projects.map(p => (
             <div key={p.id} className="border border-gray-200 rounded-lg p-5 hover:border-primary/50 transition-colors">
               <div className="flex justify-between items-start mb-2">
                 <h3 className="font-bold text-dark text-lg">{p.title}</h3>
                 <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">Seeking Partners</span>
               </div>
-              <p className="text-gray-600 text-sm mb-4">{p.desc}</p>
+              <p className="text-gray-600 text-sm mb-4">{p.description}</p>
               <div className="flex gap-4 text-sm text-gray-500 font-medium">
-                <span>By: {p.partner}</span>
-                <span>Funding: {p.funding}</span>
-                <span>Duration: {p.duration}</span>
+                <span>By: {p.partner || 'Institute'}</span>
+                <span>Funding / Duration: {p.stipend || 'TBD'}</span>
               </div>
               <button onClick={() => toast.success('Interest sent to project coordinator!')} className="mt-4 text-primary hover:underline font-medium text-sm">Express Interest</button>
             </div>

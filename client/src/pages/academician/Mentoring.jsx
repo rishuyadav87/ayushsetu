@@ -1,28 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import { Search, ChevronRight, X } from 'lucide-react';
+import { Search, ChevronRight, X, Loader2 } from 'lucide-react';
+import { academicianAPI } from '../../services/api';
 import toast from 'react-hot-toast';
 
 const Mentoring = () => {
-  const [mentees, setMentees] = useState(() => {
-    const saved = localStorage.getItem('ayush_mentees');
-    return saved ? JSON.parse(saved) : [
-      { id: 1, name: 'John Doe', year: '3rd Year', readiness: '78%', lastActive: '2 days ago', feedback: '' },
-      { id: 2, name: 'Aarav Sharma', year: '4th Year', readiness: '92%', lastActive: 'Today', feedback: '' },
-      { id: 3, name: 'Priya Patel', year: '2nd Year', readiness: '65%', lastActive: '1 week ago', feedback: '' },
-    ];
-  });
-  
+  const [mentees, setMentees] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [selectedMentee, setSelectedMentee] = useState(null);
   const [feedback, setFeedback] = useState('');
 
-  useEffect(() => {
-    localStorage.setItem('ayush_mentees', JSON.stringify(mentees));
-  }, [mentees]);
+  const fetchMentees = async () => {
+    try {
+      setLoading(true);
+      const res = await academicianAPI.getMentees();
+      setMentees(res.data);
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to load mentees');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const handleSaveFeedback = () => {
-    setMentees(mentees.map(m => m.id === selectedMentee.id ? { ...m, feedback } : m));
-    setSelectedMentee(null);
-    toast.success('Feedback saved successfully!');
+  useEffect(() => {
+    fetchMentees();
+  }, []);
+
+  const handleSaveFeedback = async () => {
+    try {
+      await academicianAPI.addFeedback({ studentId: selectedMentee.id, feedback });
+      toast.success('Feedback saved successfully!');
+      setSelectedMentee(null);
+      fetchMentees();
+    } catch (err) {
+      toast.error('Failed to save feedback');
+    }
   };
 
   return (
@@ -56,12 +68,22 @@ const Mentoring = () => {
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div className="bg-green-500 h-2 rounded-full" style={{ width: m.readiness }}></div>
               </div>
-              {m.feedback && <div className="mt-2 text-sm text-gray-600 italic">" {m.feedback} "</div>}
+              
+              {m.feedbacks && m.feedbacks.length > 0 && (
+                <div className="mt-4 space-y-2">
+                  <p className="text-xs font-semibold text-gray-500 uppercase">Recent Feedback</p>
+                  {m.feedbacks.slice(0,2).map(f => (
+                    <div key={f.id} className="text-sm text-gray-600 bg-gray-50 p-2 rounded border border-gray-100">
+                      &quot;{f.feedback}&quot;
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="flex gap-2">
-              <button onClick={() => toast.success('Profile access logged.')} className="flex-1 bg-white border border-gray-300 text-gray-700 py-2 rounded-lg text-sm font-medium hover:bg-gray-50">View Profile</button>
-              <button onClick={() => { setSelectedMentee(m); setFeedback(m.feedback || ''); }} className="flex-1 bg-primary text-white py-2 rounded-lg text-sm font-medium hover:bg-primary/90">Add Feedback</button>
+              <Link to={`/admin/users`} className="flex-1 text-center bg-white border border-gray-300 text-gray-700 py-2 rounded-lg text-sm font-medium hover:bg-gray-50">View Profiles</Link>
+              <button onClick={() => { setSelectedMentee(m); setFeedback(''); }} className="flex-1 bg-primary text-white py-2 rounded-lg text-sm font-medium hover:bg-primary/90">Add Feedback</button>
             </div>
           </div>
         ))}

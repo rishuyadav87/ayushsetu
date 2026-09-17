@@ -11,29 +11,20 @@ const ViewApplications = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fallbackApplications = [
-    { id: 101, student: { name: 'Aarav Sharma' }, opportunity: { title: 'Clinical Research Intern' }, inst: 'All India Institute of Ayurveda', createdAt: '2023-11-15', score: '95%', status: 'applied' },
-    { id: 102, student: { name: 'Priya Patel' }, opportunity: { title: 'Clinical Research Intern' }, inst: 'Gujarat Ayurved University', createdAt: '2023-11-14', score: '92%', status: 'shortlisted' },
-    { id: 103, student: { name: 'Rohan Gupta' }, opportunity: { title: 'Clinical Research Intern' }, inst: 'National Institute of Ayurveda', createdAt: '2023-11-12', score: '88%', status: 'rejected' },
-  ];
-
   useEffect(() => {
     const fetchApplications = async () => {
       try {
         setLoading(true);
-        const response = await applicationAPI.getAll(); // API should return applications for this industry user
-        
-        // If an opportunity ID is passed, filter locally, otherwise show all
+        const response = await applicationAPI.getAll();
         let filteredApps = response.data || [];
         if (id) {
-          filteredApps = filteredApps.filter(app => app.opportunity?._id === id || app.opportunity?.id === id || app.opportunityId === id);
+          filteredApps = filteredApps.filter(app =>
+            app.opportunity?.id === id || app.opportunityId === id
+          );
         }
-        
-        setApplications(filteredApps.length ? filteredApps : (id ? fallbackApplications : fallbackApplications));
+        setApplications(filteredApps);
       } catch (err) {
-        console.error("Failed to load applications", err);
-        setError("Could not load real applications. Showing fallback data.");
-        setApplications(fallbackApplications);
+        setError('Could not load applications. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -44,13 +35,12 @@ const ViewApplications = () => {
   const handleUpdateStatus = async (appId, newStatus) => {
     try {
       await applicationAPI.updateStatus(appId, newStatus);
-      // Optimistically update
-      setApplications(prev => prev.map(app => 
-        (app.id === appId || app._id === appId) ? { ...app, status: newStatus } : app
-      ));
+      setApplications(prev =>
+        prev.map(app => (app.id === appId ? { ...app, status: newStatus } : app))
+      );
+      toast.success(`Status updated to ${newStatus}`);
     } catch (err) {
-      console.error("Failed to update status", err);
-      alert("Failed to update application status");
+      toast.error(err.response?.data?.message || 'Failed to update application status');
     }
   };
 

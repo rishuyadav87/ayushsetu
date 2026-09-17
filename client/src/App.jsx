@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import DashboardLayout from './components/layout/DashboardLayout';
 import { Toaster } from 'react-hot-toast';
+import ErrorBoundary from './components/ErrorBoundary';
 
 import {
   Landing, Login, Register, StudentDashboard, SkillProfile, Assessments, Opportunities, TakeAssessment, Portfolio, Applications,
@@ -35,7 +36,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 
 function App() {
   return (
-    <>
+    <ErrorBoundary>
       <Toaster position="top-right" />
       <React.Suspense fallback={<div className="flex justify-center items-center h-screen"><Loader2 className="animate-spin text-primary" size={48} /></div>}>
         <Routes>
@@ -95,7 +96,7 @@ function App() {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       </React.Suspense>
-    </>
+    </ErrorBoundary>
   );
 }
 

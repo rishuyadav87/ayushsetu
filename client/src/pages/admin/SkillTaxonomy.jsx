@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
 import { useLanguage } from '../../context/LanguageContext';
 
@@ -6,14 +6,15 @@ export default function SkillTaxonomy() {
   const { t } = useLanguage();
   const [taxonomies, setTaxonomies] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchTaxonomy = async () => {
       try {
-        const { data } = await api.get('/api/analytics/skills');
+        const { data } = await api.get('/analytics/skills'); // BUG-003: was '/api/analytics/skills' — double prefix
         setTaxonomies(data);
-      } catch (error) {
-        console.error('Failed to fetch taxonomy', error);
+      } catch (err) {
+        setError('Failed to load skill taxonomy. Please refresh.');
       } finally {
         setLoading(false);
       }
@@ -23,6 +24,9 @@ export default function SkillTaxonomy() {
 
   if (loading) {
     return <div className="p-6 text-gray-500">Loading taxonomy...</div>;
+  }
+  if (error) {
+    return <div className="p-6 text-red-500">{error}</div>;
   }
 
   return (

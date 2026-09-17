@@ -1,13 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PlayCircle, Clock, Calendar } from 'lucide-react';
+import { academicianAPI } from '../../services/api';
 import toast from 'react-hot-toast';
 
 const FDPAccess = () => {
-  const [fdps, setFdps] = useState([
-    { id: 1, title: 'Integrating Modern Tech in Ayurveda', org: 'Ministry of Ayush', duration: '2 Weeks', date: 'Upcoming', status: 'not_enrolled' },
-    { id: 2, title: 'Advanced Research Methodology', org: 'ICMR & AYUSH', duration: '4 Weeks', date: 'Self-paced', status: 'not_enrolled' },
-    { id: 3, title: 'Digital Pedagogy for AYUSH Educators', org: 'UGC', duration: '1 Week', date: 'Completed', status: 'completed' },
-  ]);
+  const [fdps, setFdps] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchFDPs = async () => {
+    try {
+      setLoading(true);
+      const res = await academicianAPI.getOpportunities();
+      setFdps(res.data.filter(o => o.type === 'FDP').map(o => ({
+        id: o.id,
+        title: o.title,
+        org: o.postedBy?.name || 'Institution',
+        duration: o.stipend || '4 Weeks',
+        date: new Date(o.createdAt).toLocaleDateString(),
+        status: 'not_enrolled' // For demo, we just simulate status locally
+      })));
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to load FDPs');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchFDPs();
+  }, []);
 
   const handleAction = (id, currentStatus) => {
     if (currentStatus === 'completed') {
@@ -29,6 +51,11 @@ const FDPAccess = () => {
       <h1 className="text-2xl font-bold text-dark mb-6">Faculty Development Programs (FDP)</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {fdps.length === 0 && !loading && (
+          <div className="col-span-full text-center text-gray-500 py-8">
+            No Faculty Development Programs currently available.
+          </div>
+        )}
         {fdps.map((fdp) => (
           <div key={fdp.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow">
             <h3 className="font-bold text-dark mb-2">{fdp.title}</h3>

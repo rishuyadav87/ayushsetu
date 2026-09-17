@@ -70,21 +70,20 @@ const UserManagement = () => {
   const handleToggleStatus = async (id, currentStatus) => {
     try {
       await adminAPI.updateUserStatus(id, !currentStatus);
-      // Optimistic update
-      setUsers(users.map(u => u._id === id ? { ...u, isActive: !currentStatus } : u));
+      setUsers(users.map(u => (u.id === id || u._id === id) ? { ...u, isActive: !currentStatus } : u));
+      toast.success('Status updated');
     } catch (err) {
-      alert("Failed to update status on server. Updating locally.");
-      setUsers(users.map(u => u._id === id ? { ...u, isActive: !currentStatus } : u));
+      toast.error("Failed to update status");
     }
   };
 
   const handleRoleChange = async (id, newRole) => {
     try {
       await adminAPI.updateUserRole(id, newRole);
-      setUsers(users.map(u => u._id === id ? { ...u, role: newRole } : u));
+      setUsers(users.map(u => (u.id === id || u._id === id) ? { ...u, role: newRole } : u));
+      toast.success('Role updated');
     } catch (err) {
-      alert("Failed to update role on server. Updating locally.");
-      setUsers(users.map(u => u._id === id ? { ...u, role: newRole } : u));
+      toast.error(err.response?.data?.message || "Failed to update role");
     }
   };
 

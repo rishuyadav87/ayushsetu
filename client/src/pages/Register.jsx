@@ -13,6 +13,9 @@ const Register = () => {
     email: '',
     password: '',
     phone: '',
+    discipline: 'Ayurveda', // Default
+    institutionName: '',
+    verificationDocumentId: '',
   });
   
   const { register } = useAuth();
@@ -43,7 +46,11 @@ const Register = () => {
         email: formData.email,
         password: formData.password,
         phone: formData.phone,
-        role: role.toUpperCase()
+        role: role.toUpperCase(),
+        // Additional details
+        discipline: formData.discipline,
+        institutionName: formData.institutionName,
+        verificationDocumentId: formData.verificationDocumentId,
       });
     } catch (err) {
       setLocalError(err.message);
@@ -98,22 +105,22 @@ const Register = () => {
           {/* Step 1: Role Selection */}
           {step === 1 && (
             <div>
-              <h3 className="text-lg font-medium text-gray-900 mb-4">Select your role</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-6">Who are you?</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {roles.map((r) => (
-                  <div 
+                {roles.map(r => (
+                  <button
                     key={r.id}
                     onClick={() => setRole(r.id)}
-                    className={`cursor-pointer border-2 rounded-xl p-6 flex flex-col items-center text-center transition-all ${
-                      role === r.id ? 'border-primary bg-primary/5 shadow-md' : 'border-gray-200 hover:border-primary/30 hover:bg-gray-50'
-                    }`}
+                    className={`flex items-start p-4 border rounded-xl transition-all text-left ${role === r.id ? 'border-primary bg-primary/5 ring-1 ring-primary' : 'border-gray-200 hover:border-primary/30 hover:bg-gray-50'}`}
                   >
-                    <div className={`mb-4 ${role === r.id ? 'text-primary' : 'text-gray-400'}`}>
+                    <div className={`mr-4 ${role === r.id ? 'text-primary' : 'text-gray-400'}`}>
                       {r.icon}
                     </div>
-                    <h4 className="text-lg font-bold text-gray-900 mb-2">{r.title}</h4>
-                    <p className="text-sm text-gray-500">{r.desc}</p>
-                  </div>
+                    <div>
+                      <h4 className={`font-bold ${role === r.id ? 'text-primary' : 'text-gray-900'}`}>{r.title}</h4>
+                      <p className="text-sm text-gray-500 mt-1">{r.desc}</p>
+                    </div>
+                  </button>
                 ))}
               </div>
               <div className="mt-8 flex justify-end">
@@ -132,9 +139,9 @@ const Register = () => {
           {step === 2 && (
             <div>
               <h3 className="text-lg font-medium text-gray-900 mb-6">Basic Information</h3>
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Full Name / Organization Name</label>
+                  <label className="block text-sm font-medium text-gray-700">Full Name</label>
                   <input
                     type="text"
                     value={formData.name}
@@ -197,7 +204,10 @@ const Register = () => {
                   <>
                     <div>
                       <label className="block text-sm font-medium text-gray-700">AYUSH Discipline</label>
-                      <select className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary">
+                      <select 
+                        value={formData.discipline}
+                        onChange={(e) => setFormData({...formData, discipline: e.target.value})}
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary">
                         <option>Ayurveda</option>
                         <option>Yoga & Naturopathy</option>
                         <option>Unani</option>
@@ -207,7 +217,12 @@ const Register = () => {
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700">Institution Name</label>
-                      <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary" />
+                      <input 
+                        type="text" 
+                        value={formData.institutionName}
+                        onChange={(e) => setFormData({...formData, institutionName: e.target.value})}
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary" 
+                      />
                     </div>
                   </>
                 )}
@@ -215,7 +230,12 @@ const Register = () => {
                 {role !== 'student' && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Verification Document ID</label>
-                    <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary" />
+                    <input 
+                      type="text" 
+                      value={formData.verificationDocumentId}
+                      onChange={(e) => setFormData({...formData, verificationDocumentId: e.target.value})}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary focus:border-primary" 
+                    />
                   </div>
                 )}
               </div>

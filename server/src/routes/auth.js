@@ -6,21 +6,36 @@ import { authMiddleware } from '../middleware/auth.js';
 
 const router = express.Router();
 
+const ALLOWED_ROLES = ['STUDENT', 'INDUSTRY', 'ACADEMICIAN', 'INSTITUTION'];
+
 const getJwtSecret = () => {
   const secret = process.env.JWT_SECRET;
-  if (!secret) {
-    throw new Error('FATAL: JWT_SECRET environment variable is not set. Server cannot issue tokens.');
-  }
+  if (!secret) throw new Error('FATAL: JWT_SECRET is not set.');
   return secret;
 };
 
-const generateToken = (userId, role) => {
-  return jwt.sign({ userId, role }, getJwtSecret(), { expiresIn: '7d' });
-};
+const generateToken = (userId, role) =>
+  jwt.sign({ userId, role }, getJwtSecret(), { expiresIn: '7d' });
 
+// ── Register ──────────────────────────────────────────────────────────────────
 router.post('/register', async (req, res, next) => {
   try {
     const { email, password, role, name, phone } = req.body;
+
+    // BUG-002: Validate all required fields
+    if (!email || !password || !role || !name) {
+      return res.status(400).json({ message: 'email, password, role, and name are required.' });
+    }
+
+    // BUG-002: Allowlist roles — prevent self-ADMIN registration
+    if (!ALLOWED_ROLES.includes(role)) {
+      return res.status(400).json({ message: 'Invalid role.' });
+    }
+
+    // BUG-032: Password strength enforcement
+    if (password.length < 8) {
+      return res.status(400).json({ message: 'Password must be at least 8 characters.' });
+    }
 
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
@@ -30,16 +45,9 @@ router.post('/register', async (req, res, next) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await prisma.user.create({
-      data: {
-        email,
-        password: hashedPassword,
-        role,
-        name,
-        phone,
-      }
+      data: { email, password: hashedPassword, role, name, phone },
     });
 
-    // Create empty profile based on role
     if (role === 'STUDENT') {
       await prisma.studentProfile.create({ data: { userId: user.id } });
     } else if (role === 'INDUSTRY') {
@@ -57,13 +65,25 @@ router.post('/register', async (req, res, next) => {
   }
 });
 
+// ── Login ─────────────────────────────────────────────────────────────────────
 router.post('/login', async (req, res, next) => {
   try {
     const { email, password } = req.body;
+
+    // BUG-009: Validate presence of fields first
+    if (!email || !password) {
+      return res.status(400).json({ message: 'email and password are required.' });
+    }
+
     const user = await prisma.user.findUnique({ where: { email } });
 
     if (!user) {
       return res.status(400).json({ message: 'Invalid credentials' });
+    }
+
+    // BUG-001: Check if account is active before issuing token
+    if (user.isActive === false) {
+      return res.status(403).json({ message: 'Account is deactivated. Please contact support.' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -78,22 +98,37 @@ router.post('/login', async (req, res, next) => {
   }
 });
 
+// ── Me ────────────────────────────────────────────────────────────────────────
 router.get('/me', authMiddleware, async (req, res, next) => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: req.user.userId },
-      select: { id: true, email: true, role: true, name: true, phone: true, avatar: true }
+      select: { id: true, email: true, role: true, name: true, phone: true, avatar: true },
     });
+    if (!user) return res.status(404).json({ message: 'User not found.' });
     res.json(user);
   } catch (error) {
     next(error);
   }
 });
 
+// ── Change Password ───────────────────────────────────────────────────────────
 router.put('/change-password', authMiddleware, async (req, res, next) => {
   try {
     const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ message: 'currentPassword and newPassword are required.' });
+    }
+
+    // BUG-032: Enforce strength on new password
+    if (newPassword.length < 8) {
+      return res.status(400).json({ message: 'New password must be at least 8 characters.' });
+    }
+
+    // BUG-003: Guard against null user (e.g. deleted between token issue and this request)
     const user = await prisma.user.findUnique({ where: { id: req.user.userId } });
+    if (!user) return res.status(404).json({ message: 'User not found.' });
 
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
@@ -101,10 +136,7 @@ router.put('/change-password', authMiddleware, async (req, res, next) => {
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-    await prisma.user.update({
-      where: { id: req.user.userId },
-      data: { password: hashedPassword }
-    });
+    await prisma.user.update({ where: { id: req.user.userId }, data: { password: hashedPassword } });
 
     res.json({ message: 'Password updated successfully' });
   } catch (error) {

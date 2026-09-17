@@ -5,25 +5,27 @@ import { roleCheck } from '../middleware/roleCheck.js';
 
 const router = express.Router();
 
-// Apply to opportunity
+const VALID_STATUSES = ['APPLIED', 'SHORTLISTED', 'INTERVIEWED', 'SELECTED', 'REJECTED'];
+
+// ── Apply to opportunity ──────────────────────────────────────────────────────
 router.post('/', authMiddleware, roleCheck(['STUDENT']), async (req, res, next) => {
   try {
     const { opportunityId, coverLetter } = req.body;
-    
+
+    if (!opportunityId) {
+      return res.status(400).json({ message: 'opportunityId is required.' });
+    }
+
     const existing = await prisma.application.findFirst({
       where: { studentId: req.user.userId, opportunityId }
     });
 
     if (existing) {
-      return res.status(400).json({ message: 'Already applied' });
+      return res.status(409).json({ message: 'Already applied' });
     }
 
     const application = await prisma.application.create({
-      data: {
-        studentId: req.user.userId,
-        opportunityId,
-        coverLetter
-      }
+      data: { studentId: req.user.userId, opportunityId, coverLetter }
     });
 
     res.status(201).json(application);
@@ -32,21 +34,26 @@ router.post('/', authMiddleware, roleCheck(['STUDENT']), async (req, res, next) 
   }
 });
 
-// List applications (Student sees their own, others see for their posted opps)
+// ── List applications ─────────────────────────────────────────────────────────
 router.get('/', authMiddleware, async (req, res, next) => {
   try {
     const { role, userId } = req.user;
-    
+
     if (role === 'STUDENT') {
       const applications = await prisma.application.findMany({
         where: { studentId: userId },
-        include: { opportunity: true }
+        include: { opportunity: true },
+        orderBy: { appliedAt: 'desc' }
       });
       return res.json(applications);
     } else {
       const applications = await prisma.application.findMany({
         where: { opportunity: { postedById: userId } },
-        include: { student: { select: { name: true, email: true } }, opportunity: { select: { title: true } } }
+        include: {
+          student: { select: { name: true, email: true } },
+          opportunity: { select: { title: true } }
+        },
+        orderBy: { appliedAt: 'desc' }
       });
       return res.json(applications);
     }
@@ -55,10 +62,15 @@ router.get('/', authMiddleware, async (req, res, next) => {
   }
 });
 
-// Update application status
+// ── Update application status (BUG-017: validate status enum) ─────────────────
 router.put('/:id/status', authMiddleware, async (req, res, next) => {
   try {
     const { status } = req.body;
+
+    if (!status || !VALID_STATUSES.includes(status)) {
+      return res.status(400).json({ message: `status must be one of: ${VALID_STATUSES.join(', ')}` });
+    }
+
     const application = await prisma.application.findUnique({
       where: { id: req.params.id },
       include: { opportunity: true }

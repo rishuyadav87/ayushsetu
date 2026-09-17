@@ -67,6 +67,13 @@ export const chatbotAPI = {
   send: (data) => api.post('/chatbot', data),
 };
 
+export const academicianAPI = {
+  getMentees: () => api.get('/academician/mentees'),
+  addFeedback: (data) => api.post('/academician/feedback', data),
+  getOpportunities: () => api.get('/academician/opportunities'),
+  addOpportunity: (data) => api.post('/academician/opportunities', data),
+};
+
 export const opportunityAPI = {
   getAll: (params) => api.get('/opportunities', { params }),
   getRecommended: () => api.get('/opportunities/recommended'),
@@ -81,9 +88,10 @@ export const applicationAPI = {
 };
 
 export const profileAPI = {
-  getStudentProfile: (userId) => api.get(`/profiles/student/${userId}`),
+  getStudentProfile: (id) => api.get(`/profiles/student/${id}`),
   getMyProfile: () => api.get('/profiles/student/me'),
-  updateStudentProfile: (data) => api.put('/profiles/student', data),
+  updateMyProfile: (data) => api.put('/profiles/my-profile', data), // BUG: was pointing to wrong endpoint
+  searchProfiles: (role, query) => api.get('/profiles/search', { params: { role, query } }), // BUG-002: was missing
   addCertificate: (data) => api.post('/profiles/certificates', data),
   deleteCertificate: (id) => api.delete(`/profiles/certificates/${id}`),
   addProject: (data) => api.post('/profiles/projects', data),

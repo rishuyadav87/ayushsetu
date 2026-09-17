@@ -35,19 +35,18 @@ const PostOpportunity = () => {
       
       const payload = {
         title: formData.title,
-        type: formData.type.toLowerCase(),
+        type: formData.type.toUpperCase(), // backend expects uppercase enum
         location: formData.location,
         description: formData.description,
-        skills: formData.skills.split(',').map(s => s.trim()).filter(Boolean),
-        status: isDraft ? 'draft' : 'open',
+        requiredQpCodes: formData.skills.split(',').map(s => s.trim()).filter(Boolean),
+        status: isDraft ? 'DRAFT' : 'OPEN',
       };
       
       await opportunityAPI.create(payload);
       setSuccess(true);
-      setTimeout(() => navigate('/industry/opportunities'), 1500);
+      setTimeout(() => navigate('/industry/manage-opportunities'), 1500); // BUG-004: correct route
     } catch (err) {
-      console.error("Failed to post opportunity", err);
-      setError("Failed to create opportunity. Please try again.");
+      setError(err.response?.data?.message || 'Failed to create opportunity. Please try again.');
     } finally {
       setLoading(false);
     }
