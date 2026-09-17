@@ -1,15 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SearchBar from '../../components/common/SearchBar';
 import SkillBadge from '../../components/common/SkillBadge';
-import { MapPin, GraduationCap, Award } from 'lucide-react';
+import { MapPin, GraduationCap, Award, Loader2 } from 'lucide-react';
+import { profileAPI } from '../../services/api';
 import toast from 'react-hot-toast';
 
 const CandidateSearch = () => {
-  const candidates = [
-    { id: 1, name: 'Aarav Sharma', inst: 'All India Institute of Ayurveda', location: 'Delhi', skills: ['Clinical', 'Research'], score: '95%' },
-    { id: 2, name: 'Priya Patel', inst: 'Gujarat Ayurved University', location: 'Gujarat', skills: ['Data Analysis', 'Tech Tools'], score: '92%' },
-    { id: 3, name: 'Rohan Gupta', inst: 'National Institute of Ayurveda', location: 'Jaipur', skills: ['Communication', 'Clinical'], score: '88%' },
-  ];
+  const [candidates, setCandidates] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [query, setQuery] = useState('');
+
+  useEffect(() => {
+    const fetchCandidates = async () => {
+      try {
+        setLoading(true);
+        const res = await profileAPI.searchProfiles('STUDENT', query);
+        const mapped = res.data.map(p => ({
+          id: p.id,
+          name: p.user?.name || 'Anonymous Student',
+          inst: p.institution || 'Independent',
+          location: p.city ? `${p.city}` : 'Remote',
+          skills: p.skills ? (typeof p.skills === 'string' ? JSON.parse(p.skills) : p.skills).slice(0, 3) : ['General'],
+          score: 'N/A'
+        }));
+        setCandidates(mapped);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    const timer = setTimeout(fetchCandidates, 500);
+    return () => clearTimeout(timer);
+  }, [query]);
 
   return (
     <div className="space-y-6">
@@ -18,12 +41,12 @@ const CandidateSearch = () => {
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Search by Skill or Name</label>
-            <SearchBar placeholder="e.g. Clinical Research..." />
+            <label className="block text-sm font-medium text-gray-700 mb-1">Search by Name</label>
+            <SearchBar placeholder="e.g. Aarav Sharma..." value={query} onChange={e => setQuery(e.target.value)} />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Discipline</label>
-            <select className="w-full border border-gray-300 rounded-lg py-2 px-3">
+            <select className="w-full border border-gray-300 rounded-lg py-2 px-3 disabled:opacity-50" disabled>
               <option>All</option>
               <option>Ayurveda</option>
               <option>Yoga</option>
@@ -31,13 +54,18 @@ const CandidateSearch = () => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
-            <input type="text" className="w-full border border-gray-300 rounded-lg py-2 px-3" placeholder="City or State" />
+            <input type="text" className="w-full border border-gray-300 rounded-lg py-2 px-3 disabled:opacity-50" placeholder="City or State" disabled />
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {candidates.map(c => (
+      {loading ? (
+        <div className="flex justify-center items-center h-48"><Loader2 className="animate-spin text-primary" size={32} /></div>
+      ) : candidates.length === 0 ? (
+        <div className="text-center text-gray-500 py-12">No candidates found matching your criteria.</div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {candidates.map(c => (
           <div key={c.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
             <div className="flex justify-between items-start mb-4">
               <div className="flex items-center gap-3">
@@ -72,7 +100,8 @@ const CandidateSearch = () => {
             </button>
           </div>
         ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

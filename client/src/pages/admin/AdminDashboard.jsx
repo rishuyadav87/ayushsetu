@@ -9,20 +9,12 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const mockRoleData = [
-    { name: 'Students', value: 12500 },
-    { name: 'Institutions', value: 200 },
-    { name: 'Industry', value: 850 },
-    { name: 'Academicians', value: 450 },
-  ];
+  const roleData = stats?.usersByRole?.map(r => ({
+    name: r.role.toLowerCase().replace(/\b\w/g, l => l.toUpperCase()),
+    value: r._count
+  })) || [];
 
-  const mockTrendData = [
-    { name: 'Jan', users: 4000, opportunities: 240 },
-    { name: 'Feb', users: 5000, opportunities: 139 },
-    { name: 'Mar', users: 8000, opportunities: 980 },
-    { name: 'Apr', users: 11000, opportunities: 390 },
-    { name: 'May', users: 15420, opportunities: 480 },
-  ];
+  const trendData = stats?.growthTrend || [];
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
@@ -73,7 +65,7 @@ const AdminDashboard = () => {
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
-                      data={(stats?.roleData?.length > 0) ? stats.roleData : mockRoleData}
+                      data={roleData}
                       cx="50%"
                       cy="50%"
                       innerRadius={60}
@@ -82,7 +74,7 @@ const AdminDashboard = () => {
                       paddingAngle={5}
                       dataKey="value"
                     >
-                      {((stats?.roleData?.length > 0) ? stats.roleData : mockRoleData).map((entry, index) => (
+                      {roleData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
@@ -98,7 +90,7 @@ const AdminDashboard = () => {
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart
-                    data={(stats?.trendData?.length > 0) ? stats.trendData : mockTrendData}
+                    data={trendData}
                     margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" />

@@ -22,12 +22,13 @@ const ReadinessDashboard = () => {
       try {
         setLoading(true);
         const res = await analyticsAPI.getDashboard();
-        if (res.data?.skillsData) {
-          setData(res.data.skillsData);
+        if (res.data?.readinessChart) {
+          // map { name, readiness } to { name, score } since the UI uses 'score'
+          setData(res.data.readinessChart.map(item => ({ name: item.name, score: item.readiness })));
         } else {
           setData(mockData);
-          setError("Displaying mock analytics data");
         }
+        setError(null);
       } catch (err) {
         console.error("Failed to load readiness data", err);
         setError("Failed to load real data. Using fallback data.");

@@ -47,32 +47,36 @@ const Portfolio = () => {
   const handleAddCert = async (e) => {
     e.preventDefault();
     try {
-      await profileAPI.addCertificate(certForm);
+      const payload = { ...certForm, verificationUrl: certForm.url };
+      delete payload.url;
+      await profileAPI.addCertificate(payload);
       setShowCertModal(false);
       setCertForm({ title: '', issuer: '', issueDate: '', url: '', description: '' });
+      toast.success('Certificate added successfully');
       fetchProfileAndBadges();
     } catch (err) {
-      alert("Failed to add certificate (API might not be running). Updating locally.");
-      // Fallback local update
-      if(!profile) return;
-      setProfile({...profile, certifications: [...(profile.certifications || []), { id: Date.now(), ...certForm }]});
-      setShowCertModal(false);
+      toast.error(err.response?.data?.message || "Failed to add certificate.");
+      console.error(err);
     }
   };
 
   const handleAddProj = async (e) => {
     e.preventDefault();
     try {
-      await profileAPI.addProject(projForm);
+      const payload = { 
+        ...projForm, 
+        projectUrl: projForm.url,
+        technologies: projForm.technologies.split(',').map(t => t.trim()).filter(Boolean)
+      };
+      delete payload.url;
+      await profileAPI.addProject(payload);
       setShowProjModal(false);
       setProjForm({ title: '', description: '', technologies: '', url: '', startDate: '', endDate: '' });
+      toast.success('Project added successfully');
       fetchProfileAndBadges();
     } catch (err) {
-      alert("Failed to add project (API might not be running). Updating locally.");
-      // Fallback local update
-      if(!profile) return;
-      setProfile({...profile, projects: [...(profile.projects || []), { id: Date.now(), ...projForm, technologies: projForm.technologies.split(',').map(t=>t.trim()) }]});
-      setShowProjModal(false);
+      toast.error(err.response?.data?.message || "Failed to add project.");
+      console.error(err);
     }
   };
 
