@@ -97,6 +97,7 @@ Deploy on **Render.com** (or Railway):
    - `JWT_SECRET`: *Generate a strong 32-byte secret (e.g. `openssl rand -base64 32`)*
    - `JWT_EXPIRES_IN`: `7d`
    - `AI_ENGINE_URL`: `https://ayush-setu-ai.onrender.com` (from Phase 2)
+   - `GEMINI_API_KEY`: *(optional)* free key from [Google AI Studio](https://aistudio.google.com/apikey) — enables AI chatbot answers and AI-written tests. Without it the platform uses its built-in knowledge base and reviewed question bank.
 5. Click **Create Web Service**.
 6. Once deployed, run the raw SQL migration in your database to ensure pgvector columns exist:
    ```sql
@@ -181,12 +182,17 @@ Your services will be running on:
 
 | Service | Variable Name | Example Value | Description |
 | :--- | :--- | :--- | :--- |
-| **Backend** | `PORT` | `5000` or `5001` | Express server listen port |
+| **Backend** | `PORT` | `5000` | Express server listen port |
 | **Backend** | `NODE_ENV` | `production` | Node environment |
 | **Backend** | `DATABASE_URL` | `postgresql://ayush:secret@host:5432/ayush_setu` | Postgres connection string |
 | **Backend** | `JWT_SECRET` | *(random 32 bytes base64)* | Required token signing secret |
 | **Backend** | `JWT_EXPIRES_IN` | `7d` | Token lifespan |
 | **Backend** | `AI_ENGINE_URL` | `https://ayush-setu-ai.onrender.com` | Internal or public AI Engine endpoint |
+| **Backend** | `GEMINI_API_KEY` | *(optional)* | Google Gemini key for chatbot + AI test generation |
+| **Backend** | `GEMINI_MODEL` | `gemini-2.5-flash` | Gemini model name |
+| **Backend** | `OPENAI_API_KEY` | *(optional)* | Alternative: any OpenAI-compatible API key |
+| **Backend** | `OPENAI_BASE_URL` | `https://api.openai.com/v1` | OpenAI-compatible endpoint (Groq, OpenRouter, Ollama…) |
+| **Backend** | `OPENAI_MODEL` | `gpt-4o-mini` | Model name for the OpenAI-compatible API |
 | **AI Engine**| `DATABASE_URL` | `postgresql://ayush:secret@host:5432/ayush_setu` | Same Postgres database connection |
 | **AI Engine**| `ALLOWED_ORIGINS`| `https://ayush-setu.vercel.app,http://localhost:5173` | Allowed CORS origins list |
 | **Frontend** | `VITE_API_URL` | `https://ayush-setu-api.onrender.com` | Base URL for Node.js REST API |
@@ -194,21 +200,35 @@ Your services will be running on:
 
 ---
 
+## AI Proctoring Requirements
+
+- The frontend **must be served over HTTPS** (or `http://localhost` in development). Browsers only allow camera, microphone, full-screen lock and screen sharing in secure contexts. Vercel/Netlify provide HTTPS automatically.
+- Candidates need a laptop/desktop with webcam + microphone and the latest Chrome, Edge or Firefox (screen sharing is not available on mobile browsers).
+- Face/phone detection models are self-hosted in `client/public/models` (~17 MB, cached after first load); no third-party AI service receives video.
+- Database changes: run `npx prisma db push` (or apply `server/prisma/migrations/*`) after pulling — the attempt/proctoring tables are required.
+
+---
+
 ## Verification & Health Checks
 
 After deployment, perform these checks:
 
-1. **AI Engine Health**:
+1. **Backend Health**:
+   ```bash
+   curl https://<YOUR_BACKEND_URL>/api/health
+   # Response: {"status":"ok","service":"AYUSH-SETU API"}
+   ```
+2. **AI Engine Health**:
    ```bash
    curl https://<YOUR_AI_URL>/health
    # Response: {"status":"healthy","service":"AYUSH-SETU AI Engine"}
    ```
-2. **Backend Assessments Endpoint**:
+3. **Backend Assessments Endpoint**:
    ```bash
    curl https://<YOUR_BACKEND_URL>/api/assessments
    # Response: List of NSQF assessments linked to SkillTaxonomy
    ```
-3. **Frontend UI**:
+4. **Frontend UI**:
    - Open frontend URL in browser.
    - Log in as demo student: `student@ayush.edu` / `password123`.
    - Browse Opportunities and check AI match recommendations with semantic badges.

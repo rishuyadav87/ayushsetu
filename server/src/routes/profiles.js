@@ -68,7 +68,7 @@ router.get('/student/me', authMiddleware, async (req, res, next) => {
         certificates: true,
         projects: true,
         assessmentResults: {
-          include: { assessment: { select: { title: true, category: true } } }
+          include: { assessment: { select: { title: true, category: true, nsqfLevel: true } } }
         }
       }
     });
@@ -97,7 +97,8 @@ router.get('/student/resume-data', authMiddleware, async (req, res, next) => {
             certificates: true,
             projects: true,
             assessmentResults: {
-              include: { assessment: { include: { category: true } } }
+              where: { assessment: { isPractice: false } },
+              include: { assessment: { include: { taxonomy: true } } }
             }
           }
         },
@@ -115,7 +116,7 @@ router.get('/student/resume-data', authMiddleware, async (req, res, next) => {
 
     const categoryStats = {};
     for (const result of user.studentProfile.assessmentResults) {
-      const categoryName = result.assessment.category.name;
+      const categoryName = result.assessment.category || result.assessment.taxonomy?.roleName || result.assessment.title;
       if (!categoryStats[categoryName]) {
         categoryStats[categoryName] = { score: 0, maxScore: 0 };
       }
@@ -125,7 +126,7 @@ router.get('/student/resume-data', authMiddleware, async (req, res, next) => {
 
     const skills = Object.keys(categoryStats).map(category => ({
       category,
-      percentage: categoryStats[category].maxScore > 0 ? (categoryStats[category].score / categoryStats[category].maxScore) * 100 : 0
+      percentage: categoryStats[category].maxScore > 0 ? Math.round((categoryStats[category].score / categoryStats[category].maxScore) * 100) : 0
     }));
 
     const resumeData = {

@@ -21,9 +21,11 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        // the AI proctoring chunk (TensorFlow.js + face-api) is ~1.5 MB
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
         runtimeCaching: [
           {
-            urlPattern: /^http:\/\/localhost:5001\/api\/.*/,
+            urlPattern: ({ url }) => url.pathname.startsWith('/api/'),
             handler: 'NetworkFirst',
             options: { cacheName: 'api-cache', networkTimeoutSeconds: 5 }
           }
@@ -33,7 +35,7 @@ export default defineConfig({
   ],
   server: {
     proxy: {
-      '/api': { target: 'http://localhost:5001', changeOrigin: true },
+      '/api': { target: 'http://localhost:5000', changeOrigin: true },
       '/ai': { target: 'http://localhost:8000', changeOrigin: true }
     }
   }

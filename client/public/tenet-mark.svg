@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="512" height="512"><g transform="translate(0,0) scale(1.0)">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0B1535"/><stop offset="1" stop-color="#1D3B8B"/></linearGradient></defs>
+  <rect x="0" y="0" width="100" height="100" rx="24" fill="url(#g)"/>
+  <rect x="4" y="4" width="92" height="92" rx="20" fill="none" stroke="#FFFFFF" stroke-opacity="0.10" stroke-width="1.5"/>
+  <!-- T and its 180-degree twin: a palindrome you can see -->
+  <path d="M16 18 H60 V32 H45 V64 H31 V32 H16 Z" fill="#FFFFFF"/>
+  <path d="M84 82 H40 V68 H55 V36 H69 V68 H84 Z" fill="#2DD4BF"/>
+  <rect x="46.5" y="46.5" width="7" height="7" rx="1.2" transform="rotate(45 50 50)" fill="#F5A524"/>
+</g></svg>

@@ -24,3 +24,16 @@ export const authMiddleware = (req, res, next) => {
     return res.status(401).json({ message: 'Invalid or expired token' });
   }
 };
+
+// Attaches req.user when a valid token is present, but never rejects the request.
+export const optionalAuth = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    try {
+      req.user = jwt.verify(authHeader.split(' ')[1], getJwtSecret());
+    } catch (_) {
+      // ignore invalid tokens for public endpoints
+    }
+  }
+  next();
+};

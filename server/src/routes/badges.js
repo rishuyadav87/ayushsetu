@@ -43,7 +43,7 @@ router.post('/check-and-award', authMiddleware, async (req, res, next) => {
           include: {
             assessment: {
               include: {
-                category: true
+                taxonomy: true
               }
             }
           }
@@ -92,9 +92,10 @@ router.post('/check-and-award', authMiddleware, async (req, res, next) => {
       const percentage = result.maxScore > 0 ? (result.score / result.maxScore) * 100 : 0;
       if (percentage === 100) perfectScoreAchieved = true;
 
-      const categoryName = result.assessment.category.name.toLowerCase();
-      if (categoryName === 'ayurveda' && percentage > 80) ayurvedaScholarAchieved = true;
-      if (categoryName === 'yoga' && percentage > 80) yogaMasterAchieved = true;
+      const a = result.assessment;
+      const categoryName = `${a.category || ''} ${a.taxonomy?.roleName || ''} ${a.title || ''}`.toLowerCase();
+      if (categoryName.includes('ayurved') && percentage > 80) ayurvedaScholarAchieved = true;
+      if (categoryName.includes('yoga') && percentage > 80) yogaMasterAchieved = true;
     }
 
     if (perfectScoreAchieved && !existingBadgeNames.has('Perfect Score')) {

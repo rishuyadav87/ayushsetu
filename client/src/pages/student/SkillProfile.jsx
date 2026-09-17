@@ -1,92 +1,70 @@
 import React, { useState, useEffect } from 'react';
-import SkillRadarChart from '../../components/common/SkillRadarChart';
+import { useNavigate } from 'react-router-dom';
+import SkillBarChart from '../../components/common/SkillBarChart';
 import SkillBadge from '../../components/common/SkillBadge';
 import { skillProfileAPI } from '../../services/api';
-import { Download, AlertCircle, AlertTriangle, CheckCircle, TrendingUp } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import { generateSkillGapReport } from '../../utils/pdfGenerator';
+import { Download, AlertCircle, AlertTriangle, CheckCircle, TrendingUp, BookOpen } from 'lucide-react';
+import toast from 'react-hot-toast';
+
+const levelFromPercent = (p) => (p >= 85 ? 'advanced' : p >= 60 ? 'intermediate' : 'beginner');
 
 const SkillProfile = () => {
-  const [skillData, setSkillData] = useState([]);
-  const [gapAnalysis, setGapAnalysis] = useState([]);
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const [profile, setProfile] = useState(null);
+  const [gapData, setGapData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  const mockSkillData = [
-    { subject: 'Clinical', score: 85, fullMark: 100 },
-    { subject: 'Research', score: 65, fullMark: 100 },
-    { subject: 'Tech Tools', score: 50, fullMark: 100 },
-    { subject: 'Communication', score: 90, fullMark: 100 },
-    { subject: 'Ethics', score: 95, fullMark: 100 },
-    { subject: 'Management', score: 60, fullMark: 100 },
-  ];
-
-  const mockGapAnalysis = [
-    { category: 'Tech Tools', studentScore: 50, benchmark: 70, severity: 'red', recommendation: 'Complete the "Data Analysis for Healthcare" certification.' },
-    { category: 'Management', studentScore: 60, benchmark: 70, severity: 'yellow', recommendation: 'Take the "Healthcare Management Fundamentals" course.' },
-    { category: 'Research', studentScore: 65, benchmark: 70, severity: 'yellow', recommendation: 'Participate in a minor research project.' },
-  ];
-
-  const verifiedSkills = [
-    { name: 'Patient Diagnosis', level: 'advanced' },
-    { name: 'Herbal Formulations', level: 'intermediate' },
-    { name: 'Clinical Communication', level: 'advanced' },
-    { name: 'Data Analysis', level: 'beginner' },
-    { name: 'Ayurvedic Dietetics', level: 'intermediate' }
-  ];
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        // Try fetching real data
         const [profileRes, gapRes] = await Promise.all([
-          skillProfileAPI.get().catch(() => null),
-          skillProfileAPI.getGapAnalysis().catch(() => null)
+          skillProfileAPI.get(),
+          skillProfileAPI.getGapAnalysis()
         ]);
-
-        if (profileRes?.data?.skills) {
-          setSkillData(profileRes.data.skills);
-        } else {
-          setSkillData(mockSkillData);
-          if(!error) setError("Displaying mock skill data");
-        }
-
-        if (gapRes?.data) {
-          setGapAnalysis(gapRes.data);
-        } else {
-          setGapAnalysis(mockGapAnalysis);
-        }
+        setProfile(profileRes.data);
+        setGapData(gapRes.data);
       } catch (err) {
-        console.error("Failed to load skill profile", err);
-        setSkillData(mockSkillData);
-        setGapAnalysis(mockGapAnalysis);
+        console.error('Failed to load skill profile', err);
+        setError('Could not load your skill profile from the server.');
       } finally {
         setLoading(false);
       }
     };
-    
     fetchData();
   }, []);
 
+  const categories = profile?.categories || [];
+  const chartData = categories.map(c => ({ subject: c.name, score: Math.round(c.percentage), fullMark: 100 }));
+  const gaps = gapData?.gaps || [];
+
   const handleDownloadPDF = () => {
-    // Placeholder for PDF generation
-    alert("Downloading PDF Report...");
+    try {
+      generateSkillGapReport(user?.name || 'Student', gapData, profile);
+    } catch (e) {
+      console.error(e);
+      toast.error('Could not generate the PDF report');
+    }
   };
 
   const getSeverityStyles = (severity) => {
-    switch(severity) {
-      case 'red': return 'bg-red-50 border-red-200 text-red-800';
-      case 'yellow': return 'bg-yellow-50 border-yellow-200 text-yellow-800';
-      case 'green': return 'bg-green-50 border-green-200 text-green-800';
-      default: return 'bg-gray-50 border-gray-200 text-gray-800';
+    switch (severity) {
+      case 'high': return 'bg-red-50 border-red-200 text-red-800';
+      case 'medium': return 'bg-yellow-50 border-yellow-200 text-yellow-800';
+      default: return 'bg-green-50 border-green-200 text-green-800';
     }
   };
 
   const getSeverityIcon = (severity) => {
-    switch(severity) {
-      case 'red': return <AlertCircle size={20} className="text-red-500" />;
-      case 'yellow': return <AlertTriangle size={20} className="text-yellow-500" />;
-      case 'green': return <CheckCircle size={20} className="text-green-500" />;
-      default: return <TrendingUp size={20} className="text-gray-500" />;
+    switch (severity) {
+      case 'high': return <AlertCircle size={20} className="text-red-500" />;
+      case 'medium': return <AlertTriangle size={20} className="text-yellow-500" />;
+      case 'low': return <TrendingUp size={20} className="text-green-600" />;
+      default: return <CheckCircle size={20} className="text-green-500" />;
     }
   };
 
@@ -102,9 +80,10 @@ const SkillProfile = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-dark">Skill Profile & Intelligence</h1>
-        <button 
+        <button
           onClick={handleDownloadPDF}
-          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors shadow-sm text-sm font-medium"
+          disabled={!profile}
+          className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors shadow-sm text-sm font-medium disabled:opacity-50"
         >
           <Download size={16} />
           Download PDF Report
@@ -112,40 +91,59 @@ const SkillProfile = () => {
       </div>
 
       {error && (
-        <div className="bg-blue-50 text-blue-800 p-4 rounded-lg flex items-center text-sm">
+        <div className="bg-yellow-50 text-yellow-800 p-4 rounded-lg flex items-center text-sm">
           <AlertCircle size={18} className="mr-2 flex-shrink-0" />
-          Note: Real API not connected, showing mock analytics data.
+          {error}
         </div>
       )}
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-          <h2 className="text-lg font-bold text-dark mb-4">NSQF Alignment Radar</h2>
-          <SkillRadarChart data={skillData} />
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-bold text-dark">NSQF Skill Scores</h2>
+            {profile && (
+              <span className="text-sm font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full">
+                Overall {Math.round(profile.overallScore || 0)}%
+              </span>
+            )}
+          </div>
+          {chartData.length > 0 ? (
+            <SkillBarChart data={chartData} />
+          ) : (
+            <div className="text-center py-16 text-gray-500">
+              <BookOpen size={48} className="mx-auto text-gray-300 mb-3" />
+              <p className="mb-4">Take an assessment to see your skill scores.</p>
+              <button onClick={() => navigate('/student/assessments')} className="px-4 py-2 bg-primary text-white rounded-lg text-sm">
+                Go to Assessments
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="space-y-6">
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
             <h2 className="text-lg font-bold text-dark mb-4">Verified Skills</h2>
             <div className="flex flex-wrap gap-2">
-              {verifiedSkills.map((s, idx) => (
-                <SkillBadge key={idx} skill={s.name} level={s.level} />
-              ))}
+              {categories.length > 0 ? categories.map((c, idx) => (
+                <SkillBadge key={idx} skill={c.name} level={levelFromPercent(c.percentage)} />
+              )) : (
+                <p className="text-sm text-gray-500">Skills are verified automatically when you complete proctored assessments.</p>
+              )}
             </div>
           </div>
 
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
             <h2 className="text-lg font-bold text-dark mb-4">Gap Analysis & Recommendations</h2>
             <div className="space-y-3">
-              {gapAnalysis.length > 0 ? gapAnalysis.map((gap, idx) => (
+              {gaps.length > 0 ? gaps.map((gap, idx) => (
                 <div key={idx} className={`p-4 rounded-xl border ${getSeverityStyles(gap.severity)}`}>
                   <div className="flex items-start gap-3">
                     <div className="mt-0.5">{getSeverityIcon(gap.severity)}</div>
                     <div className="flex-1">
-                      <div className="flex justify-between items-center mb-1">
-                        <h3 className="font-bold">{gap.category} Gap</h3>
-                        <span className="text-xs font-semibold px-2 py-1 bg-white/60 rounded">
-                          Score: {gap.studentScore}% / Target: {gap.benchmark}%
+                      <div className="flex justify-between items-center mb-1 gap-2">
+                        <h3 className="font-bold">{gap.category}</h3>
+                        <span className="text-xs font-semibold px-2 py-1 bg-white/60 rounded whitespace-nowrap">
+                          {Math.round(gap.studentScore)}% / Target {gap.benchmark}%
                         </span>
                       </div>
                       <p className="text-sm opacity-90">{gap.recommendation}</p>

@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vladmandic/human": "3.3.6",
     "axios": "^1.6.2",
     "jspdf": "^2.5.2",
     "jspdf-autotable": "^3.8.4",

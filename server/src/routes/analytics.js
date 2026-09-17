@@ -13,8 +13,8 @@ router.get('/dashboard', authMiddleware, async (req, res, next) => {
       const studentProfile = await prisma.studentProfile.findUnique({ where: { userId } });
       const [applications, assessmentsTaken, badges, opportunities] = await Promise.all([
         prisma.application.count({ where: { studentId: userId } }),
-        prisma.assessmentResult.count({ where: { studentId: studentProfile?.id } }),
-        prisma.badge.count({ where: { studentId: userId } }),
+        prisma.assessmentResult.count({ where: { studentId: studentProfile?.id ?? '__none__' } }),
+        prisma.badge.count({ where: { studentId: studentProfile?.id ?? '__none__' } }),
         prisma.postedOpportunity.count({ where: { status: 'OPEN' } }),
       ]);
 
@@ -27,14 +27,14 @@ router.get('/dashboard', authMiddleware, async (req, res, next) => {
 
       // Recent assessment results for chart
       const recentResults = await prisma.assessmentResult.findMany({
-        where: { studentId: studentProfile?.id },
-        include: { assessment: { include: { category: true } } },
+        where: { studentId: studentProfile?.id ?? '__none__', assessment: { isPractice: false } },
+        include: { assessment: { include: { taxonomy: true } } },
         orderBy: { completedAt: 'desc' },
         take: 5,
       });
 
       const scoreHistory = recentResults.map(r => ({
-        name: r.assessment.category.name,
+        name: r.assessment.category || r.assessment.taxonomy?.roleName || r.assessment.title,
         score: Math.round((r.score / r.maxScore) * 100),
         date: r.completedAt,
       }));

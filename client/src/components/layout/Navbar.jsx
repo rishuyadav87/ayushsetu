@@ -2,29 +2,34 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { Bell, User, LogOut, Globe } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { notificationAPI } from '../../services/api';
-import toast from 'react-hot-toast';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const { language, toggleLanguage } = useLanguage();
-  const [unreadCount, setUnreadCount] = useState(3); // Default fallback
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
-    if (user) {
-      const fetchNotifications = async () => {
-        try {
-          const res = await notificationAPI.getAll();
-          const unread = res.data?.filter(n => !n.isRead)?.length || 0;
-          setUnreadCount(unread);
-        } catch (err) {
-          console.error("Failed to fetch notifications", err);
-        }
-      };
-      fetchNotifications();
-    }
-  }, [user]);
+    if (!user) return undefined;
+    const fetchNotifications = async () => {
+      try {
+        const res = await notificationAPI.getAll();
+        setUnreadCount(res.data?.filter(n => !n.isRead)?.length || 0);
+      } catch (err) {
+        console.error("Failed to fetch notifications", err);
+      }
+    };
+    fetchNotifications();
+    const interval = setInterval(fetchNotifications, 60000);
+    window.addEventListener('notifications:changed', fetchNotifications);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('notifications:changed', fetchNotifications);
+    };
+  }, [user, location.pathname]);
 
   return (
     <nav className="bg-primary text-white shadow-md px-6 py-3 flex justify-between items-center sticky top-0 z-50">
@@ -44,11 +49,11 @@ const Navbar = () => {
 
         {user && (
           <>
-            <button onClick={() => toast('Feature coming soon!', { icon: '🚧' })} className="hover:text-accent transition-colors relative">
+            <button onClick={() => navigate(`/${user.role}/notifications`)} className="hover:text-accent transition-colors relative" title="Notices">
               <Bell size={20} />
               {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-secondary text-xs rounded-full h-4 w-4 flex items-center justify-center">
-                  {unreadCount}
+                <span className="absolute -top-1 -right-2 bg-secondary text-[10px] rounded-full h-4 min-w-4 px-1 flex items-center justify-center">
+                  {unreadCount > 99 ? '99+' : unreadCount}
                 </span>
               )}
             </button>

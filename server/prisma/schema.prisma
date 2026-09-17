@@ -1,13 +1,13 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["postgresqlExtensions"]
+  previewFeatures = []
   binaryTargets   = ["native", "debian-openssl-3.0.x", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
-  provider   = "postgresql"
+  provider   = "sqlite"
   url        = env("DATABASE_URL")
-  extensions = [pgvector(map: "vector")]
+  
 }
 
 model User {
@@ -42,9 +42,10 @@ model StudentProfile {
   bio            String?
   resumeUrl      String?
   skills         String? // Storing as comma-separated or JSON string
-  embedding      Unsupported("vector(384)")?
+  embedding      String?
 
   assessmentResults AssessmentResult[]
+  attempts          AssessmentAttempt[]
   certificates      Certificate[]
   projects          Project[]
   mentorFeedbacks   MentorFeedback[]
@@ -89,7 +90,7 @@ model SkillTaxonomy {
   qpCode           String   @id
   roleName         String   @unique
   nsqfLevel        Int
-  competencyUnits  Json
+  competencyUnits  String
   source           String   @default("Healthcare Sector Skill Council — AYUSH Sub-Council")
   createdAt        DateTime @default(now())
 
@@ -97,29 +98,70 @@ model SkillTaxonomy {
 }
 
 model Assessment {
-  id          String        @id @default(uuid())
-  title       String
-  description String?
-  taxonomy    SkillTaxonomy @relation(fields: [qpCode], references: [qpCode])
-  qpCode      String
-  questions   String // JSON array of questions
-  duration    Int // minutes
-  totalMarks  Int
+  id             String         @id @default(uuid())
+  title          String
+  description    String?
+  taxonomy       SkillTaxonomy? @relation(fields: [qpCode], references: [qpCode])
+  qpCode         String?
+  nsqfLevel      Int            @default(4) // NSQF level 1-10
+  category       String?        // Skill area shown on cards / charts
+  questions      String         // JSON array: [{ q, options[], correctIndex }]
+  duration       Int            // minutes
+  totalMarks     Int
+  passingPercent Int            @default(60)
+  proctored      Boolean        @default(true)
+  isPractice     Boolean        @default(false) // student practice set (private to creator)
+  source         String         @default("MANUAL") // MANUAL | UPLOAD | AI
+  createdById    String?        // user who uploaded the question set (null = platform/seed)
+  createdAt      DateTime       @default(now())
 
-  results AssessmentResult[]
+  results  AssessmentResult[]
+  attempts AssessmentAttempt[]
+}
+
+// One proctored sitting of an assessment. Created on start, kept alive by heartbeats,
+// closed on submit (or finalised automatically when abandoned / time expires).
+model AssessmentAttempt {
+  id              String         @id @default(uuid())
+  assessment      Assessment     @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  assessmentId    String
+  student         StudentProfile @relation(fields: [studentId], references: [id])
+  studentId       String
+  status          String         @default("IN_PROGRESS") // IN_PROGRESS | SUBMITTED | ABANDONED
+  startedAt       DateTime       @default(now())
+  expiresAt       DateTime
+  lastHeartbeatAt DateTime       @default(now())
+  questionOrder   String         // JSON: original question indices in display order
+  optionOrder     String         // JSON: { [questionIndex]: original option indices in display order }
+  answers         String         @default("{}") // JSON autosave: { [questionIndex]: optionIndex }
+  violationCount  Int            @default(0)
+  events          String         @default("[]") // JSON: latest proctoring events (capped)
+  lastSnapshot    String?        // small webcam thumbnail for the live monitoring dashboard
+  faceCount       Int?
+  resumeCount     Int            @default(0)
+  environment     String?        // JSON: device / browser integrity checks at start
+  resultId        String?
 }
 
 model AssessmentResult {
-  id           String         @id @default(uuid())
-  student      StudentProfile @relation(fields: [studentId], references: [id])
-  studentId    String
-  assessment   Assessment     @relation(fields: [assessmentId], references: [id])
-  assessmentId String
-  score        Int
-  maxScore     Int
-  answers      String // JSON string
-  skillScores  String? // JSON string
-  completedAt  DateTime       @default(now())
+  id             String         @id @default(uuid())
+  student        StudentProfile @relation(fields: [studentId], references: [id])
+  studentId      String
+  assessment     Assessment     @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  assessmentId   String
+  score          Int
+  maxScore       Int
+  percentage     Int            @default(0)
+  answers        String         // JSON string
+  skillScores    String?        // JSON string
+  // --- AI proctoring ---
+  violationCount Int            @default(0)
+  flagged        Boolean        @default(false)
+  autoSubmitted  Boolean        @default(false)
+  submitReason   String?        // MANUAL, TIME_UP, MAX_VIOLATIONS, PAGE_CLOSED
+  proctoringLog  String?        // JSON: { events: [...], snapshots: [...], summary }
+  timeTakenSec   Int?
+  completedAt    DateTime       @default(now())
 }
 
 model PostedOpportunity {
@@ -135,7 +177,7 @@ model PostedOpportunity {
   stipend         String?
   deadline        DateTime?
   status          String          @default("OPEN")
-  embedding       Unsupported("vector(384)")?
+  embedding       String?
   applications    Application[]
   createdAt       DateTime        @default(now())
 }

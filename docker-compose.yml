@@ -32,6 +32,8 @@ services:
       - JWT_EXPIRES_IN=7d
       - DATABASE_URL=postgresql://ayush:ayush_secret@postgres:5432/ayush_setu
       - AI_ENGINE_URL=http://ai-engine:8000
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
 
   ai-engine:
     build:

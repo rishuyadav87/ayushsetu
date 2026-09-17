@@ -42,6 +42,26 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import UserManagement from './pages/admin/UserManagement';
 import SkillTaxonomy from './pages/admin/SkillTaxonomy';
 
+// Shared (all roles)
+import Notifications from './pages/shared/Notifications';
+import QuestionSets from './pages/shared/QuestionSets';
+import UploadQuestionSet from './pages/shared/UploadQuestionSet';
+import ProctoringReports from './pages/shared/ProctoringReports';
+import LiveProctoring from './pages/shared/LiveProctoring';
+import LevelTests from './pages/student/LevelTests';
+
+// Routes every role gets inside its own area
+const sharedRoutes = (role) => [
+  <Route key={`${role}-notifications`} path="notifications" element={<Notifications />} />,
+  <Route key={`${role}-qs`} path="question-sets" element={<QuestionSets />} />,
+  <Route key={`${role}-qs-upload`} path="question-sets/upload" element={<UploadQuestionSet />} />,
+  ...(role !== 'student' ? [
+    <Route key={`${role}-qs-reports`} path="question-sets/:id/reports" element={<ProctoringReports />} />,
+    <Route key={`${role}-live`} path="live-proctoring" element={<LiveProctoring />} />,
+  ] : []),
+  ...(['admin', 'institution'].includes(role) ? [<Route key={`${role}-flagged`} path="proctoring-reports" element={<ProctoringReports />} />] : []),
+];
+
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const { user } = useAuth();
   if (!user) return <Navigate to="/login" replace />;
@@ -62,11 +82,13 @@ function App() {
         <Route path="/student" element={<ProtectedRoute allowedRoles={['student']}><DashboardLayout /></ProtectedRoute>}>
           <Route index element={<StudentDashboard />} />
           <Route path="skills" element={<SkillProfile />} />
+          <Route path="level-tests" element={<LevelTests />} />
           <Route path="assessments" element={<Assessments />} />
           <Route path="assessments/take/:id" element={<TakeAssessment />} />
           <Route path="opportunities" element={<Opportunities />} />
           <Route path="portfolio" element={<Portfolio />} />
           <Route path="applications" element={<Applications />} />
+          {sharedRoutes('student')}
         </Route>
 
         {/* Industry Routes */}
@@ -76,6 +98,7 @@ function App() {
           <Route path="manage-opportunities" element={<ManageOpportunities />} />
           <Route path="candidate-search" element={<CandidateSearch />} />
           <Route path="applications/:id" element={<ViewApplications />} />
+          {sharedRoutes('industry')}
         </Route>
 
         {/* Academician Routes */}
@@ -84,6 +107,7 @@ function App() {
           <Route path="mentoring" element={<Mentoring />} />
           <Route path="research-hub" element={<ResearchHub />} />
           <Route path="fdp-access" element={<FDPAccess />} />
+          {sharedRoutes('academician')}
         </Route>
 
         {/* Institution Routes */}
@@ -92,6 +116,7 @@ function App() {
           <Route path="readiness" element={<ReadinessDashboard />} />
           <Route path="outcomes" element={<OutcomeTracking />} />
           <Route path="students" element={<StudentManagement />} />
+          {sharedRoutes('institution')}
         </Route>
 
         {/* Admin Routes */}
@@ -99,7 +124,10 @@ function App() {
           <Route index element={<AdminDashboard />} />
           <Route path="users" element={<UserManagement />} />
           <Route path="taxonomy" element={<SkillTaxonomy />} />
+          {sharedRoutes('admin')}
         </Route>
+
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>
   );

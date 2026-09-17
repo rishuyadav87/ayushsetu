@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 150" width="900" height="300">
+<g transform="translate(10,25) scale(1.0)">
+  <defs><linearGradient id="gh" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0B1535"/><stop offset="1" stop-color="#1D3B8B"/></linearGradient></defs>
+  <rect x="0" y="0" width="100" height="100" rx="24" fill="url(#gh)"/>
+  <rect x="4" y="4" width="92" height="92" rx="20" fill="none" stroke="#FFFFFF" stroke-opacity="0.10" stroke-width="1.5"/>
+  <!-- T and its 180-degree twin: a palindrome you can see -->
+  <path d="M16 18 H60 V32 H45 V64 H31 V32 H16 Z" fill="#FFFFFF"/>
+  <path d="M84 82 H40 V68 H55 V36 H69 V68 H84 Z" fill="#2DD4BF"/>
+  <rect x="46.5" y="46.5" width="7" height="7" rx="1.2" transform="rotate(45 50 50)" fill="#F5A524"/>
+</g>
+<g transform="translate(150,42)"><path d="M0 0 H48 V12 H30 V60 H18 V12 H0 Z" fill="#0B1535"/><path d="M62 0 H102 V12 H74 V24 H96 V36 H74 V48 H102 V60 H62 Z" fill="#0B1535"/><path d="M116 60 V0 H128 L152 38 V0 H164 V60 H152 L128 22 V60 Z" fill="#2DD4BF"/><path d="M178 0 H218 V12 H190 V24 H212 V36 H190 V48 H218 V60 H178 Z" fill="#0B1535"/><path d="M232 0 H280 V12 H262 V60 H250 V12 H232 Z" fill="#0B1535"/></g>
+<rect x="150" y="122" width="280" height="4" rx="2" fill="#F5A524"/>
+</svg>

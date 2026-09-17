@@ -1,12 +1,14 @@
 import pkg from '@prisma/client';
 const { PrismaClient } = pkg;
 import bcrypt from 'bcryptjs';
+import { toAssessmentQuestions, bankByTopic } from '../src/utils/questionBank.js';
 
 const prisma = new PrismaClient();
 
 async function main() {
   console.log('Clearing old transaction data for deterministic seed...');
   await prisma.application.deleteMany();
+  await prisma.assessmentAttempt.deleteMany();
   await prisma.assessmentResult.deleteMany();
   await prisma.assessment.deleteMany();
   await prisma.postedOpportunity.deleteMany();
@@ -71,13 +73,13 @@ async function main() {
       update: {
         roleName: t.roleName,
         nsqfLevel: t.nsqfLevel,
-        competencyUnits: t.competencyUnits
+        competencyUnits: JSON.stringify(t.competencyUnits)
       },
       create: {
         qpCode: t.qpCode,
         roleName: t.roleName,
         nsqfLevel: t.nsqfLevel,
-        competencyUnits: t.competencyUnits
+        competencyUnits: JSON.stringify(t.competencyUnits)
       }
     });
   }
@@ -165,35 +167,46 @@ async function main() {
     }
   });
 
-  // 3. Assessments
-  const assessmentDiet = await prisma.assessment.create({
-    data: {
-      title: 'Ayurveda Dietetics & Nutrition Planning (Level 5)',
-      description: 'Comprehensive evaluation of Ahara Vijnana, client Prakriti analysis, customized diet plan preparation, and pathya guidelines.',
-      qpCode: 'HSS/Q3902',
-      duration: 30,
-      totalMarks: 50,
-      questions: JSON.stringify([
-        { q: 'What is Ahara Vijnana?', options: ['Dietetics & Nutrition Science', 'Surgical Technique', 'Bone Setting', 'Yoga Postures'], correctIndex: 0 },
-        { q: 'Which factor is most critical when designing an individualized Ayurvedic diet plan?', options: ['Client Prakriti & Agni status', 'Caloric deficit only', 'Time of sunrise', 'Blood type'], correctIndex: 0 },
-        { q: 'Which of the following is considered the primary seat of Agni in Ahara metabolism?', options: ['Grahani', 'Hridaya', 'Kanta', 'Sirah'], correctIndex: 0 }
-      ])
-    }
+  // 3. NSQF level-wise assessments (questions come from the reviewed question bank)
+  const createFromBank = (data, topic) => prisma.assessment.create({
+    data: { ...data, source: 'MANUAL', questions: JSON.stringify(toAssessmentQuestions(bankByTopic(topic).filter(q => q.nsqfLevel === data.nsqfLevel))) },
   });
 
-  const assessmentPancha = await prisma.assessment.create({
-    data: {
-      title: 'Panchakarma Protocol & Procedures (Level 4)',
-      description: 'Assessment of Snehana, Swedana, Shirodhara setup, and biomedical waste compliance.',
-      qpCode: 'HSS/Q3601',
-      duration: 45,
-      totalMarks: 100,
-      questions: JSON.stringify([
-        { q: 'What is the preparatory procedure before Pradhana Karma in Panchakarma?', options: ['Purvakarma (Snehana & Swedana)', 'Paschatkarma', 'Samsarjana Krama', 'Langhana'], correctIndex: 0 },
-        { q: 'Which color-coded bin is mandated for infectious biomedical waste?', options: ['Yellow', 'Green', 'Blue', 'Black'], correctIndex: 0 }
-      ])
-    }
-  });
+  await createFromBank({
+    title: 'Ayurveda Ahar & Poshan Fundamentals (Level 3)',
+    description: 'Entry-level test for Ayurveda Ahar and Poshan Sahayak: basic Ayurvedic food terms, kitchen hygiene and safe working practices.',
+    qpCode: 'HSS/Q3901', nsqfLevel: 3, category: 'Ayurveda Ahar & Poshan', duration: 15, totalMarks: 20, passingPercent: 60,
+  }, 'Ayurveda Ahar & Poshan');
+
+  await createFromBank({
+    title: 'Healthcare Safety & Hygiene Essentials (Level 3)',
+    description: 'Hand hygiene, PPE, spill management, fire safety and biomedical waste basics for AYUSH support staff.',
+    nsqfLevel: 3, category: 'Healthcare Safety & Hygiene', duration: 10, totalMarks: 10, passingPercent: 60,
+  }, 'Healthcare Safety & Hygiene');
+
+  await createFromBank({
+    title: 'Panchakarma Protocol & Procedures (Level 4)',
+    description: 'Assessment of pre-therapy preparation, Abhyanga, Swedana, Shirodhara set-up, post-therapy care and biomedical waste compliance.',
+    qpCode: 'HSS/Q3601', nsqfLevel: 4, category: 'Panchakarma Therapy', duration: 20, totalMarks: 50, passingPercent: 60,
+  }, 'Panchakarma Therapy');
+
+  await createFromBank({
+    title: 'Yoga Practice & Instruction (Level 4)',
+    description: 'Asanas, Pranayama, Ashtanga Yoga concepts and safe instruction practices.',
+    nsqfLevel: 4, category: 'Yoga & Wellness', duration: 10, totalMarks: 12, passingPercent: 60,
+  }, 'Yoga & Wellness');
+
+  const assessmentDiet = await createFromBank({
+    title: 'Ayurveda Dietetics & Nutrition Planning (Level 5)',
+    description: 'Comprehensive evaluation of Ahara Vijnana, client Prakriti analysis, customised diet plan preparation, and pathya guidelines.',
+    qpCode: 'HSS/Q3902', nsqfLevel: 5, category: 'Ayurveda Dietetics', duration: 20, totalMarks: 50, passingPercent: 60,
+  }, 'Ayurveda Dietetics');
+
+  await createFromBank({
+    title: 'Research Methods & Pharmacovigilance (Level 6)',
+    description: 'Clinical research ethics, trial design, CTRI registration, pharmacovigilance and pharmacopoeial standards.',
+    nsqfLevel: 6, category: 'Research & Pharmacovigilance', duration: 15, totalMarks: 35, passingPercent: 60,
+  }, 'Research & Pharmacovigilance');
 
   // 4. Seed Assessment Result for Student (Demonstrating verified competency in Dietetics)
   const studentProfile = await prisma.studentProfile.findUnique({ where: { userId: studentUser.id } });
@@ -202,9 +215,11 @@ async function main() {
       data: {
         studentId: studentProfile.id,
         assessmentId: assessmentDiet.id,
-        score: 48,
+        score: 45,
         maxScore: 50,
-        answers: JSON.stringify({ 0: 0, 1: 0, 2: 0 }),
+        percentage: 90,
+        submitReason: 'MANUAL',
+        answers: JSON.stringify([]),
         skillScores: JSON.stringify({
           "Prepare ayurvedic diet plan": 96,
           "Client Prakriti assessment": 95,

@@ -24,10 +24,47 @@ export const authAPI = {
 };
 
 export const assessmentAPI = {
-  getAll: () => api.get('/assessments'),
+  getAll: (params) => api.get('/assessments', { params }),
+  getLevels: () => api.get('/assessments/levels'),
+  getTaxonomy: () => api.get('/assessments/taxonomy'),
   getById: (id) => api.get(`/assessments/${id}`),
-  submit: (id, answers) => api.post(`/assessments/${id}/submit`, { answers }),
+  start: (id, environment) => api.post(`/assessments/${id}/start`, { environment }),
   getResults: () => api.get('/assessments/student/results'),
+  // Question sets: create yourself or generate with AI
+  create: (data) => api.post('/assessments', data),
+  generate: (data) => api.post('/assessments/generate', data, { timeout: 90000 }),
+  remove: (id) => api.delete(`/assessments/${id}`),
+  getMine: () => api.get('/assessments/mine'),
+  getReports: (id) => api.get(`/assessments/${id}/reports`),
+  getProctoringReports: (params) => api.get('/assessments/proctoring/reports', { params }),
+};
+
+export const attemptAPI = {
+  // payload: { answers, events, violationCount, snapshot, faceCount }
+  heartbeat: (attemptId, payload) => api.post(`/attempts/${attemptId}/heartbeat`, payload),
+  // payload: { answers, proctoring, submitReason, timeTakenSec }
+  submit: (attemptId, payload) => api.post(`/attempts/${attemptId}/submit`, payload),
+  live: () => api.get('/attempts/live'),
+  terminate: (attemptId, reason) => api.post(`/attempts/${attemptId}/terminate`, { reason }),
+};
+
+// Used when the page is closing: axios can't send during unload, fetch keepalive can (body must stay < 64 KB).
+export const submitAttemptOnUnload = (attemptId, payload) => {
+  try {
+    const token = localStorage.getItem('token');
+    fetch(`${API_BASE_URL}/attempts/${attemptId}/submit`, {
+      method: 'POST',
+      keepalive: true,
+      headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+      body: JSON.stringify(payload),
+    });
+  } catch (_) {
+    // best effort — the server also finalises abandoned attempts
+  }
+};
+
+export const chatbotAPI = {
+  send: (data) => api.post('/chatbot', data),
 };
 
 export const opportunityAPI = {
@@ -77,6 +114,8 @@ export const analyticsAPI = {
 export const notificationAPI = {
   getAll: () => api.get('/notifications'),
   markAsRead: (id) => api.put(`/notifications/${id}/read`),
+  markAllAsRead: () => api.put('/notifications/read-all'),
+  broadcast: (data) => api.post('/notifications/broadcast', data),
 };
 
 export default api;

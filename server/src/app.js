@@ -14,6 +14,8 @@ import notificationRoutes from './routes/notifications.js';
 import skillProfileRoutes from './routes/skillProfile.js';
 import badgesRoutes from './routes/badges.js';
 import adminRoutes from './routes/admin.js';
+import chatbotRoutes from './routes/chatbot.js';
+import attemptRoutes from './routes/attempts.js';
 
 dotenv.config();
 
@@ -27,7 +29,8 @@ if (!process.env.JWT_SECRET) {
 const app = express();
 
 app.use(cors());
-app.use(express.json());
+// 2mb allows proctoring evidence snapshots to be submitted with a test
+app.use(express.json({ limit: '2mb' }));
 app.use(morgan('dev'));
 
 // Routes
@@ -41,6 +44,10 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/skill-profile', skillProfileRoutes);
 app.use('/api/badges', badgesRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/chatbot', chatbotRoutes);
+app.use('/api/attempts', attemptRoutes);
+
+app.get('/api/health', (req, res) => res.json({ status: 'ok', service: 'AYUSH-SETU API' }));
 
 // Error Handler
 app.use(errorHandler);

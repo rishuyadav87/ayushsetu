@@ -15,6 +15,7 @@ router.get('/', authMiddleware, async (req, res, next) => {
       where: { userId },
       include: {
         assessmentResults: {
+          where: { assessment: { isPractice: false } },
           include: {
             assessment: {
               include: {
@@ -36,7 +37,7 @@ router.get('/', authMiddleware, async (req, res, next) => {
     let lastUpdated = null;
 
     for (const result of studentProfile.assessmentResults) {
-      const roleName = result.assessment.taxonomy.roleName;
+      const roleName = result.assessment.category || result.assessment.taxonomy?.roleName || result.assessment.title;
       if (!taxonomyStats[roleName]) {
         taxonomyStats[roleName] = { score: 0, maxScore: 0 };
       }
@@ -57,11 +58,11 @@ router.get('/', authMiddleware, async (req, res, next) => {
         name,
         score: stats.score,
         maxScore: stats.maxScore,
-        percentage: stats.maxScore > 0 ? (stats.score / stats.maxScore) * 100 : 0
+        percentage: stats.maxScore > 0 ? Math.round((stats.score / stats.maxScore) * 100) : 0
       };
     });
 
-    const overallScore = totalMaxScore > 0 ? (totalScore / totalMaxScore) * 100 : 0;
+    const overallScore = totalMaxScore > 0 ? Math.round((totalScore / totalMaxScore) * 100) : 0;
 
     res.json({ categories, overallScore, lastUpdated });
   } catch (error) {
@@ -80,6 +81,7 @@ router.get('/gap-analysis', authMiddleware, async (req, res, next) => {
       where: { userId },
       include: {
         assessmentResults: {
+          where: { assessment: { isPractice: false } },
           include: {
             assessment: {
               include: {
@@ -100,7 +102,7 @@ router.get('/gap-analysis', authMiddleware, async (req, res, next) => {
     let totalMaxScore = 0;
 
     for (const result of studentProfile.assessmentResults) {
-      const roleName = result.assessment.taxonomy.roleName;
+      const roleName = result.assessment.category || result.assessment.taxonomy?.roleName || result.assessment.title;
       if (!taxonomyStats[roleName]) {
         taxonomyStats[roleName] = { score: 0, maxScore: 0 };
       }
@@ -115,7 +117,7 @@ router.get('/gap-analysis', authMiddleware, async (req, res, next) => {
     const gaps = [];
 
     for (const [roleName, stats] of Object.entries(taxonomyStats)) {
-      const studentScore = stats.maxScore > 0 ? (stats.score / stats.maxScore) * 100 : 0;
+      const studentScore = stats.maxScore > 0 ? Math.round((stats.score / stats.maxScore) * 100) : 0;
       if (studentScore < benchmark) {
         const gap = benchmark - studentScore;
         let severity = 'low';
@@ -139,7 +141,7 @@ router.get('/gap-analysis', authMiddleware, async (req, res, next) => {
       }
     }
 
-    const readinessScore = totalMaxScore > 0 ? (totalScore / totalMaxScore) * 100 : 0;
+    const readinessScore = totalMaxScore > 0 ? Math.round((totalScore / totalMaxScore) * 100) : 0;
 
     res.json({ gaps, readinessScore });
   } catch (error) {

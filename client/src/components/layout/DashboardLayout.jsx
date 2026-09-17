@@ -2,6 +2,7 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
+import ChatbotWidget from '../chatbot/ChatbotWidget';
 
 const DashboardLayout = () => {
   return (
@@ -15,6 +16,7 @@ const DashboardLayout = () => {
           </div>
         </main>
       </div>
+      <ChatbotWidget />
     </div>
   );
 };
