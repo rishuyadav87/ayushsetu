@@ -4,51 +4,15 @@ import { useAuth } from './context/AuthContext';
 import DashboardLayout from './components/layout/DashboardLayout';
 import { Toaster } from 'react-hot-toast';
 
-// Pages - lazy load or direct import later
-import Landing from './pages/Landing';
-import Login from './pages/Login';
-import Register from './pages/Register';
-
-// Student
-import StudentDashboard from './pages/student/StudentDashboard';
-import SkillProfile from './pages/student/SkillProfile';
-import Assessments from './pages/student/Assessments';
-import Opportunities from './pages/student/Opportunities';
-import TakeAssessment from './pages/student/TakeAssessment';
-import Portfolio from './pages/student/Portfolio';
-import Applications from './pages/student/Applications';
-
-// Industry
-import IndustryDashboard from './pages/industry/IndustryDashboard';
-import PostOpportunity from './pages/industry/PostOpportunity';
-import ManageOpportunities from './pages/industry/ManageOpportunities';
-import CandidateSearch from './pages/industry/CandidateSearch';
-import ViewApplications from './pages/industry/ViewApplications';
-
-// Academician
-import AcademicianDashboard from './pages/academician/AcademicianDashboard';
-import Mentoring from './pages/academician/Mentoring';
-import ResearchHub from './pages/academician/ResearchHub';
-import FDPAccess from './pages/academician/FDPAccess';
-
-// Institution
-import InstitutionDashboard from './pages/institution/InstitutionDashboard';
-import ReadinessDashboard from './pages/institution/ReadinessDashboard';
-import OutcomeTracking from './pages/institution/OutcomeTracking';
-import StudentManagement from './pages/institution/StudentManagement';
-
-// Admin
-import AdminDashboard from './pages/admin/AdminDashboard';
-import UserManagement from './pages/admin/UserManagement';
-import SkillTaxonomy from './pages/admin/SkillTaxonomy';
-
-// Shared (all roles)
-import Notifications from './pages/shared/Notifications';
-import QuestionSets from './pages/shared/QuestionSets';
-import UploadQuestionSet from './pages/shared/UploadQuestionSet';
-import ProctoringReports from './pages/shared/ProctoringReports';
-import LiveProctoring from './pages/shared/LiveProctoring';
-import LevelTests from './pages/student/LevelTests';
+import {
+  Landing, Login, Register, StudentDashboard, SkillProfile, Assessments, Opportunities, TakeAssessment, Portfolio, Applications,
+  IndustryDashboard, PostOpportunity, ManageOpportunities, CandidateSearch, ViewApplications,
+  AcademicianDashboard, Mentoring, ResearchHub, FDPAccess,
+  InstitutionDashboard, ReadinessDashboard, OutcomeTracking, StudentManagement,
+  AdminDashboard, UserManagement, SkillTaxonomy,
+  Notifications, QuestionSets, UploadQuestionSet, ProctoringReports, LiveProctoring, LevelTests
+} from './lazyRoutes';
+import { Loader2 } from 'lucide-react';
 
 // Routes every role gets inside its own area
 const sharedRoutes = (role) => [
@@ -73,12 +37,13 @@ function App() {
   return (
     <>
       <Toaster position="top-right" />
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        
-        {/* Student Routes */}
+      <React.Suspense fallback={<div className="flex justify-center items-center h-screen"><Loader2 className="animate-spin text-primary" size={48} /></div>}>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          
+          {/* Student Routes */}
         <Route path="/student" element={<ProtectedRoute allowedRoles={['student']}><DashboardLayout /></ProtectedRoute>}>
           <Route index element={<StudentDashboard />} />
           <Route path="skills" element={<SkillProfile />} />
@@ -129,6 +94,7 @@ function App() {
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      </React.Suspense>
     </>
   );
 }
