@@ -12,10 +12,10 @@ const Footer = () => {
         <div>
           <h4 className="font-semibold mb-4">Quick Links</h4>
           <ul className="space-y-2 text-sm text-gray-400">
-            <li><button onClick={() => toast.success('About page coming soon!')} className="hover:text-white transition">About Us</button></li>
-            <li><button onClick={() => toast.success('Contact page coming soon!')} className="hover:text-white transition">Contact</button></li>
-            <li><button onClick={() => toast.success('Privacy Policy coming soon!')} className="hover:text-white transition">Privacy Policy</button></li>
-            <li><button onClick={() => toast.success('Terms of Service coming soon!')} className="hover:text-white transition">Terms of Service</button></li>
+            <li><a href="#" className="hover:text-white transition">About Us</a></li>
+            <li><a href="#" className="hover:text-white transition">Contact</a></li>
+            <li><a href="#" className="hover:text-white transition">Privacy Policy</a></li>
+            <li><a href="#" className="hover:text-white transition">Terms of Service</a></li>
           </ul>
         </div>
         <div>

@@ -129,9 +129,6 @@ const Opportunities = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <button onClick={() => toast('Feature coming soon!', { icon: '🚧' })} className="p-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 flex items-center justify-center">
-            <Filter size={20} />
-          </button>
         </div>
       </div>
 

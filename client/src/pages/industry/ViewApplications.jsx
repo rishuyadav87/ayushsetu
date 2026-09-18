@@ -100,9 +100,6 @@ const ViewApplications = () => {
                       </td>
                       <td className="px-6 py-4 text-right">
                         <div className="flex justify-end gap-2">
-                          <button onClick={() => toast('Feature coming soon!', { icon: '🚧' })} className="p-1.5 text-gray-500 hover:text-primary hover:bg-primary/10 rounded" title="View Portfolio">
-                            <Download size={18} />
-                          </button>
                           <button 
                             onClick={() => handleUpdateStatus(appId, 'shortlisted')}
                             className="p-1.5 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded" 

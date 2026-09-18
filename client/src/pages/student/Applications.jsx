@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import ApplicationStatusBadge from '../../components/common/ApplicationStatusBadge';
 import { Building, MapPin, Calendar, ArrowRight, AlertCircle } from 'lucide-react';
 import { applicationAPI } from '../../services/api';
@@ -84,9 +85,9 @@ const Applications = () => {
                         <ApplicationStatusBadge status={app.status || 'applied'} />
                       </td>
                       <td className="px-6 py-4 text-right">
-                        <button onClick={() => toast('Feature coming soon!', { icon: '🚧' })} className="text-primary hover:text-primary/80 font-medium text-sm inline-flex items-center">
+                        <Link to={'/student/opportunities'} className="text-primary hover:text-primary/80 font-medium text-sm inline-flex items-center">
                           View Details <ArrowRight size={16} className="ml-1" />
-                        </button>
+                        </Link>
                       </td>
                     </tr>
                   )

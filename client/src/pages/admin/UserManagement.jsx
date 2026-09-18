@@ -189,7 +189,7 @@ const UserManagement = () => {
                       </button>
                     </td>
                     <td className="px-6 py-4">
-                      <button onClick={() => toast('Feature coming soon!', { icon: '🚧' })} className="text-gray-400 hover:text-primary transition-colors p-1">
+                      <button onClick={() => toast.error('Admin feature disabled in demo mode')} className="text-gray-400 hover:text-primary transition-colors p-1">
                         <MoreVertical size={18} />
                       </button>
                     </td>

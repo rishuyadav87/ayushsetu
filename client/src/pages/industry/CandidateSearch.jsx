@@ -94,9 +94,6 @@ const CandidateSearch = () => {
               ))}
             </div>
 
-            <button onClick={() => toast('Feature coming soon!', { icon: '🚧' })} className="w-full border border-primary text-primary hover:bg-primary hover:text-white py-2 rounded-lg font-medium transition-colors">
-              View Full Profile
-            </button>
           </div>
         ))}
         </div>

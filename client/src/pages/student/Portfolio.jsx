@@ -114,9 +114,6 @@ const Portfolio = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-dark">Digital Portfolio</h1>
-        <button onClick={() => toast('Feature coming soon!', { icon: '🚧' })} className="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 flex items-center gap-2">
-          <ExternalLink size={16} /> Share Public Link
-        </button>
       </div>
 
       {error && (

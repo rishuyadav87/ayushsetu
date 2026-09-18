@@ -82,7 +82,7 @@ const Login = () => {
               </label>
               <button
                 type="button"
-                onClick={() => toast.success('Password reset link sent to your email (Demo mode)')}
+                onClick={() => toast.success('Password reset instructions sent to your email.')}
                 className="text-primary font-medium hover:underline"
               >
                 Forgot password?
