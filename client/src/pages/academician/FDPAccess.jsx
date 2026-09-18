@@ -20,7 +20,6 @@ const FDPAccess = () => {
         status: 'not_enrolled' // For demo, we just simulate status locally
       })));
     } catch (err) {
-      console.error(err);
       toast.error('Failed to load FDPs');
     } finally {
       setLoading(false);

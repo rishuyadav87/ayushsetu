@@ -23,7 +23,6 @@ const Applications = () => {
         const response = await applicationAPI.getAll();
         setApplications(response.data?.length ? response.data : fallbackApplications);
       } catch (err) {
-        console.error("Failed to fetch applications", err);
         setError("Could not load your applications. Showing fallback data.");
         setApplications(fallbackApplications);
       } finally {

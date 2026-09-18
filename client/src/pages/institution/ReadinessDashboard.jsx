@@ -8,31 +8,20 @@ const ReadinessDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const mockData = [
-    { name: 'Clinical', score: 85 },
-    { name: 'Research', score: 65 },
-    { name: 'Tech Tools', score: 50 },
-    { name: 'Communication', score: 90 },
-    { name: 'Ethics', score: 95 },
-    { name: 'Management', score: 60 },
-  ];
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
         const res = await analyticsAPI.getDashboard();
-        if (res.data?.readinessChart) {
-          // map { name, readiness } to { name, score } since the UI uses 'score'
-          setData(res.data.readinessChart.map(item => ({ name: item.name, score: item.readiness })));
+        if (res.data?.readinessChart && res.data.readinessChart.length > 0) {
+          setData(res.data.readinessChart.map(item => ({ name: item.name, score: item.readiness, benchmark: item.benchmark || 70 })));
         } else {
-          setData(mockData);
+          setData([]);
         }
         setError(null);
       } catch (err) {
-        console.error("Failed to load readiness data", err);
-        setError("Failed to load real data. Using fallback data.");
-        setData(mockData);
+        setError('Failed to load readiness data. Please try again.');
+        setData([]);
       } finally {
         setLoading(false);
       }
@@ -60,36 +49,31 @@ const ReadinessDashboard = () => {
       )}
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
-        <p className="text-gray-500 mb-6">Aggregate skill readiness across all students in your institution.</p>
+        <p className="text-gray-500 mb-6">Aggregate skill readiness across all students based on assessment performance.</p>
         
-        <div className="h-80 w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={data}
-              margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="score" name="Average Score %" fill="#2D6A4F" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
-           <div className="p-4 border rounded-lg bg-gray-50">
-             <h3 className="font-bold mb-2">B.A.M.S 4th Year Cohort</h3>
-             <div className="w-full bg-gray-200 rounded-full h-2 mb-1"><div className="bg-green-500 h-2 rounded-full" style={{ width: '85%' }}></div></div>
-             <span className="text-xs text-gray-500 font-medium">85% Average Readiness Score</span>
-           </div>
-           <div className="p-4 border rounded-lg bg-gray-50">
-             <h3 className="font-bold mb-2">B.A.M.S 3rd Year Cohort</h3>
-             <div className="w-full bg-gray-200 rounded-full h-2 mb-1"><div className="bg-yellow-500 h-2 rounded-full" style={{ width: '65%' }}></div></div>
-             <span className="text-xs text-gray-500 font-medium">65% Average Readiness Score</span>
-           </div>
-        </div>
+        {data.length > 0 ? (
+          <div className="h-80 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={data}
+                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis domain={[0, 100]} />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="score" name="Avg Readiness %" fill="#2D6A4F" />
+                <Bar dataKey="benchmark" name="Benchmark %" fill="#94D2BD" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        ) : (
+          <div className="text-center py-12 text-gray-500">
+            <p className="text-lg font-medium mb-2">No readiness data available yet</p>
+            <p className="text-sm">Readiness scores appear once students complete assessments.</p>
+          </div>
+        )}
       </div>
     </div>
   );

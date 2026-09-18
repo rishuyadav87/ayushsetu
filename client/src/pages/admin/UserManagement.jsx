@@ -52,7 +52,6 @@ const UserManagement = () => {
         if(!error && !Array.isArray(response.data)) setError("Displaying mock data (API unavailable)");
       }
     } catch (err) {
-      console.error("Failed to load users", err);
       setError("Failed to fetch real users. Showing mock data.");
       setUsers(mockUsers.filter(u => 
         (roleFilter === 'all' || u.role === roleFilter) &&

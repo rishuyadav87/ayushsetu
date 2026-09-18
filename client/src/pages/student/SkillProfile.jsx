@@ -29,7 +29,6 @@ const SkillProfile = () => {
         setProfile(profileRes.data);
         setGapData(gapRes.data);
       } catch (err) {
-        console.error('Failed to load skill profile', err);
         setError('Could not load your skill profile from the server.');
       } finally {
         setLoading(false);
@@ -46,7 +45,6 @@ const SkillProfile = () => {
     try {
       generateSkillGapReport(user?.name || 'Student', gapData, profile);
     } catch (e) {
-      console.error(e);
       toast.error('Could not generate the PDF report');
     }
   };

@@ -16,6 +16,12 @@ router.post('/', authMiddleware, roleCheck(['STUDENT']), async (req, res, next) 
       return res.status(400).json({ message: 'opportunityId is required.' });
     }
 
+    // Verify opportunity exists
+    const opportunity = await prisma.postedOpportunity.findUnique({ where: { id: opportunityId } });
+    if (!opportunity) {
+      return res.status(404).json({ message: 'Opportunity not found.' });
+    }
+
     const existing = await prisma.application.findFirst({
       where: { studentId: req.user.userId, opportunityId }
     });

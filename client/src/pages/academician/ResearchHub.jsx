@@ -15,7 +15,6 @@ const ResearchHub = () => {
       const res = await academicianAPI.getOpportunities();
       setProjects(res.data.filter(o => o.type === 'RESEARCH'));
     } catch (err) {
-      console.error(err);
       toast.error('Failed to load projects');
     } finally {
       setLoading(false);

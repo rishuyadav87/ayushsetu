@@ -26,7 +26,6 @@ const StudentDashboard = () => {
         setStats(statsRes.data);
         setRecommendedOpps(oppsRes.data);
       } catch (err) {
-        console.error("Dashboard fetch error:", err);
         setError("Failed to load dashboard data. Showing default data.");
       } finally {
         setLoading(false);

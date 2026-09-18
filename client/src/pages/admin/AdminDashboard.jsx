@@ -25,7 +25,6 @@ const AdminDashboard = () => {
         const response = await analyticsAPI.getDashboard();
         setStats(response.data);
       } catch (err) {
-        console.error("Failed to load admin stats", err);
         setError("Failed to load live data. Showing fallback metrics.");
       } finally {
         setLoading(false);

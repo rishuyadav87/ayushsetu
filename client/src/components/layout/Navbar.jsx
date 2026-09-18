@@ -23,7 +23,6 @@ const Navbar = () => {
         const res = await notificationAPI.getAll();
         setUnreadCount(res.data?.filter(n => !n.isRead)?.length || 0);
       } catch (err) {
-        console.error("Failed to fetch notifications", err);
       }
     };
     fetchNotifications();

@@ -25,7 +25,6 @@ const CandidateSearch = () => {
         }));
         setCandidates(mapped);
       } catch (err) {
-        console.error(err);
       } finally {
         setLoading(false);
       }

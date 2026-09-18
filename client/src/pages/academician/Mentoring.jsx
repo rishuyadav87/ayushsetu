@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Search, ChevronRight, X, Loader2 } from 'lucide-react';
 import { academicianAPI } from '../../services/api';
 import toast from 'react-hot-toast';
@@ -15,7 +16,6 @@ const Mentoring = () => {
       const res = await academicianAPI.getMentees();
       setMentees(res.data);
     } catch (err) {
-      console.error(err);
       toast.error('Failed to load mentees');
     } finally {
       setLoading(false);

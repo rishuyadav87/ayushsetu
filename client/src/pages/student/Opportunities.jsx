@@ -43,7 +43,6 @@ const Opportunities = () => {
         const response = await opportunityAPI.getAll(params);
         setOpportunities(response.data?.length ? response.data : fallbackOpportunities);
       } catch (err) {
-        console.error("Failed to fetch opportunities", err);
         setError(t('common.error') + " - Could not load real opportunities. Showing fallback data.");
         setOpportunities(fallbackOpportunities);
       } finally {

@@ -16,7 +16,6 @@ const AcademicianDashboard = () => {
         const res = await analyticsAPI.getDashboard();
         setStats(res.data);
       } catch (err) {
-        console.error("Dashboard fetch error:", err);
         setError("Failed to load dashboard data. Showing empty state.");
       } finally {
         setLoading(false);

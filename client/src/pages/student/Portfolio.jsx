@@ -32,7 +32,6 @@ const Portfolio = () => {
       if (badgeRes?.data) setBadges(badgeRes.data);
       
     } catch (err) {
-      console.error("Failed to load portfolio data", err);
       setError("Could not load real profile data. Showing default data.");
     } finally {
       setLoading(false);
@@ -56,7 +55,6 @@ const Portfolio = () => {
       fetchProfileAndBadges();
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to add certificate.");
-      console.error(err);
     }
   };
 
@@ -76,7 +74,6 @@ const Portfolio = () => {
       fetchProfileAndBadges();
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to add project.");
-      console.error(err);
     }
   };
 
@@ -101,28 +98,17 @@ const Portfolio = () => {
   };
 
   const fallbackData = {
-    name: user?.name || 'John Doe',
-    education: 'B.A.M.S Student',
-    institution: 'Independent',
-    skills: [
-      { name: 'General', level: 'beginner' }
-    ],
-    projects: [
-      { 
-        id: 1, 
-        title: 'Efficacy of Ashwagandha in Stress Management',
-        subtitle: 'Mentored by Dr. Smitha K. | Jan 2023 - Jun 2023',
-        description: 'A comparative study analyzing cortisol levels before and after a 6-week intervention of Ashwagandha root extract.'
-      }
-    ],
-    certifications: [
-      { id: 1, title: 'NSQF Level 5 Certification - Clinical Practices', issuer: 'Issued by Ministry of Ayush | Oct 2023' }
-    ]
+    name: user?.name || 'Student',
+    education: '',
+    institution: '',
+    skills: [],
+    projects: [],
+    certifications: []
   };
 
   const displayData = profile || fallbackData;
-  const initials = displayData.name?.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'JD';
-  const displayBadges = badges.length > 0 ? badges : [{id:'b1', name:'Early Adopter', icon:'🌟', description:'Joined early'}];
+  const initials = displayData.name?.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || '??';
+  const displayBadges = badges;
 
   return (
     <div className="space-y-6">

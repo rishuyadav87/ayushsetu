@@ -57,10 +57,13 @@ router.post('/broadcast', authMiddleware, roleCheck(['ADMIN', 'INSTITUTION']), a
 
 router.put('/:id/read', authMiddleware, async (req, res, next) => {
   try {
-    const notification = await prisma.notification.updateMany({
+    const result = await prisma.notification.updateMany({
       where: { id: req.params.id, userId: req.user.userId },
       data: { isRead: true }
     });
+    if (result.count === 0) {
+      return res.status(404).json({ message: 'Notification not found' });
+    }
     res.json({ message: 'Marked as read' });
   } catch (error) {
     next(error);

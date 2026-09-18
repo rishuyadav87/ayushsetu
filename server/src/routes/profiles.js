@@ -63,6 +63,10 @@ router.put('/my-profile', authMiddleware, async (req, res, next) => {
       if (updateData.skills && Array.isArray(updateData.skills)) {
         updateData.skills = JSON.stringify(updateData.skills);
       }
+      if (updateData.enrollmentYear) {
+        updateData.enrollmentYear = parseInt(updateData.enrollmentYear, 10);
+        if (isNaN(updateData.enrollmentYear)) delete updateData.enrollmentYear;
+      }
       updatedProfile = await prisma.studentProfile.update({ where: { userId }, data: updateData });
     } else if (role === 'INDUSTRY') {
       const updateData = pick(req.body, INDUSTRY_UPDATABLE);

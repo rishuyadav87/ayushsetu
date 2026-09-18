@@ -25,7 +25,6 @@ const Assessments = () => {
         setLevels(levelRes.data?.levels || []);
         setProgress(levelRes.data?.progress || null);
       } catch (err) {
-        console.error('Failed to fetch assessments', err);
         setError('Could not load assessments from the server. Please check that the backend is running.');
       } finally {
         setLoading(false);

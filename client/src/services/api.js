@@ -17,6 +17,19 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// Auto-logout on expired/invalid token
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const authAPI = {
   login: (data) => api.post('/auth/login', data),
   register: (data) => api.post('/auth/register', data),
@@ -79,6 +92,7 @@ export const opportunityAPI = {
   getRecommended: () => api.get('/opportunities/recommended'),
   getById: (id) => api.get(`/opportunities/${id}`),
   create: (data) => api.post('/opportunities', data),
+  delete: (id) => api.delete(`/opportunities/${id}`),
 };
 
 export const applicationAPI = {

@@ -142,7 +142,6 @@ const TakeAssessment = () => {
       });
       await finishWithResult(data);
     } catch (err) {
-      console.error('Submission failed', err);
       submittedRef.current = false;
       setSubmitError(err.response?.data?.message || 'Could not submit. Check your internet connection and try again.');
       setPhase('test');

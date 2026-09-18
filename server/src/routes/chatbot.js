@@ -143,7 +143,8 @@ router.post('/', authMiddleware, async (req, res, next) => {
         where: { studentId: profile.id, status: 'IN_PROGRESS', expiresAt: { gt: new Date() } },
       });
       if (live) {
-        const events = JSON.parse(live.events || '[]');
+        let events = [];
+        try { events = JSON.parse(live.events || '[]'); } catch (_) { events = []; }
         events.push({ type: 'AI_ASSISTANT_DURING_TEST', severity: 'high', message: 'Tried to use the AI assistant during a live test (possibly from another tab or device)', at: new Date().toISOString(), elapsedSec: Math.round((Date.now() - new Date(live.startedAt).getTime()) / 1000) });
         await prisma.assessmentAttempt.update({ where: { id: live.id }, data: { events: JSON.stringify(events.slice(-300)), violationCount: { increment: 1 } } });
         return res.json({ reply: 'The assistant is disabled while your test is in progress. This attempt has been recorded by the proctoring system.', actions: [], source: 'integrity' });
