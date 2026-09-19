@@ -88,7 +88,7 @@ const UserManagement = () => {
 
   const getRoleBadge = (role) => {
     switch (role?.toUpperCase()) {
-      case 'STUDENT': return <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-semibold">STUDENT</span>;
+      case 'STUDENT': return <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-semibold">STUDENT</span>;
       case 'INDUSTRY': return <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-semibold">INDUSTRY</span>;
       case 'ACADEMICIAN': return <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs font-semibold">ACADEMICIAN</span>;
       case 'INSTITUTION': return <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs font-semibold">INSTITUTION</span>;
@@ -180,7 +180,7 @@ const UserManagement = () => {
                         onClick={() => handleToggleStatus(u._id || u.id, u.isActive)}
                         className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-colors border ${
                           u.isActive 
-                            ? 'bg-green-50 text-green-700 border-green-200 hover:bg-green-100' 
+                            ? 'bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100' 
                             : 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100'
                         }`}
                       >

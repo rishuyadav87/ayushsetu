@@ -8,7 +8,7 @@ const TYPE_ICON = {
   NOTICE: <Megaphone size={18} className="text-primary" />,
   ASSESSMENT: <FileText size={18} className="text-blue-600" />,
   ASSESSMENT_RESULT: <Award size={18} className="text-amber-600" />,
-  LEVEL_UNLOCK: <Unlock size={18} className="text-green-600" />,
+  LEVEL_UNLOCK: <Unlock size={18} className="text-blue-600" />,
   PROCTORING: <ShieldAlert size={18} className="text-red-600" />,
 };
 

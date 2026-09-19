@@ -89,7 +89,7 @@ const LevelTests = () => {
                   <div>
                     <div className="flex items-center gap-2 flex-wrap">
                       <h2 className="font-bold text-dark">{l.title}</h2>
-                      {l.passed && <span className="text-xs bg-green-50 text-green-700 px-2 py-0.5 rounded-full flex items-center gap-1"><CheckCircle size={12} /> Passed</span>}
+                      {l.passed && <span className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full flex items-center gap-1"><CheckCircle size={12} /> Passed</span>}
                       {isCurrent && !l.passed && <span className="text-xs bg-accent/15 text-orange-700 px-2 py-0.5 rounded-full flex items-center gap-1"><Flag size={12} /> Your level</span>}
                       {!l.unlocked && <span className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full flex items-center gap-1"><Lock size={12} /> Locked</span>}
                     </div>
@@ -122,7 +122,7 @@ const LevelTests = () => {
                             {t.proctored && <span className="flex items-center gap-1 text-blue-600"><ShieldCheck size={12} /> Proctored</span>}
                             {t.source === 'AI' && <span className="flex items-center gap-1 text-purple-600"><Sparkles size={12} /> AI</span>}
                           </div>
-                          {t.attempts > 0 && <div className={`text-xs mt-2 ${passed ? 'text-green-700' : 'text-orange-700'}`}>Best {t.bestPercentage}% · {t.attempts} attempt(s)</div>}
+                          {t.attempts > 0 && <div className={`text-xs mt-2 ${passed ? 'text-blue-700' : 'text-orange-700'}`}>Best {t.bestPercentage}% · {t.attempts} attempt(s)</div>}
                           <button
                             disabled={t.locked}
                             onClick={() => navigate(`/student/assessments/take/${t.id}`)}

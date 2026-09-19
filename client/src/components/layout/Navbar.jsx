@@ -77,7 +77,7 @@ const Navbar = () => {
               <div className="flex items-center gap-2 md:gap-3">
                 <div className="flex flex-col items-end hidden md:flex">
                   <span className="text-sm font-medium">{user.name || 'User'}</span>
-                  <span className="text-xs text-green-200 capitalize">{user.role}</span>
+                  <span className="text-xs text-blue-200 capitalize">{user.role}</span>
                 </div>
                 <div className="bg-white text-primary rounded-full p-1.5 md:p-2">
                   <User size={18} className="md:w-5 md:h-5" />

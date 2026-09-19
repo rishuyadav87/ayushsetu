@@ -32,7 +32,7 @@ const AssessmentCard = ({
       </div>
 
       {attempts > 0 && (
-        <div className={`text-xs mb-4 px-3 py-2 rounded-lg ${passed ? 'bg-green-50 text-green-700' : 'bg-orange-50 text-orange-700'}`}>
+        <div className={`text-xs mb-4 px-3 py-2 rounded-lg ${passed ? 'bg-blue-50 text-blue-700' : 'bg-orange-50 text-orange-700'}`}>
           Best score {bestPercentage}% · {attempts} attempt{attempts > 1 ? 's' : ''} · {passed ? 'Passed' : `Pass mark ${passingPercent}%`}
         </div>
       )}

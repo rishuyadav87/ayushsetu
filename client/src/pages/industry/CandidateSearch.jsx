@@ -73,12 +73,12 @@ const CandidateSearch = () => {
                 </div>
                 <div>
                   <h3 className="font-bold text-dark">{c.name}</h3>
-                  <div className="flex items-center text-xs text-green-600 font-medium">
+                  <div className="flex items-center text-xs text-blue-600 font-medium">
                     <Award size={12} className="mr-1" /> NSQF Level 5
                   </div>
                 </div>
               </div>
-              <div className="bg-green-50 text-green-700 font-bold px-2 py-1 rounded text-sm">
+              <div className="bg-blue-50 text-blue-700 font-bold px-2 py-1 rounded text-sm">
                 {c.score}
               </div>
             </div>

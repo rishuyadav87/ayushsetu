@@ -14,7 +14,7 @@ const StatCard = ({ title, value, icon, trend, trendValue, colorClass = "text-pr
       </div>
       {trend && (
         <div className="mt-auto flex items-center text-sm">
-          <span className={`font-medium ${trend === 'up' ? 'text-green-600' : 'text-red-600'}`}>
+          <span className={`font-medium ${trend === 'up' ? 'text-blue-600' : 'text-red-600'}`}>
             {trend === 'up' ? '↑' : '↓'} {trendValue}
           </span>
           <span className="text-gray-400 ml-2">vs last month</span>

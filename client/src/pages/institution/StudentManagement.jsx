@@ -13,7 +13,7 @@ const StudentManagement = () => {
          <ul className="mt-4 space-y-2">
             <li className="p-3 border rounded flex justify-between">
               <span>John Doe (ID: 1001) - 4th Year</span>
-              <span className="text-green-600 font-bold">Readiness: 78%</span>
+              <span className="text-blue-600 font-bold">Readiness: 78%</span>
             </li>
             <li className="p-3 border rounded flex justify-between">
               <span>Aarav Sharma (ID: 1002) - 3rd Year</span>

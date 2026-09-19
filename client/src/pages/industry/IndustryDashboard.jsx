@@ -50,7 +50,7 @@ const IndustryDashboard = () => {
             <StatCard title="Active Postings" value={stats?.opportunities || 5} icon={<Briefcase size={24} />} colorClass="text-blue-600 bg-blue-100" />
             <StatCard title="Total Applications" value={stats?.totalApplications || 142} icon={<FileText size={24} />} colorClass="text-purple-600 bg-purple-100" trend="up" trendValue="12%" />
             <StatCard title="Shortlisted" value={stats?.shortlisted || 28} icon={<Users size={24} />} colorClass="text-orange-600 bg-orange-100" />
-            <StatCard title="Selected" value={stats?.selected || 6} icon={<CheckCircle size={24} />} colorClass="text-green-600 bg-green-100" />
+            <StatCard title="Selected" value={stats?.selected || 6} icon={<CheckCircle size={24} />} colorClass="text-blue-600 bg-blue-100" />
           </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -63,7 +63,7 @@ const IndustryDashboard = () => {
                   <h3 className="font-semibold text-gray-800">{job.name}</h3>
                   <p className="text-xs text-gray-500 mt-1">{job.applications} Applications received</p>
                 </div>
-                <span className={`text-xs px-2 py-1 rounded bg-green-100 text-green-800`}>
+                <span className={`text-xs px-2 py-1 rounded bg-blue-100 text-blue-800`}>
                   Active
                 </span>
               </div>
@@ -77,7 +77,7 @@ const IndustryDashboard = () => {
                   <h3 className="font-semibold text-gray-800">{job.title}</h3>
                   <p className="text-xs text-gray-500 mt-1">{job.apps} Applications received</p>
                 </div>
-                <span className={`text-xs px-2 py-1 rounded ${job.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                <span className={`text-xs px-2 py-1 rounded ${job.status === 'Active' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}`}>
                   {job.status}
                 </span>
               </div>
@@ -107,7 +107,7 @@ const IndustryDashboard = () => {
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-sm font-bold text-green-600">{cand.score}</div>
+                  <div className="text-sm font-bold text-blue-600">{cand.score}</div>
                   <div className="text-xs text-gray-400">Match Score</div>
                 </div>
               </div>

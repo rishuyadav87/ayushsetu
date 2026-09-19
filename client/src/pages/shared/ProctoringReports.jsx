@@ -66,7 +66,7 @@ const ProctoringReports = () => {
           {rows.map(r => (
             <div key={r.id} className={`bg-white rounded-xl border shadow-sm ${r.flagged ? 'border-red-200' : 'border-gray-100'}`}>
               <button onClick={() => setOpen(open === r.id ? null : r.id)} className="w-full p-4 flex flex-wrap items-center gap-4 text-left">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${r.flagged ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'}`}>
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${r.flagged ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600'}`}>
                   {r.flagged ? <ShieldAlert size={20} /> : <ShieldCheck size={20} />}
                 </div>
                 <div className="flex-1 min-w-[180px]">

@@ -65,7 +65,7 @@ const StudentDashboard = () => {
         <>
           {/* Stats Row */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <StatCard title="Overall Readiness" value={`${stats?.overallReadiness ?? 0}%`} icon={<Award size={24} />} colorClass="text-green-600 bg-green-100" trend={stats?.overallReadiness ? "up" : null} trendValue={stats?.overallReadiness ? "5%" : null} />
+            <StatCard title="Overall Readiness" value={`${stats?.overallReadiness ?? 0}%`} icon={<Award size={24} />} colorClass="text-blue-600 bg-blue-100" trend={stats?.overallReadiness ? "up" : null} trendValue={stats?.overallReadiness ? "5%" : null} />
             <StatCard title="Assessments Completed" value={stats?.assessmentsTaken ?? 0} icon={<BookOpen size={24} />} colorClass="text-blue-600 bg-blue-100" />
             <StatCard title="Applications Active" value={stats?.applications ?? 0} icon={<Briefcase size={24} />} colorClass="text-orange-600 bg-orange-100" />
             <StatCard title="Available Opportunities" value={stats?.openOpportunities ?? 0} icon={<Star size={24} />} colorClass="text-purple-600 bg-purple-100" />

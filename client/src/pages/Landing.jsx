@@ -83,7 +83,7 @@ const Landing = () => {
                 icon: <Briefcase size={40} />, 
                 title: "Opportunity Hub", 
                 desc: "AI-driven matchmaking connecting students with industry internships, jobs, and research collaborations.",
-                color: "bg-green-50 text-green-600 border-green-100"
+                color: "bg-blue-50 text-blue-600 border-blue-100"
               },
               { 
                 icon: <GraduationCap size={40} />, 

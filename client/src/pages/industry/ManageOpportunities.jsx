@@ -84,7 +84,7 @@ const ManageOpportunities = () => {
                     </td>
                     <td className="px-6 py-4">
                       <span className={`text-xs px-2.5 py-1 rounded-full font-medium capitalize ${
-                        job.status === 'OPEN' || job.status === 'open' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                        job.status === 'OPEN' || job.status === 'open' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'
                       }`}>
                         {job.status?.toLowerCase() || 'open'}
                       </span>

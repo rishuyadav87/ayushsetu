@@ -63,10 +63,10 @@ const Mentoring = () => {
             <div className="space-y-3 mb-6">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Overall Readiness:</span>
-                <span className="font-bold text-green-600">{m.readiness}</span>
+                <span className="font-bold text-blue-600">{m.readiness}</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
-                <div className="bg-green-500 h-2 rounded-full" style={{ width: m.readiness }}></div>
+                <div className="bg-blue-500 h-2 rounded-full" style={{ width: m.readiness }}></div>
               </div>
               
               {m.feedbacks && m.feedbacks.length > 0 && (
