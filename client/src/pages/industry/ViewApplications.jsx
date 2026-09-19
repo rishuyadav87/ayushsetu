@@ -102,7 +102,7 @@ const ViewApplications = () => {
                         <div className="flex justify-end gap-2">
                           <button 
                             onClick={() => handleUpdateStatus(appId, 'shortlisted')}
-                            className="p-1.5 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded" 
+                            className="p-1.5 text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 rounded" 
                             title="Shortlist"
                           >
                             <CheckCircle size={18} />

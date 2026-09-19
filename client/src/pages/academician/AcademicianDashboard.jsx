@@ -42,9 +42,9 @@ const AcademicianDashboard = () => {
       ) : (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <StatCard title="Active Mentees" value={stats?.totalStudents || 15} icon={<Users size={24} />} colorClass="text-blue-600 bg-blue-100" />
+            <StatCard title="Active Mentees" value={stats?.totalStudents || 15} icon={<Users size={24} />} colorClass="text-indigo-600 bg-indigo-100" />
             <StatCard title="Research Projects" value={stats?.researchProjects || 3} icon={<BookOpen size={24} />} colorClass="text-purple-600 bg-purple-100" />
-            <StatCard title="FDPs Completed" value={stats?.totalApplications || 4} icon={<GraduationCap size={24} />} colorClass="text-blue-600 bg-blue-100" />
+            <StatCard title="FDPs Completed" value={stats?.totalApplications || 4} icon={<GraduationCap size={24} />} colorClass="text-indigo-600 bg-indigo-100" />
             <StatCard title="Endorsements Given" value={stats?.mentoringSessions || 42} icon={<FileText size={24} />} colorClass="text-orange-600 bg-orange-100" />
           </div>
         </>

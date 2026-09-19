@@ -53,7 +53,7 @@ const SkillProfile = () => {
     switch (severity) {
       case 'high': return 'bg-red-50 border-red-200 text-red-800';
       case 'medium': return 'bg-yellow-50 border-yellow-200 text-yellow-800';
-      default: return 'bg-blue-50 border-blue-200 text-blue-800';
+      default: return 'bg-indigo-50 border-indigo-200 text-indigo-800';
     }
   };
 
@@ -61,8 +61,8 @@ const SkillProfile = () => {
     switch (severity) {
       case 'high': return <AlertCircle size={20} className="text-red-500" />;
       case 'medium': return <AlertTriangle size={20} className="text-yellow-500" />;
-      case 'low': return <TrendingUp size={20} className="text-blue-600" />;
-      default: return <CheckCircle size={20} className="text-blue-500" />;
+      case 'low': return <TrendingUp size={20} className="text-indigo-600" />;
+      default: return <CheckCircle size={20} className="text-indigo-500" />;
     }
   };
 

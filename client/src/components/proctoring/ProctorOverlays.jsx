@@ -35,7 +35,7 @@ export const Watermark = ({ name, email, attemptId }) => {
 export const AudioMeter = ({ level = 0, speaking }) => (
   <div className="flex items-end gap-0.5 h-4" title={speaking ? 'Voice detected' : 'Microphone level'}>
     {[0.15, 0.3, 0.45, 0.6, 0.75].map((t, i) => (
-      <div key={i} className={`w-1 rounded-sm ${level >= t ? (speaking ? 'bg-red-500' : 'bg-blue-500') : 'bg-gray-300'}`} style={{ height: `${(i + 1) * 3}px` }} />
+      <div key={i} className={`w-1 rounded-sm ${level >= t ? (speaking ? 'bg-red-500' : 'bg-indigo-500') : 'bg-gray-300'}`} style={{ height: `${(i + 1) * 3}px` }} />
     ))}
   </div>
 );

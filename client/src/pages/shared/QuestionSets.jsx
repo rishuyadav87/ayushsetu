@@ -96,9 +96,9 @@ const QuestionSets = () => {
                     <div className="font-semibold text-dark">{s.title}</div>
                     <div className="text-xs text-gray-500 flex gap-2 items-center">
                       {s.category}
-                      {s.isPractice && <span className="bg-blue-50 text-blue-700 px-1.5 rounded">Practice</span>}
+                      {s.isPractice && <span className="bg-indigo-50 text-indigo-700 px-1.5 rounded">Practice</span>}
                       {s.source === 'AI' && <span className="bg-purple-50 text-purple-700 px-1.5 rounded">AI</span>}
-                      {s.proctored && <span className="flex items-center gap-0.5 text-blue-600"><ShieldCheck size={12} /> Proctored</span>}
+                      {s.proctored && <span className="flex items-center gap-0.5 text-indigo-600"><ShieldCheck size={12} /> Proctored</span>}
                     </div>
                   </td>
                   <td className="px-4 py-3"><span className="bg-primary/10 text-primary font-semibold px-2 py-1 rounded text-xs">L{s.nsqfLevel}</span></td>

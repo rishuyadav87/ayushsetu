@@ -162,7 +162,7 @@ const Opportunities = () => {
                   onApply={() => openApplyModal(o)} 
                 />
                 {isApplied && (
-                  <div className="absolute bottom-4 right-4 bg-blue-100 text-blue-700 px-3 py-1 rounded font-medium text-sm flex items-center shadow">
+                  <div className="absolute bottom-4 right-4 bg-indigo-100 text-indigo-700 px-3 py-1 rounded font-medium text-sm flex items-center shadow">
                     <CheckCircle size={16} className="mr-1" />
                     {t('student.applied') || 'Applied ✓'}
                   </div>
@@ -206,7 +206,7 @@ const Opportunities = () => {
               
               {applySuccess ? (
                 <div className="py-8 flex flex-col items-center text-center">
-                  <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mb-4 animate-bounce">
+                  <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mb-4 animate-bounce">
                     <CheckCircle size={32} />
                   </div>
                   <h3 className="text-xl font-bold text-gray-800 mb-2">Applied Successfully!</h3>

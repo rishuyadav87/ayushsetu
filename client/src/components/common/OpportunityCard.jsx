@@ -12,7 +12,7 @@ const OpportunityCard = ({ title, company, location, type, stipend, tags, onAppl
             <span className="text-sm font-medium">{company}</span>
           </div>
         </div>
-        <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-md font-medium capitalize">
+        <span className="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-md font-medium capitalize">
           {type}
         </span>
       </div>

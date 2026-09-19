@@ -34,7 +34,7 @@ const StepRow = ({ state, icon: Icon, title, hint, action }) => (
   <div className="flex items-start gap-3 py-3">
     <div className="mt-0.5 flex-shrink-0">
       {state === 'pending' ? <Loader2 size={18} className="animate-spin text-gray-400" />
-        : state === 'ok' ? <CheckCircle size={18} className="text-blue-600" />
+        : state === 'ok' ? <CheckCircle size={18} className="text-indigo-600" />
           : state === 'warn' ? <AlertTriangle size={18} className="text-amber-500" />
             : state === 'todo' ? <div className="w-[18px] h-[18px] rounded-full border-2 border-gray-300" />
               : <XCircle size={18} className="text-red-500" />}
@@ -293,7 +293,7 @@ const TakeAssessment = () => {
     return (
       <div className="max-w-3xl mx-auto py-8">
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 card-hover overflow-hidden text-center p-10">
-          <div className={`w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-6 ${result.passed ? 'bg-blue-100 text-blue-600' : 'bg-red-100 text-red-600'}`}>
+          <div className={`w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-6 ${result.passed ? 'bg-indigo-100 text-indigo-600' : 'bg-red-100 text-red-600'}`}>
             {result.passed ? <CheckCircle size={48} /> : <AlertTriangle size={48} />}
           </div>
           <h1 className="text-3xl font-bold text-gray-800 mb-2">{result.passed ? 'Assessment Passed!' : 'Assessment Finished'}</h1>
@@ -309,9 +309,9 @@ const TakeAssessment = () => {
               <div className="text-sm text-gray-500 mb-1 font-medium uppercase">Marks</div>
               <div className="text-3xl font-bold text-gray-800">{result.score} / {result.maxScore}</div>
             </div>
-            <div className={`p-5 rounded-2xl w-40 border ${result.passed ? 'bg-blue-50 border-blue-100' : 'bg-red-50 border-red-100'}`}>
-              <div className={`text-sm mb-1 font-medium uppercase ${result.passed ? 'text-blue-600' : 'text-red-600'}`}>Percentage</div>
-              <div className={`text-3xl font-bold ${result.passed ? 'text-blue-700' : 'text-red-700'}`}>{result.percentage}%</div>
+            <div className={`p-5 rounded-2xl w-40 border ${result.passed ? 'bg-indigo-50 border-indigo-100' : 'bg-red-50 border-red-100'}`}>
+              <div className={`text-sm mb-1 font-medium uppercase ${result.passed ? 'text-indigo-600' : 'text-red-600'}`}>Percentage</div>
+              <div className={`text-3xl font-bold ${result.passed ? 'text-indigo-700' : 'text-red-700'}`}>{result.percentage}%</div>
               <div className="text-xs text-gray-500 mt-1">Pass mark {result.passingPercent}%</div>
             </div>
           </div>
@@ -323,8 +323,8 @@ const TakeAssessment = () => {
           )}
 
           {proctored && (
-            <div className={`mb-8 p-5 rounded-xl border text-left ${result.flagged ? 'bg-red-50 border-red-200' : 'bg-blue-50 border-blue-200'}`}>
-              <div className={`font-bold flex items-center gap-2 mb-2 ${result.flagged ? 'text-red-800' : 'text-blue-800'}`}>
+            <div className={`mb-8 p-5 rounded-xl border text-left ${result.flagged ? 'bg-red-50 border-red-200' : 'bg-indigo-50 border-indigo-200'}`}>
+              <div className={`font-bold flex items-center gap-2 mb-2 ${result.flagged ? 'text-red-800' : 'text-indigo-800'}`}>
                 <ShieldCheck size={20} /> AI Proctoring Report — {result.flagged ? 'Flagged for review' : 'No integrity concerns'}
               </div>
               <p className="text-sm text-gray-700 mb-2">{result.violationCount} serious violation(s) recorded.</p>
@@ -437,7 +437,7 @@ const TakeAssessment = () => {
                     </div>
                   )}
                   {proctor.cameraStatus === 'active' && proctor.faceCount >= 0 && (
-                    <div className={`absolute top-2 left-2 text-xs font-semibold px-2 py-1 rounded ${proctor.faceCount === 1 ? 'bg-blue-600' : 'bg-red-600'} text-white`}>
+                    <div className={`absolute top-2 left-2 text-xs font-semibold px-2 py-1 rounded ${proctor.faceCount === 1 ? 'bg-indigo-600' : 'bg-red-600'} text-white`}>
                       {proctor.faceCount} face{proctor.faceCount === 1 ? '' : 's'}
                     </div>
                   )}
@@ -554,7 +554,7 @@ const TakeAssessment = () => {
                 <video ref={proctor.attachVideo} autoPlay muted playsInline disablePictureInPicture className="w-full h-full object-cover -scale-x-100" />
                 <div className="absolute top-1 left-1 flex items-center gap-1 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded"><span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span> LIVE</div>
                 {proctor.faceCount >= 0 && (
-                  <div className={`absolute bottom-1 left-1 text-[10px] font-semibold px-1.5 py-0.5 rounded ${proctor.faceCount === 1 ? 'bg-blue-600' : 'bg-red-600'} text-white`}>
+                  <div className={`absolute bottom-1 left-1 text-[10px] font-semibold px-1.5 py-0.5 rounded ${proctor.faceCount === 1 ? 'bg-indigo-600' : 'bg-red-600'} text-white`}>
                     {proctor.faceCount === 1 ? 'Face OK' : proctor.faceCount === 0 ? 'No face' : `${proctor.faceCount} faces`}
                   </div>
                 )}

@@ -18,7 +18,7 @@ const AssessmentCard = ({
             <span className="bg-purple-50 text-purple-700 text-xs px-2 py-1 rounded flex items-center gap-1"><Sparkles size={12} /> AI</span>
           )}
           {isPractice && (
-            <span className="bg-blue-50 text-blue-700 text-xs px-2 py-1 rounded flex items-center gap-1"><User size={12} /> Practice</span>
+            <span className="bg-indigo-50 text-indigo-700 text-xs px-2 py-1 rounded flex items-center gap-1"><User size={12} /> Practice</span>
           )}
           <span className="bg-primary/10 text-primary text-xs font-semibold px-2 py-1 rounded">NSQF L{nsqfLevel}</span>
         </div>
@@ -28,11 +28,11 @@ const AssessmentCard = ({
       <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-500 mb-4">
         <div className="flex items-center"><Clock size={16} className="mr-1" />{duration} mins</div>
         <div className="flex items-center"><Award size={16} className="mr-1" />{questionCount ?? 0} Qs</div>
-        {proctored && <div className="flex items-center text-blue-600"><ShieldCheck size={16} className="mr-1" />AI proctored</div>}
+        {proctored && <div className="flex items-center text-indigo-600"><ShieldCheck size={16} className="mr-1" />AI proctored</div>}
       </div>
 
       {attempts > 0 && (
-        <div className={`text-xs mb-4 px-3 py-2 rounded-lg ${passed ? 'bg-blue-50 text-blue-700' : 'bg-orange-50 text-orange-700'}`}>
+        <div className={`text-xs mb-4 px-3 py-2 rounded-lg ${passed ? 'bg-indigo-50 text-indigo-700' : 'bg-orange-50 text-orange-700'}`}>
           Best score {bestPercentage}% · {attempts} attempt{attempts > 1 ? 's' : ''} · {passed ? 'Passed' : `Pass mark ${passingPercent}%`}
         </div>
       )}

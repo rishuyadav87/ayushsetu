@@ -63,7 +63,7 @@ const LiveProctoring = () => {
             <div key={r.id} className={`bg-white rounded-xl border shadow-sm overflow-hidden ${r.violationCount >= 3 ? 'border-red-300' : r.violationCount ? 'border-amber-200' : 'border-gray-100'}`}>
               <div className="relative bg-gray-900 aspect-video">
                 {r.snapshot ? <img src={r.snapshot} alt={`${r.studentName} webcam`} className="w-full h-full object-cover -scale-x-100" /> : <div className="w-full h-full flex items-center justify-center text-white/60 text-xs gap-1"><CameraOff size={14} /> Waiting for camera frame</div>}
-                <div className={`absolute top-2 left-2 text-[10px] font-bold px-1.5 py-0.5 rounded flex items-center gap-1 ${r.online ? 'bg-blue-600 text-white' : 'bg-gray-600 text-white'}`}>
+                <div className={`absolute top-2 left-2 text-[10px] font-bold px-1.5 py-0.5 rounded flex items-center gap-1 ${r.online ? 'bg-indigo-600 text-white' : 'bg-gray-600 text-white'}`}>
                   {r.online ? <Wifi size={10} /> : <WifiOff size={10} />} {r.online ? 'ONLINE' : 'NO HEARTBEAT'}
                 </div>
                 {r.faceCount !== null && r.faceCount !== 1 && (
@@ -77,7 +77,7 @@ const LiveProctoring = () => {
                     <div className="font-semibold text-dark truncate">{r.studentName}</div>
                     <div className="text-xs text-gray-500 truncate">{r.assessment.title} · L{r.assessment.nsqfLevel}</div>
                   </div>
-                  <div className={`text-sm font-bold whitespace-nowrap ${r.violationCount ? 'text-red-600' : 'text-blue-600'}`}>{r.violationCount} ⚠</div>
+                  <div className={`text-sm font-bold whitespace-nowrap ${r.violationCount ? 'text-red-600' : 'text-indigo-600'}`}>{r.violationCount} ⚠</div>
                 </div>
                 <div className="text-xs text-gray-500 mt-1">{r.answeredCount} answered{r.resumeCount ? ` · resumed ${r.resumeCount}×` : ''}</div>
                 <ul className="mt-3 space-y-1 text-xs max-h-24 overflow-y-auto">

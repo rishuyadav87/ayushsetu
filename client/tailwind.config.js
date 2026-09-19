@@ -10,10 +10,10 @@ export default {
         sans: ['Inter', 'sans-serif'],
       },
       colors: {
-        primary: "#2563EB", // Blue-600 (vibrant, modern)
-        primaryHover: "#1D4ED8",
-        secondary: "#3B82F6",
-        accent: "#60A5FA",
+        primary: "#4F46E5", // Indigo-600 (Premium Stripe-like blue)
+        primaryHover: "#4338CA", // Indigo-700
+        secondary: "#6366F1", // Indigo-500
+        accent: "#818CF8", // Indigo-400
         dark: "#0F172A", // Slate-900
         muted: "#64748B",
         light: "#F8FAFC", // Slate-50

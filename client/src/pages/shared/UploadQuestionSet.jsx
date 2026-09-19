@@ -273,10 +273,10 @@ const UploadQuestionSet = () => {
                 <input type="number" min={1} max={100} className={input} value={form.passingPercent} onChange={e => setField('passingPercent', e.target.value)} />
               </div>
             </div>
-            <label className="md:col-span-2 flex items-center gap-3 p-3 bg-blue-50 rounded-lg cursor-pointer">
+            <label className="md:col-span-2 flex items-center gap-3 p-3 bg-indigo-50 rounded-lg cursor-pointer">
               <input type="checkbox" checked={form.proctored} onChange={e => setField('proctored', e.target.checked)} className="w-4 h-4" />
-              <ShieldCheck size={18} className="text-blue-700" />
-              <span className="text-sm text-blue-900">Enable AI proctoring (camera, microphone, entire-screen share, full-screen lock, anti-remote-access checks)</span>
+              <ShieldCheck size={18} className="text-indigo-700" />
+              <span className="text-sm text-indigo-900">Enable AI proctoring (camera, microphone, entire-screen share, full-screen lock, anti-remote-access checks)</span>
             </label>
           </div>
 
@@ -319,7 +319,7 @@ const UploadQuestionSet = () => {
                     <span className="text-sm font-semibold text-gray-500 flex items-center gap-2">
                       Question {idx + 1}
                       {source === 'AI' && <span className="text-[10px] bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded">AI draft</span>}
-                      {problems.length ? <span className="text-xs text-red-600 font-normal">Missing: {problems.join(', ')}</span> : <CheckCircle size={14} className="text-blue-600" />}
+                      {problems.length ? <span className="text-xs text-red-600 font-normal">Missing: {problems.join(', ')}</span> : <CheckCircle size={14} className="text-indigo-600" />}
                     </span>
                     <button type="button" onClick={() => setQuestions(qs => qs.filter((_, i) => i !== idx))} className="text-gray-400 hover:text-red-600"><Trash2 size={18} /></button>
                   </div>

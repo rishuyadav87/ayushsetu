@@ -41,7 +41,7 @@ export default function SkillTaxonomy() {
               <p className="text-sm text-gray-600 mb-2">QP Code: {tax.id} | NSQF Level: {tax.nsqfLevel}</p>
               <div className="flex justify-between items-center text-sm mt-2">
                 <span className="text-gray-500">Assessments linked: {tax.assessmentCount}</span>
-                <span className="text-blue-600 font-medium">Avg Readiness: {tax.avgScore}%</span>
+                <span className="text-indigo-600 font-medium">Avg Readiness: {tax.avgScore}%</span>
               </div>
             </div>
           ))}

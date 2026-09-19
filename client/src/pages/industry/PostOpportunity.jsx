@@ -64,7 +64,7 @@ const PostOpportunity = () => {
       )}
 
       {success && (
-        <div className="bg-blue-50 text-blue-700 p-4 rounded-lg flex items-center mb-6">
+        <div className="bg-indigo-50 text-indigo-700 p-4 rounded-lg flex items-center mb-6">
           Opportunity created successfully! Redirecting...
         </div>
       )}
