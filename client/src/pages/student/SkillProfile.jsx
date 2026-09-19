@@ -96,7 +96,7 @@ const SkillProfile = () => {
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 card-hover p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-bold text-dark">NSQF Skill Scores</h2>
             {profile && (
@@ -119,7 +119,7 @@ const SkillProfile = () => {
         </div>
 
         <div className="space-y-6">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 card-hover p-6">
             <h2 className="text-lg font-bold text-dark mb-4">Verified Skills</h2>
             <div className="flex flex-wrap gap-2">
               {categories.length > 0 ? categories.map((c, idx) => (
@@ -130,7 +130,7 @@ const SkillProfile = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 card-hover p-6">
             <h2 className="text-lg font-bold text-dark mb-4">Gap Analysis & Recommendations</h2>
             <div className="space-y-3">
               {gaps.length > 0 ? gaps.map((gap, idx) => (

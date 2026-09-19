@@ -56,7 +56,7 @@ const FDPAccess = () => {
           </div>
         )}
         {fdps.map((fdp) => (
-          <div key={fdp.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow">
+          <div key={fdp.id} className="bg-white rounded-xl shadow-sm border border-gray-100 card-hover p-5 hover:shadow-md transition-shadow">
             <h3 className="font-bold text-dark mb-2">{fdp.title}</h3>
             <p className="text-sm text-gray-500 mb-4">{fdp.org}</p>
             <div className="flex flex-col gap-2 text-sm text-gray-600 mb-5">

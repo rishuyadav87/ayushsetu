@@ -4,7 +4,7 @@ const OutcomeTracking = () => {
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-dark mb-6">Outcome Tracking</h1>
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 card-hover p-8">
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-gray-50 border-b">

@@ -49,7 +49,7 @@ const Mentoring = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {mentees.map(m => (
-          <div key={m.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
+          <div key={m.id} className="bg-white rounded-xl shadow-sm border border-gray-100 card-hover p-6 hover:shadow-md transition-shadow">
             <div className="flex items-center gap-4 mb-4">
               <div className="w-14 h-14 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xl font-bold">
                 {m.name.charAt(0)}

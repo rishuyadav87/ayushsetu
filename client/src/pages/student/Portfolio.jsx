@@ -131,7 +131,7 @@ const Portfolio = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column */}
           <div className="lg:col-span-1 space-y-6">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-center">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 card-hover p-6 text-center">
               <div className="w-24 h-24 bg-primary/10 text-primary rounded-full mx-auto flex items-center justify-center text-3xl font-bold mb-4">
                 {initials}
               </div>
@@ -140,7 +140,7 @@ const Portfolio = () => {
               <p className="text-gray-600 mt-2">{displayData.institution}</p>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 card-hover p-6">
               <h3 className="font-bold text-dark mb-4 flex items-center gap-2">
                 <Award size={18} className="text-primary" /> Verified Skills
               </h3>
@@ -154,7 +154,7 @@ const Portfolio = () => {
             </div>
             
             {/* Badges Display */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 card-hover p-6">
               <h3 className="font-bold text-dark mb-4 flex items-center gap-2">
                 <Award size={18} className="text-primary" /> Earned Badges
               </h3>
@@ -172,7 +172,7 @@ const Portfolio = () => {
           {/* Right Column */}
           <div className="lg:col-span-2 space-y-6">
             {/* Projects Section */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 card-hover p-6">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="font-bold text-dark flex items-center gap-2">
                   <FileText size={18} className="text-primary" /> Academic Projects
@@ -215,7 +215,7 @@ const Portfolio = () => {
             </div>
 
             {/* Certifications Section */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 card-hover p-6">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="font-bold text-dark flex items-center gap-2">
                   <Award size={18} className="text-primary" /> Certifications

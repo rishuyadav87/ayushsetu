@@ -3,7 +3,7 @@ import { MapPin, Clock, DollarSign, Building } from 'lucide-react';
 
 const OpportunityCard = ({ title, company, location, type, stipend, tags, onApply }) => {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 card-hover p-5 hover:shadow-md transition-shadow">
       <div className="flex justify-between items-start">
         <div>
           <h3 className="text-lg font-bold text-dark">{title}</h3>

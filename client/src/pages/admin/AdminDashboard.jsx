@@ -58,7 +58,7 @@ const AdminDashboard = () => {
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 lg:col-span-1">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 card-hover p-6 lg:col-span-1">
               <h2 className="text-lg font-bold text-dark mb-4">Users by Role</h2>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
@@ -84,7 +84,7 @@ const AdminDashboard = () => {
               </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 lg:col-span-2">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 card-hover p-6 lg:col-span-2">
               <h2 className="text-lg font-bold text-dark mb-4">Platform Growth</h2>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">

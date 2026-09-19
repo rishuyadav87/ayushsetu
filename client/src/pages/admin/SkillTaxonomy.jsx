@@ -32,7 +32,7 @@ export default function SkillTaxonomy() {
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">{t('Skill Taxonomy')}</h1>
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-white rounded-2xl shadow-soft card-hover p-6">
         <h2 className="text-lg font-medium text-gray-900 mb-4">NSQF Aligned Roles</h2>
         <div className="space-y-6">
           {taxonomies.map(tax => (

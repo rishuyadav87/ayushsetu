@@ -37,7 +37,7 @@ const CandidateSearch = () => {
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-dark mb-6">Candidate Search</h1>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 card-hover p-6 mb-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="md:col-span-2">
             <label className="block text-sm font-medium text-gray-700 mb-1">Search by Name</label>
@@ -65,7 +65,7 @@ const CandidateSearch = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {candidates.map(c => (
-          <div key={c.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
+          <div key={c.id} className="bg-white rounded-xl shadow-sm border border-gray-100 card-hover p-6 hover:shadow-md transition-shadow">
             <div className="flex justify-between items-start mb-4">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center text-lg font-bold">

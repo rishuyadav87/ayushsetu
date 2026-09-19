@@ -54,7 +54,7 @@ const IndustryDashboard = () => {
           </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 card-hover p-6">
           <h2 className="text-lg font-bold text-dark mb-4">Recent Postings</h2>
           <div className="space-y-4">
             {(stats?.oppChart && stats.oppChart.length > 0) ? stats.oppChart.map((job, i) => (
@@ -88,7 +88,7 @@ const IndustryDashboard = () => {
           </Link>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 card-hover p-6">
           <h2 className="text-lg font-bold text-dark mb-4">AI Recommended Candidates</h2>
           <div className="space-y-4">
             {[

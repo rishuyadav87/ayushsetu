@@ -8,7 +8,7 @@ const StudentManagement = () => {
         <h1 className="text-2xl font-bold text-dark">Student Management</h1>
         <SearchBar placeholder="Search students by name or ID..." />
       </div>
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 card-hover p-6">
          <p className="text-gray-500">Student list goes here.</p>
          <ul className="mt-4 space-y-2">
             <li className="p-3 border rounded flex justify-between">

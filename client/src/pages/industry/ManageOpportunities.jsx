@@ -57,12 +57,12 @@ const ManageOpportunities = () => {
           <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
         </div>
       ) : opportunities.length === 0 ? (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 card-hover p-12 text-center">
           <p className="text-gray-500 mb-4">No opportunities posted yet.</p>
           <Link to="/industry/post-opportunity" className="text-primary font-medium hover:underline">Post your first opportunity →</Link>
         </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 card-hover overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>

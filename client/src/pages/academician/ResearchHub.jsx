@@ -51,7 +51,7 @@ const ResearchHub = () => {
         </button>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 card-hover p-6">
         <h2 className="text-lg font-bold text-dark mb-4">Open Collaborations</h2>
         <div className="space-y-4">
           {projects.length === 0 && !loading && (

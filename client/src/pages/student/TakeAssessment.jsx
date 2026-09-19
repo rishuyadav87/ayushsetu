@@ -292,7 +292,7 @@ const TakeAssessment = () => {
     }, {});
     return (
       <div className="max-w-3xl mx-auto py-8">
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden text-center p-10">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 card-hover overflow-hidden text-center p-10">
           <div className={`w-24 h-24 mx-auto rounded-full flex items-center justify-center mb-6 ${result.passed ? 'bg-blue-100 text-blue-600' : 'bg-red-100 text-red-600'}`}>
             {result.passed ? <CheckCircle size={48} /> : <AlertTriangle size={48} />}
           </div>
@@ -341,7 +341,7 @@ const TakeAssessment = () => {
               <h3 className="font-bold text-amber-800 flex items-center justify-center gap-2 mb-4"><Award size={24} /> New Badges Unlocked!</h3>
               <div className="flex flex-wrap justify-center gap-4">
                 {newBadges.map((badge, idx) => (
-                  <div key={idx} className="bg-white px-4 py-3 rounded-lg shadow-sm text-left">
+                  <div key={idx} className="bg-white px-4 py-3 rounded-2xl shadow-soft card-hover-sm text-left">
                     <div className="font-bold text-sm text-gray-800">{badge.name}</div>
                     <div className="text-xs text-gray-500">{badge.description}</div>
                   </div>

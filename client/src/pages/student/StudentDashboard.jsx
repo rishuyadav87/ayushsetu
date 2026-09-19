@@ -74,7 +74,7 @@ const StudentDashboard = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Left Column: Skills & Gap Analysis */}
             <div className="lg:col-span-2 space-y-6">
-              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+              <div className="bg-white rounded-xl shadow-sm border border-gray-100 card-hover p-6">
                 <h2 className="text-lg font-bold text-dark mb-4">Skill Scores</h2>
                 {skillData.length > 0 ? (
                   <>
@@ -100,7 +100,7 @@ const StudentDashboard = () => {
 
             {/* Right Column: Matched Opportunities & Notifications */}
             <div className="space-y-6">
-              <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+              <div className="bg-white rounded-xl shadow-sm border border-gray-100 card-hover p-6">
                 <h2 className="text-lg font-bold text-dark mb-4">AI Matched Opportunities</h2>
                 <div className="space-y-4">
                   {recommendedOpps && recommendedOpps.length > 0 ? (

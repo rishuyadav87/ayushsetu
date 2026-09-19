@@ -3,22 +3,43 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
   body {
-    @apply bg-light text-dark font-sans;
+    @apply bg-slate-50 text-slate-900 font-sans antialiased selection:bg-blue-200 selection:text-blue-900;
+  }
+  
+  /* Make all default buttons and links transition smoothly */
+  button, a {
+    @apply transition-all duration-200 ease-in-out;
   }
 }
 
-/* Custom scrollbar */
+@layer components {
+  .btn-primary {
+    @apply bg-primary text-white font-medium py-2 px-4 rounded-lg hover:bg-primaryHover shadow-sm hover:shadow active:scale-95 transition-all;
+  }
+  .card-hover {
+    @apply hover:shadow-soft hover:-translate-y-1 transition-all duration-300;
+  }
+  .glass-nav {
+    @apply bg-white/80 backdrop-blur-md border-b border-gray-100;
+  }
+}
+
+/* Elegant Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
+  background: #cbd5e1;
+  border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #94a3b8;
 }
