@@ -47,7 +47,7 @@ const ViewApplications = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4 mb-6">
-        <Link to="/industry/opportunities" className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+        <Link to="/industry/manage-opportunities" className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50">
           <ArrowLeft size={20} />
         </Link>
         <div>

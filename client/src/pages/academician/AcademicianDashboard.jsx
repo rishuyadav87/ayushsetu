@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import StatCard from '../../components/common/StatCard';
-import { Users, BookOpen, GraduationCap, FileText, AlertCircle } from 'lucide-react';
+import { Users, BookOpen, GraduationCap, FileText, AlertCircle, ChevronRight } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { analyticsAPI } from '../../services/api';
 
@@ -42,10 +42,48 @@ const AcademicianDashboard = () => {
       ) : (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <StatCard title="Active Mentees" value={stats?.totalStudents || 15} icon={<Users size={24} />} colorClass="text-indigo-600 bg-indigo-100" />
+            <StatCard title="Active Mentees" value={stats?.menteesCount || 15} icon={<Users size={24} />} colorClass="text-indigo-600 bg-indigo-100" />
             <StatCard title="Research Projects" value={stats?.researchProjects || 3} icon={<BookOpen size={24} />} colorClass="text-purple-600 bg-purple-100" />
-            <StatCard title="FDPs Completed" value={stats?.totalApplications || 4} icon={<GraduationCap size={24} />} colorClass="text-indigo-600 bg-indigo-100" />
-            <StatCard title="Endorsements Given" value={stats?.mentoringSessions || 42} icon={<FileText size={24} />} colorClass="text-orange-600 bg-orange-100" />
+            <StatCard title="FDPs Completed" value={stats?.fdpsCompleted || 4} icon={<GraduationCap size={24} />} colorClass="text-indigo-600 bg-indigo-100" />
+            <StatCard title="Endorsements Given" value={stats?.endorsementsGiven || 42} icon={<FileText size={24} />} colorClass="text-orange-600 bg-orange-100" />
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+            <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+              <h2 className="text-lg font-bold text-dark mb-4">Recent Activity</h2>
+              <div className="space-y-4">
+                {[
+                  { title: "Endorsed Aarav Sharma for 'Clinical Ayurveda'", time: "2 hours ago", type: "endorsement" },
+                  { title: "New Mentee Assigned: Priya Patel", time: "1 day ago", type: "mentee" },
+                  { title: "FDP Certificate Generated: Advanced Research Methods", time: "3 days ago", type: "fdp" },
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start gap-4 p-3 hover:bg-gray-50 rounded-lg transition-colors border border-transparent hover:border-gray-100">
+                    <div className="w-10 h-10 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+                      {item.type === 'endorsement' ? <FileText size={18} /> : item.type === 'mentee' ? <Users size={18} /> : <GraduationCap size={18} />}
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">{item.title}</p>
+                      <p className="text-xs text-gray-500 mt-1">{item.time}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+              <h2 className="text-lg font-bold text-dark mb-4">Quick Actions</h2>
+              <div className="space-y-3">
+                <button onClick={() => window.location.href='/academician/mentoring'} className="w-full text-left px-4 py-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg font-medium transition-colors flex items-center justify-between">
+                  Review Mentees <ChevronRight size={18} />
+                </button>
+                <button onClick={() => window.location.href='/academician/research-hub'} className="w-full text-left px-4 py-3 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-lg font-medium transition-colors flex items-center justify-between">
+                  Propose Research <ChevronRight size={18} />
+                </button>
+                <button onClick={() => window.location.href='/academician/fdp'} className="w-full text-left px-4 py-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg font-medium transition-colors flex items-center justify-between">
+                  Browse FDPs <ChevronRight size={18} />
+                </button>
+              </div>
+            </div>
           </div>
         </>
       )}

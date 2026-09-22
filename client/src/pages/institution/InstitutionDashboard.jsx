@@ -3,8 +3,10 @@ import StatCard from '../../components/common/StatCard';
 import { Users, Briefcase, Activity, CheckCircle, AlertCircle } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { analyticsAPI } from '../../services/api';
+import { useNavigate } from 'react-router-dom';
 
 const InstitutionDashboard = () => {
+  const navigate = useNavigate();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -59,8 +61,8 @@ const InstitutionDashboard = () => {
                 Our analysis shows that <strong>78% of your final-year students</strong> are scoring below industry expectations in <strong>"Modern Tech Tools Integration"</strong>. 
                 Industry demand for this skill has increased by 45% this quarter.
               </p>
-              <button className="mt-3 text-sm bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-                View Suggested Syllabus Updates
+              <button onClick={() => navigate('/institution/readiness-dashboard')} className="mt-3 text-sm bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                View Readiness Dashboard →
               </button>
             </div>
           </div>

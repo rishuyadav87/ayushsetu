@@ -9,9 +9,17 @@ const TYPE_STYLES = {
   default: 'bg-gray-100 text-gray-700 border-gray-200',
 };
 
-const OpportunityCard = ({ title, company, location, type, stipend, tags, onApply }) => {
+const OpportunityCard = ({ title, company, location, type, stipend, tags, onApply, createdAt }) => {
   const typeLower = (type || '').toLowerCase();
   const typeStyle = TYPE_STYLES[typeLower] || TYPE_STYLES.default;
+
+  const getDaysAgo = (dateStr) => {
+    if (!dateStr) return 'Just now';
+    const diff = Math.floor((new Date() - new Date(dateStr)) / (1000 * 60 * 60 * 24));
+    if (diff === 0) return 'Today';
+    if (diff === 1) return '1 day ago';
+    return `${diff} days ago`;
+  };
 
   return (
     <div className="group relative bg-white rounded-2xl border border-gray-100 p-5 hover:border-indigo-200 hover:shadow-card hover:-translate-y-1 transition-all duration-300 overflow-hidden">
@@ -41,7 +49,7 @@ const OpportunityCard = ({ title, company, location, type, stipend, tags, onAppl
           )}
           <div className="flex items-center gap-1">
             <Clock size={12} className="text-indigo-400" />
-            2 days ago
+            {getDaysAgo(createdAt)}
           </div>
           {stipend && <span className="text-indigo-600 font-semibold">{stipend}</span>}
         </div>

@@ -85,8 +85,8 @@ const Applications = () => {
                         <ApplicationStatusBadge status={app.status || 'applied'} />
                       </td>
                       <td className="px-6 py-4 text-right">
-                        <Link to={'/student/opportunities'} className="text-primary hover:text-primary/80 font-medium text-sm inline-flex items-center">
-                          View Details <ArrowRight size={16} className="ml-1" />
+                        <Link to={`/student/opportunities`} state={{ highlightId: app.opportunityId }} className="text-primary hover:text-primary/80 font-medium text-sm inline-flex items-center">
+                          View Opportunity <ArrowRight size={16} className="ml-1" />
                         </Link>
                       </td>
                     </tr>

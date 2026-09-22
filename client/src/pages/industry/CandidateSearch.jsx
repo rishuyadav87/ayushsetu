@@ -25,6 +25,7 @@ const CandidateSearch = () => {
         }));
         setCandidates(mapped);
       } catch (err) {
+        toast.error('Failed to load candidates. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -45,15 +46,18 @@ const CandidateSearch = () => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Discipline</label>
-            <select className="w-full border border-gray-300 rounded-lg py-2 px-3 disabled:opacity-50" disabled>
+            <select className="w-full border border-gray-300 rounded-lg py-2 px-3">
               <option>All</option>
               <option>Ayurveda</option>
               <option>Yoga</option>
+              <option>Unani</option>
+              <option>Siddha</option>
+              <option>Homeopathy</option>
             </select>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
-            <input type="text" className="w-full border border-gray-300 rounded-lg py-2 px-3 disabled:opacity-50" placeholder="City or State" disabled />
+            <input type="text" className="w-full border border-gray-300 rounded-lg py-2 px-3" placeholder="City or State" />
           </div>
         </div>
       </div>

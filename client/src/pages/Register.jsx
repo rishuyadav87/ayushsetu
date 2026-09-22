@@ -184,13 +184,18 @@ const Register = () => {
                 >
                   Back
                 </button>
-                <button
-                  onClick={handleNext}
-                  disabled={!formData.name || !formData.email || !formData.password}
-                  className="bg-primary text-white px-6 py-2 rounded-lg font-medium disabled:opacity-50 flex items-center"
-                >
-                  Continue <ChevronRight size={18} className="ml-1" />
-                </button>
+                <div className="flex items-center gap-3">
+                  {(!formData.name || !formData.email || !formData.password) && (
+                    <span className="text-xs text-red-500 font-medium">Please fill all required fields</span>
+                  )}
+                  <button
+                    onClick={handleNext}
+                    disabled={!formData.name || !formData.email || !formData.password}
+                    className="bg-primary text-white px-6 py-2 rounded-lg font-medium disabled:opacity-50 flex items-center"
+                  >
+                    Continue <ChevronRight size={18} className="ml-1" />
+                  </button>
+                </div>
               </div>
             </div>
           )}

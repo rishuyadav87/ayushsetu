@@ -49,6 +49,11 @@ const FDPAccess = () => {
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-dark mb-6">Faculty Development Programs (FDP)</h1>
 
+      {loading && (
+        <div className="flex justify-center py-12">
+          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+        </div>
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {fdps.length === 0 && !loading && (
           <div className="col-span-full text-center text-gray-500 py-8">

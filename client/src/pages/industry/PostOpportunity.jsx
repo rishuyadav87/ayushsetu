@@ -70,7 +70,7 @@ const PostOpportunity = () => {
       )}
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 card-hover p-8">
-        <form className="space-y-6">
+        <form onSubmit={(e) => handleSubmit(e, false)} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-2">Opportunity Title *</label>
@@ -164,8 +164,7 @@ const PostOpportunity = () => {
               <Save size={18} /> Save Draft
             </button>
             <button 
-              type="button" 
-              onClick={(e) => handleSubmit(e, false)}
+              type="submit" 
               disabled={loading || success}
               className="px-6 py-2 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 flex items-center gap-2 disabled:opacity-50"
             >

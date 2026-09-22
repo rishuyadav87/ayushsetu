@@ -9,6 +9,7 @@ const Mentoring = () => {
   const [loading, setLoading] = useState(true);
   const [selectedMentee, setSelectedMentee] = useState(null);
   const [feedback, setFeedback] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const fetchMentees = async () => {
     try {
@@ -43,12 +44,12 @@ const Mentoring = () => {
         <h1 className="text-2xl font-bold text-dark">Mentoring Hub</h1>
         <div className="relative">
           <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-          <input type="text" placeholder="Search mentees..." className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary" />
+          <input type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Search mentees..." className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary" />
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {mentees.map(m => (
+        {mentees.filter(m => m.name.toLowerCase().includes(searchQuery.toLowerCase())).map(m => (
           <div key={m.id} className="bg-white rounded-xl shadow-sm border border-gray-100 card-hover p-6 hover:shadow-md transition-shadow">
             <div className="flex items-center gap-4 mb-4">
               <div className="w-14 h-14 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xl font-bold">
@@ -82,7 +83,7 @@ const Mentoring = () => {
             </div>
 
             <div className="flex gap-2">
-              <Link to={`/admin/users`} className="flex-1 text-center bg-white border border-gray-300 text-gray-700 py-2 rounded-lg text-sm font-medium hover:bg-gray-50">View Profiles</Link>
+              <Link to={`/student/skill-profile`} className="flex-1 text-center bg-white border border-gray-300 text-gray-700 py-2 rounded-lg text-sm font-medium hover:bg-gray-50">View Profile</Link>
               <button onClick={() => { setSelectedMentee(m); setFeedback(''); }} className="flex-1 bg-primary text-white py-2 rounded-lg text-sm font-medium hover:bg-primary/90">Add Feedback</button>
             </div>
           </div>
