@@ -70,7 +70,6 @@ export default function SkillTaxonomy() {
           </div>
         </div>
       )}
-      </div>
     </div>
   );
 }
