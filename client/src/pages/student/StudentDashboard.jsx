@@ -65,10 +65,10 @@ const StudentDashboard = () => {
         <>
           {/* Stats Row */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <StatCard title="Overall Readiness" value={`${stats?.overallReadiness ?? 0}%`} icon={<Award size={24} />} colorClass="text-indigo-600 bg-indigo-100" trend={stats?.overallReadiness ? "up" : null} trendValue={stats?.overallReadiness ? "5%" : null} />
-            <StatCard title="Assessments Completed" value={stats?.assessmentsTaken ?? 0} icon={<BookOpen size={24} />} colorClass="text-indigo-600 bg-indigo-100" />
-            <StatCard title="Applications Active" value={stats?.applications ?? 0} icon={<Briefcase size={24} />} colorClass="text-orange-600 bg-orange-100" />
-            <StatCard title="Available Opportunities" value={stats?.openOpportunities ?? 0} icon={<Star size={24} />} colorClass="text-purple-600 bg-purple-100" />
+            <StatCard title="Overall Readiness" value={`${stats?.overallReadiness ?? 0}%`} icon={<Award size={24} />} colorClass="text-emerald-600 bg-emerald-100" trend={stats?.overallReadiness ? "up" : null} trendValue={stats?.overallReadiness ? "5%" : null} gradient="bg-gradient-to-r from-emerald-500 to-teal-500" />
+            <StatCard title="Assessments Completed" value={stats?.assessmentsTaken ?? 0} icon={<BookOpen size={24} />} colorClass="text-indigo-600 bg-indigo-100" gradient="bg-gradient-to-r from-indigo-500 to-purple-500" />
+            <StatCard title="Applications Active" value={stats?.applications ?? 0} icon={<Briefcase size={24} />} colorClass="text-orange-600 bg-orange-100" gradient="bg-gradient-to-r from-orange-400 to-red-500" />
+            <StatCard title="Available Opportunities" value={stats?.openOpportunities ?? 0} icon={<Star size={24} />} colorClass="text-purple-600 bg-purple-100" gradient="bg-gradient-to-r from-purple-500 to-pink-500" />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

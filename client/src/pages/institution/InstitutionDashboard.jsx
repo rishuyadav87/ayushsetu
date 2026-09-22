@@ -44,10 +44,10 @@ const InstitutionDashboard = () => {
       ) : (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <StatCard title="Total Students" value={stats?.totalStudents || "1,250"} icon={<Users size={24} />} colorClass="text-indigo-600 bg-indigo-100" />
-            <StatCard title="Avg Readiness Score" value={stats?.overallReadiness || "72%"} icon={<Activity size={24} />} colorClass="text-indigo-600 bg-indigo-100" trend="up" trendValue="4%" />
-            <StatCard title="Opportunities" value={stats?.totalOpportunities || "342"} icon={<Briefcase size={24} />} colorClass="text-purple-600 bg-purple-100" trend="up" trendValue="2%" />
-            <StatCard title="Assessments" value={stats?.totalAssessments || "45K+"} icon={<CheckCircle size={24} />} colorClass="text-orange-600 bg-orange-100" />
+            <StatCard title="Total Students" value={stats?.totalStudents || "1,250"} icon={<Users size={24} />} colorClass="text-indigo-600 bg-indigo-100" gradient="bg-gradient-to-r from-indigo-500 to-purple-500" />
+            <StatCard title="Avg Readiness Score" value={stats?.overallReadiness || "72%"} icon={<Activity size={24} />} colorClass="text-emerald-600 bg-emerald-100" trend="up" trendValue="4%" gradient="bg-gradient-to-r from-emerald-500 to-teal-500" />
+            <StatCard title="Opportunities" value={stats?.totalOpportunities || "342"} icon={<Briefcase size={24} />} colorClass="text-purple-600 bg-purple-100" trend="up" trendValue="2%" gradient="bg-gradient-to-r from-purple-500 to-pink-500" />
+            <StatCard title="Assessments" value={stats?.totalAssessments || "45K+"} icon={<CheckCircle size={24} />} colorClass="text-orange-600 bg-orange-100" gradient="bg-gradient-to-r from-orange-400 to-red-500" />
           </div>
 
           {/* AI Curriculum Alert */}

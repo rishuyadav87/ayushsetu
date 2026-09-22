@@ -47,10 +47,10 @@ const IndustryDashboard = () => {
       ) : (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <StatCard title="Active Postings" value={stats?.opportunities || 5} icon={<Briefcase size={24} />} colorClass="text-indigo-600 bg-indigo-100" />
-            <StatCard title="Total Applications" value={stats?.totalApplications || 142} icon={<FileText size={24} />} colorClass="text-purple-600 bg-purple-100" trend="up" trendValue="12%" />
-            <StatCard title="Shortlisted" value={stats?.shortlisted || 28} icon={<Users size={24} />} colorClass="text-orange-600 bg-orange-100" />
-            <StatCard title="Selected" value={stats?.selected || 6} icon={<CheckCircle size={24} />} colorClass="text-indigo-600 bg-indigo-100" />
+            <StatCard title="Active Postings" value={stats?.opportunities || 5} icon={<Briefcase size={24} />} colorClass="text-indigo-600 bg-indigo-100" gradient="bg-gradient-to-r from-indigo-500 to-purple-500" />
+            <StatCard title="Total Applications" value={stats?.totalApplications || 142} icon={<FileText size={24} />} colorClass="text-purple-600 bg-purple-100" trend="up" trendValue="12%" gradient="bg-gradient-to-r from-purple-500 to-pink-500" />
+            <StatCard title="Shortlisted" value={stats?.shortlisted || 28} icon={<Users size={24} />} colorClass="text-orange-600 bg-orange-100" gradient="bg-gradient-to-r from-orange-400 to-red-500" />
+            <StatCard title="Selected" value={stats?.selected || 6} icon={<CheckCircle size={24} />} colorClass="text-emerald-600 bg-emerald-100" gradient="bg-gradient-to-r from-emerald-500 to-teal-500" />
           </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
