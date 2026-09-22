@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Mail, Lock, LogIn, AlertCircle } from 'lucide-react';
+import { Mail, Lock, LogIn, AlertCircle, Sparkles } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 const Login = () => {
@@ -25,33 +25,46 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
-        <div className="bg-primary px-8 py-10 text-center text-white">
-          <h2 className="text-3xl font-bold mb-2">Welcome Back</h2>
-          <p className="text-primary-100 opacity-80">Log in to your AYUSH-SETU account</p>
+    <div className="min-h-screen bg-[#0A0F1E] flex items-center justify-center px-4 relative overflow-hidden">
+      {/* Background Orbs */}
+      <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] rounded-full bg-indigo-600/20 blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] left-[-5%] w-[400px] h-[400px] rounded-full bg-purple-600/20 blur-[100px] pointer-events-none" />
+
+      <div className="relative w-full max-w-md z-10">
+        {/* Logo */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center gap-2 mb-4">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-900/50">
+              <Sparkles size={20} className="text-white" />
+            </div>
+            <span className="font-black text-2xl bg-gradient-to-r from-white to-indigo-300 bg-clip-text text-transparent tracking-wider">AYUSH-SETU</span>
+          </div>
+          <h1 className="text-2xl font-bold text-white">Welcome back</h1>
+          <p className="text-gray-500 text-sm mt-1">Sign in to continue your journey</p>
         </div>
-        
-        <div className="p-8">
+
+        {/* Card */}
+        <div className="bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-xl shadow-2xl">
+          
           {(error || localError) && (
-            <div className="mb-4 bg-red-50 text-red-600 p-3 rounded-lg flex items-center text-sm">
-              <AlertCircle size={18} className="mr-2" />
+            <div className="mb-6 bg-red-500/10 border border-red-500/20 text-red-400 p-3 rounded-xl flex items-center text-sm">
+              <AlertCircle size={16} className="mr-2 shrink-0" />
               {localError || error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+              <label className="block text-sm font-medium text-gray-400 mb-2">Email Address</label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400" />
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Mail className="h-4 w-4 text-gray-500" />
                 </div>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-primary focus:border-primary bg-gray-50"
+                  className="block w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all text-sm"
                   placeholder="you@example.com"
                   required
                 />
@@ -59,16 +72,16 @@ const Login = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
+              <label className="block text-sm font-medium text-gray-400 mb-2">Password</label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Lock className="h-4 w-4 text-gray-500" />
                 </div>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-primary focus:border-primary bg-gray-50"
+                  className="block w-full pl-11 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all text-sm"
                   placeholder="••••••••"
                   required
                 />
@@ -76,14 +89,14 @@ const Login = () => {
             </div>
 
             <div className="flex items-center justify-between text-sm">
-              <label className="flex items-center">
-                <input type="checkbox" className="rounded border-gray-300 text-primary focus:ring-primary" />
-                <span className="ml-2 text-gray-600">Remember me</span>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" className="w-4 h-4 rounded border-white/20 bg-white/5 text-indigo-500 focus:ring-indigo-500/50" />
+                <span className="text-gray-500">Remember me</span>
               </label>
               <button
                 type="button"
                 onClick={() => toast.success('Password reset instructions sent to your email.')}
-                className="text-primary font-medium hover:underline"
+                className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors"
               >
                 Forgot password?
               </button>
@@ -92,19 +105,32 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-2xl shadow-soft card-hover-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors disabled:opacity-50"
+              className="w-full flex justify-center items-center py-3 px-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold hover:from-indigo-500 hover:to-purple-500 transition-all shadow-lg shadow-indigo-900/50 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
               ) : (
                 <LogIn className="mr-2" size={18} />
               )}
-              {loading ? 'Logging in...' : 'Log In'}
+              {loading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
 
-          <div className="mt-8 text-center text-sm text-gray-600">
-            Don't have an account? <Link to="/register" className="text-secondary font-bold hover:underline">Register now</Link>
+          <div className="mt-6 pt-6 border-t border-white/10 text-center text-sm text-gray-500">
+            Don't have an account?{' '}
+            <Link to="/register" className="text-indigo-400 font-semibold hover:text-indigo-300 transition-colors">
+              Create account
+            </Link>
+          </div>
+        </div>
+
+        {/* Demo credentials hint */}
+        <div className="mt-4 bg-white/5 border border-white/10 rounded-2xl p-4 text-center backdrop-blur-sm">
+          <p className="text-xs text-gray-500 font-medium mb-2">Demo Credentials</p>
+          <div className="grid grid-cols-2 gap-2 text-xs text-gray-400">
+            <span>student@ayush.edu</span>
+            <span>industry@ayush.com</span>
+            <span className="col-span-2 text-gray-600">Password: password123</span>
           </div>
         </div>
       </div>
