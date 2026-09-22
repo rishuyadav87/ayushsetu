@@ -6,7 +6,7 @@ import { safeParseJSON } from '../utils/helpers.js';
 
 const router = express.Router();
 
-// ── Whitelisted update fields per role (BUG-004: mass-assignment protection) ──
+
 const STUDENT_UPDATABLE = ['specialization', 'institution', 'enrollmentYear', 'bio', 'resumeUrl', 'skills'];
 const INDUSTRY_UPDATABLE = ['companyName', 'industry', 'website', 'description', 'location', 'logo'];
 const ACADEMICIAN_UPDATABLE = ['institution', 'department', 'designation', 'expertise', 'bio'];
@@ -58,7 +58,7 @@ router.put('/my-profile', authMiddleware, async (req, res, next) => {
     let updatedProfile = null;
 
     if (role === 'STUDENT') {
-      // BUG-004: whitelist fields
+
       const updateData = pick(req.body, STUDENT_UPDATABLE);
       if (updateData.skills && Array.isArray(updateData.skills)) {
         updateData.skills = JSON.stringify(updateData.skills);
@@ -135,7 +135,7 @@ router.get('/student/resume-data', authMiddleware, async (req, res, next) => {
           }
         },
         applications: {
-          // BUG-040: Only include non-rejected applications in resume
+
           where: { status: { not: 'REJECTED' } },
           include: { opportunity: { select: { title: true, type: true, location: true } } }
         }
@@ -179,13 +179,13 @@ router.get('/student/resume-data', authMiddleware, async (req, res, next) => {
   }
 });
 
-// ── GET /student/:id (BUG-010: add auth) ─────────────────────────────────────
+
 router.get('/student/:id', authMiddleware, async (req, res, next) => {
   try {
     const profile = await prisma.studentProfile.findUnique({
       where: { id: req.params.id },
       include: {
-        user: { select: { name: true, avatar: true } }, // BUG-010: removed email from public view
+        user: { select: { name: true, avatar: true } },
         certificates: true,
         projects: true,
         assessmentResults: {
@@ -201,7 +201,7 @@ router.get('/student/:id', authMiddleware, async (req, res, next) => {
   }
 });
 
-// ── GET /search (BUG-011: add auth, BUG-024: case-insensitive) ───────────────
+
 router.get('/search', authMiddleware, async (req, res, next) => {
   try {
     const { role, query } = req.query;
@@ -224,7 +224,7 @@ router.get('/search', authMiddleware, async (req, res, next) => {
   }
 });
 
-// ── POST /certificates (BUG-021, BUG-022: validate required fields) ───────────
+
 router.post('/certificates', authMiddleware, async (req, res, next) => {
   try {
     const { userId, role } = req.user;
@@ -275,7 +275,7 @@ router.delete('/certificates/:id', authMiddleware, async (req, res, next) => {
   }
 });
 
-// ── POST /projects (BUG-023: validate required fields) ────────────────────────
+
 router.post('/projects', authMiddleware, async (req, res, next) => {
   try {
     const { userId, role } = req.user;

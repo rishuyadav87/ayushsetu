@@ -11,7 +11,7 @@ export default function SkillTaxonomy() {
   useEffect(() => {
     const fetchTaxonomy = async () => {
       try {
-        const { data } = await api.get('/analytics/skills'); // BUG-003: was '/api/analytics/skills' — double prefix
+        const { data } = await api.get('/analytics/skills');
         setTaxonomies(data);
       } catch (err) {
         setError('Failed to load skill taxonomy. Please refresh.');

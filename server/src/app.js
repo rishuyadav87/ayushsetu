@@ -30,13 +30,13 @@ if (!process.env.JWT_SECRET) {
 
 const app = express();
 
-// Security headers (BUG-034)
+
 app.use(helmet({
   crossOriginEmbedderPolicy: false,
   contentSecurityPolicy: false,
 }));
 
-// Restricted CORS (BUG-015)
+
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || '')
   .split(',')
   .map(o => o.trim())
@@ -52,7 +52,7 @@ app.use(cors({
   credentials: true,
 }));
 
-// Global rate limiter — 200 requests/minute per IP (BUG-016)
+
 const globalLimiter = rateLimit({
   windowMs: 60 * 1000,
   max: 200,
@@ -62,7 +62,7 @@ const globalLimiter = rateLimit({
 });
 app.use(globalLimiter);
 
-// Strict auth rate limiter — 20 requests/minute on auth endpoints (BUG-016)
+
 const authLimiter = rateLimit({
   windowMs: 60 * 1000,
   max: 20,

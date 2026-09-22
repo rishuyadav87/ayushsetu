@@ -71,41 +71,42 @@ const InstitutionDashboard = () => {
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 card-hover p-6">
           <h2 className="text-lg font-bold text-dark mb-4">Aggregate Readiness by Skill</h2>
           <div className="h-64 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={(stats?.readinessChart?.length > 0) ? stats.readinessChart : [
-                { name: 'Clinical', readiness: 75 },
-                { name: 'Research', readiness: 60 },
-                { name: 'Tech Tools', readiness: 45 },
-                { name: 'Communication', readiness: 85 },
-                { name: 'Ethics', readiness: 90 },
-              ]} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis type="number" domain={[0, 100]} />
-                <YAxis dataKey="name" type="category" width={100} />
-                <Tooltip />
-                <Bar dataKey="readiness" fill="#2D6A4F" radius={[0, 4, 4, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+            {stats?.readinessChart && stats.readinessChart.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={stats.readinessChart} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis type="number" domain={[0, 100]} />
+                  <YAxis dataKey="name" type="category" width={100} />
+                  <Tooltip />
+                  <Bar dataKey="readiness" fill="#2D6A4F" radius={[0, 4, 4, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full flex items-center justify-center text-gray-500 text-sm">
+                No readiness data available yet.
+              </div>
+            )}
           </div>
-          <p className="text-sm text-gray-500 mt-4 text-center">Tech Tools is currently the weakest area across your student body.</p>
         </div>
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 card-hover p-6">
           <h2 className="text-lg font-bold text-dark mb-4">Recent Placements & Internships</h2>
           <div className="space-y-4">
-            {[
-              { name: 'John Doe', role: 'Clinical Intern', company: 'Dabur' },
-              { name: 'Aarav Sharma', role: 'Ayurvedic Consultant', company: 'Patanjali' },
-              { name: 'Priya Patel', role: 'Research Asst.', company: 'Himalaya' }
-            ].map((p, i) => (
-              <div key={i} className="flex justify-between items-center p-3 border-b border-gray-100 last:border-0">
-                <div>
-                  <div className="font-semibold text-gray-800">{p.name}</div>
-                  <div className="text-sm text-gray-500">{p.role}</div>
+            {stats?.recentPlacements && stats.recentPlacements.length > 0 ? (
+              stats.recentPlacements.map((p, i) => (
+                <div key={i} className="flex justify-between items-center p-3 border-b border-gray-100 last:border-0">
+                  <div>
+                    <div className="font-semibold text-gray-800">{p.name}</div>
+                    <div className="text-sm text-gray-500">{p.role}</div>
+                  </div>
+                  <div className="text-sm font-medium text-primary">{p.company}</div>
                 </div>
-                <div className="text-sm font-medium text-primary">{p.company}</div>
+              ))
+            ) : (
+              <div className="text-center py-8 text-gray-500 text-sm">
+                No recent placements recorded.
               </div>
-            ))}
+            )}
           </div>
         </div>
       </div>

@@ -68,7 +68,7 @@ router.get('/', authMiddleware, async (req, res, next) => {
   }
 });
 
-// ── Update application status (BUG-017: validate status enum) ─────────────────
+
 router.put('/:id/status', authMiddleware, async (req, res, next) => {
   try {
     const { status } = req.body;

@@ -115,22 +115,9 @@ const StudentDashboard = () => {
                       />
                     ))
                   ) : (
-                    <>
-                      <OpportunityCard 
-                        title="Clinical Research Intern"
-                        company="Dabur Research Foundation"
-                        location="Delhi, NCR"
-                        type="internship"
-                        tags={['Clinical', 'Research']}
-                      />
-                      <OpportunityCard 
-                        title="Ayurvedic Consultant"
-                        company="Patanjali Wellness"
-                        location="Remote"
-                        type="job"
-                        tags={['Consultation', 'Communication']}
-                      />
-                    </>
+                    <div className="text-center py-6 text-gray-500 text-sm">
+                      No AI matches available yet. Take more assessments to get personalized recommendations!
+                    </div>
                   )}
                 </div>
               </div>

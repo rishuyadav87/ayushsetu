@@ -97,12 +97,9 @@ const ManageOpportunities = () => {
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex justify-end gap-3">
-                        <Link to={`/industry/applications/${job.id}`} className="text-primary hover:text-primary/80" title="View Applications">
+                        <Link to={`/industry/applications/${job.id}`} className="text-indigo-600 hover:text-indigo-800" title="View Applications">
                           <Eye size={18} />
                         </Link>
-                        <button onClick={() => toast.error('Edit feature coming soon')} className="text-gray-500 hover:text-gray-700" title="Edit">
-                          <Edit2 size={18} />
-                        </button>
                         <button onClick={() => handleDelete(job.id)} className="text-red-600 hover:text-red-800" title="Delete">
                           <Trash2 size={18} />
                         </button>

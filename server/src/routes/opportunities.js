@@ -14,7 +14,7 @@ const pick = (obj, keys) => {
   return result;
 };
 
-// ── List opportunities (BUG-014: remove email; BUG-024: case-insensitive; BUG-043: validate type) ──
+
 router.get('/', async (req, res, next) => {
   try {
     const { type, location, query } = req.query;
@@ -29,7 +29,7 @@ router.get('/', async (req, res, next) => {
 
     const opportunities = await prisma.postedOpportunity.findMany({
       where,
-      include: { postedBy: { select: { name: true } } }, // BUG-014: removed email
+      include: { postedBy: { select: { name: true } } },
       orderBy: { createdAt: 'desc' }
     });
 
@@ -80,7 +80,7 @@ router.get('/recommended', authMiddleware, roleCheck(['STUDENT']), async (req, r
   }
 });
 
-// ── Create opportunity (BUG-005: mass-assignment protection) ──────────────────
+
 router.post('/', authMiddleware, roleCheck(['INDUSTRY', 'ACADEMICIAN', 'INSTITUTION']), async (req, res, next) => {
   try {
     const safeData = pick(req.body, OPP_FIELDS);
@@ -102,7 +102,7 @@ router.post('/', authMiddleware, roleCheck(['INDUSTRY', 'ACADEMICIAN', 'INSTITUT
   }
 });
 
-// ── Update opportunity (BUG-006: mass-assignment protection) ──────────────────
+
 router.put('/:id', authMiddleware, roleCheck(['INDUSTRY', 'ACADEMICIAN', 'INSTITUTION']), async (req, res, next) => {
   try {
     const opportunity = await prisma.postedOpportunity.findUnique({ where: { id: req.params.id } });

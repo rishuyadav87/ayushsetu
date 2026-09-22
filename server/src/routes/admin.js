@@ -8,7 +8,7 @@ const router = express.Router();
 const VALID_ROLES = ['STUDENT', 'INDUSTRY', 'ACADEMICIAN', 'INSTITUTION', 'ADMIN'];
 const MAX_LIMIT = 100;
 
-// ── GET /users (BUG-008: use roleCheck; BUG-019: cap limit; BUG-042: safe parseInt) ──
+
 router.get('/users', authMiddleware, roleCheck(['ADMIN']), async (req, res, next) => {
   try {
     const { search, role } = req.query;
@@ -43,7 +43,7 @@ router.get('/users', authMiddleware, roleCheck(['ADMIN']), async (req, res, next
   }
 });
 
-// ── PUT /users/:id/status (BUG-008: use roleCheck) ────────────────────────────
+
 router.put('/users/:id/status', authMiddleware, roleCheck(['ADMIN']), async (req, res, next) => {
   try {
     const { isActive } = req.body;
@@ -64,10 +64,10 @@ router.put('/users/:id/status', authMiddleware, roleCheck(['ADMIN']), async (req
   }
 });
 
-// ── PUT /users/:id/role (BUG-008: roleCheck; BUG-033: prevent self-change) ────
+
 router.put('/users/:id/role', authMiddleware, roleCheck(['ADMIN']), async (req, res, next) => {
   try {
-    // BUG-033: Prevent admin from self-role-changing (could lock them out)
+
     if (req.params.id === req.user.userId) {
       return res.status(400).json({ message: 'Admins cannot change their own role.' });
     }

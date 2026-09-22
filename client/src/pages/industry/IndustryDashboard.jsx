@@ -67,21 +67,11 @@ const IndustryDashboard = () => {
                   Active
                 </span>
               </div>
-            )) : [
-              { title: 'Clinical Research Intern', apps: 45, status: 'Active' },
-              { title: 'Data Analyst (Ayush)', apps: 32, status: 'Active' },
-              { title: 'Ayurvedic Consultant', apps: 12, status: 'Draft' }
-            ].map((job, i) => (
-              <div key={i} className="flex justify-between items-center p-3 hover:bg-gray-50 rounded-lg border border-transparent hover:border-gray-100 transition-colors">
-                <div>
-                  <h3 className="font-semibold text-gray-800">{job.title}</h3>
-                  <p className="text-xs text-gray-500 mt-1">{job.apps} Applications received</p>
-                </div>
-                <span className={`text-xs px-2 py-1 rounded ${job.status === 'Active' ? 'bg-indigo-100 text-indigo-800' : 'bg-gray-100 text-gray-800'}`}>
-                  {job.status}
-                </span>
+            )) : (
+              <div className="text-center py-6 text-gray-500 text-sm">
+                No active postings found.
               </div>
-            ))}
+            )}
           </div>
           <Link to="/industry/manage-opportunities" className="block text-center text-sm font-medium text-primary mt-4 hover:underline">
             View All Postings
@@ -91,27 +81,29 @@ const IndustryDashboard = () => {
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 card-hover p-6">
           <h2 className="text-lg font-bold text-dark mb-4">AI Recommended Candidates</h2>
           <div className="space-y-4">
-            {[
-              { name: 'Aarav Sharma', score: '95%', match: 'Clinical Research Intern' },
-              { name: 'Priya Patel', score: '92%', match: 'Data Analyst (Ayush)' },
-              { name: 'Rohan Gupta', score: '88%', match: 'Clinical Research Intern' }
-            ].map((cand, i) => (
-              <div key={i} className="flex justify-between items-center p-3 border border-gray-100 rounded-lg">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold">
-                    {cand.name.charAt(0)}
+            {stats?.recommendedCandidates && stats.recommendedCandidates.length > 0 ? (
+              stats.recommendedCandidates.map((cand, i) => (
+                <div key={i} className="flex justify-between items-center p-3 border border-gray-100 rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 font-bold">
+                      {cand.name.charAt(0)}
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-800">{cand.name}</h3>
+                      <p className="text-xs text-gray-500">Match: {cand.match}</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-800">{cand.name}</h3>
-                    <p className="text-xs text-gray-500 mt-1">Matched: {cand.match}</p>
+                  <div className="text-right">
+                    <div className="text-sm font-bold text-emerald-600">{cand.score}</div>
+                    <div className="text-xs text-gray-400">Match Score</div>
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="text-sm font-bold text-indigo-600">{cand.score}</div>
-                  <div className="text-xs text-gray-400">Match Score</div>
-                </div>
+              ))
+            ) : (
+              <div className="text-center py-8 text-gray-500 text-sm">
+                Post an opportunity to see AI-matched candidates.
               </div>
-            ))}
+            )}
           </div>
         </div>
       </div>

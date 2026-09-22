@@ -22,17 +22,17 @@ router.post('/register', async (req, res, next) => {
   try {
     const { email, password, role, name, phone } = req.body;
 
-    // BUG-002: Validate all required fields
+
     if (!email || !password || !role || !name) {
       return res.status(400).json({ message: 'email, password, role, and name are required.' });
     }
 
-    // BUG-002: Allowlist roles — prevent self-ADMIN registration
+
     if (!ALLOWED_ROLES.includes(role)) {
       return res.status(400).json({ message: 'Invalid role.' });
     }
 
-    // BUG-032: Password strength enforcement
+
     if (password.length < 8) {
       return res.status(400).json({ message: 'Password must be at least 8 characters.' });
     }
@@ -70,7 +70,7 @@ router.post('/login', async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    // BUG-009: Validate presence of fields first
+
     if (!email || !password) {
       return res.status(400).json({ message: 'email and password are required.' });
     }
@@ -81,7 +81,7 @@ router.post('/login', async (req, res, next) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    // BUG-001: Check if account is active before issuing token
+
     if (user.isActive === false) {
       return res.status(403).json({ message: 'Account is deactivated. Please contact support.' });
     }
@@ -121,12 +121,12 @@ router.put('/change-password', authMiddleware, async (req, res, next) => {
       return res.status(400).json({ message: 'currentPassword and newPassword are required.' });
     }
 
-    // BUG-032: Enforce strength on new password
+
     if (newPassword.length < 8) {
       return res.status(400).json({ message: 'New password must be at least 8 characters.' });
     }
 
-    // BUG-003: Guard against null user (e.g. deleted between token issue and this request)
+
     const user = await prisma.user.findUnique({ where: { id: req.user.userId } });
     if (!user) return res.status(404).json({ message: 'User not found.' });
 

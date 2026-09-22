@@ -44,7 +44,7 @@ const PostOpportunity = () => {
       
       await opportunityAPI.create(payload);
       setSuccess(true);
-      setTimeout(() => navigate('/industry/manage-opportunities'), 1500); // BUG-004: correct route
+      setTimeout(() => navigate('/industry/manage-opportunities'), 1500);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to create opportunity. Please try again.');
     } finally {

@@ -95,7 +95,7 @@ const Login = () => {
               </label>
               <button
                 type="button"
-                onClick={() => toast.success('Password reset instructions sent to your email.')}
+                onClick={() => toast('Please contact your institutional admin to reset your credentials.', { icon: 'ℹ️', duration: 4000 })}
                 className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors"
               >
                 Forgot password?

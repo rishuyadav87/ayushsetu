@@ -18,13 +18,6 @@ const UserManagement = () => {
   // Local debounced search value
   const [debouncedSearch, setDebouncedSearch] = useState('');
 
-  const mockUsers = [
-    { _id: 'u1', name: 'Ravi Kumar', email: 'ravi@example.com', role: 'STUDENT', isActive: true },
-    { _id: 'u2', name: 'Dabur Research', email: 'contact@dabur.com', role: 'INDUSTRY', isActive: false },
-    { _id: 'u3', name: 'Dr. Sharma', email: 'sharma@institute.edu', role: 'ACADEMICIAN', isActive: true },
-    { _id: 'u4', name: 'AIIA Delhi', email: 'admin@aiia.gov.in', role: 'INSTITUTION', isActive: true },
-  ];
-
   // Debounce search
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -36,6 +29,7 @@ const UserManagement = () => {
   const fetchUsers = async () => {
     try {
       setLoading(true);
+      setError('');
       const params = { page, limit: 10 };
       if (debouncedSearch) params.search = debouncedSearch;
       if (roleFilter !== 'all') params.role = roleFilter;
@@ -46,17 +40,12 @@ const UserManagement = () => {
         setUsers(response.data.users);
         setTotalPages(response.data.totalPages || 1);
       } else {
-        // Fallback if data format differs or if API returns array directly
-        setUsers(Array.isArray(response.data) ? response.data : mockUsers);
+        setUsers(Array.isArray(response.data) ? response.data : []);
         setTotalPages(1);
-        if(!error && !Array.isArray(response.data)) setError("Displaying mock data (API unavailable)");
       }
     } catch (err) {
-      setError("Failed to fetch real users. Showing mock data.");
-      setUsers(mockUsers.filter(u => 
-        (roleFilter === 'all' || u.role === roleFilter) &&
-        (u.name.toLowerCase().includes(debouncedSearch.toLowerCase()) || u.email.toLowerCase().includes(debouncedSearch.toLowerCase()))
-      ));
+      setError("Failed to fetch users. Please check your connection.");
+      setUsers([]);
     } finally {
       setLoading(false);
     }
