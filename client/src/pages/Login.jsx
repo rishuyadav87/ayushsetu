@@ -122,6 +122,7 @@ const Login = () => {
               Create account
             </Link>
           </div>
+        </div>
       </div>
     </div>
   );
