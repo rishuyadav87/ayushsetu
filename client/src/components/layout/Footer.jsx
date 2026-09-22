@@ -19,15 +19,15 @@ const Footer = () => {
           </ul>
         </div>
         <div>
-          <h4 className="font-semibold mb-4">Built for Smart India Hackathon 2026</h4>
-          <p className="text-sm text-gray-400">Problem statement SIH26044 — Portal for Academia–Industry collaboration for Skill Mapping, Internships and Placement (Ministry of Ayush).</p>
+          <h4 className="font-semibold mb-4">Empowering AYUSH Professionals</h4>
+          <p className="text-sm text-gray-400">The premier portal for Academia–Industry collaboration, driving skill mapping, internships, and high-value placements.</p>
           <div className="mt-4 flex items-center gap-3">
-            <img src="/tenet-logo-dark.svg" alt="Team Tenet" className="h-9" />
+            <span className="text-sm text-gray-500 font-bold">AYUSH-SETU</span>
           </div>
         </div>
       </div>
       <div className="border-t border-gray-700 mt-8 pt-4 text-center text-xs text-gray-500">
-        &copy; {new Date().getFullYear()} AYUSH-SETU prototype by Team Tenet.
+        &copy; {new Date().getFullYear()} AYUSH-SETU. All rights reserved.
       </div>
     </footer>
   );

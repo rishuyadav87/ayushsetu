@@ -73,7 +73,7 @@ export const scanEnvironment = async () => {
   };
 
   if (MOBILE_UA.test(ua) || navigator.userAgentData?.mobile) {
-    // Disabled mobile blocking for demo purposes as requested by user
+
     risks.push({ type: 'MOBILE_DEVICE', severity: 'low', blocking: false, message: 'Taking proctored tests on mobile may limit some anti-cheating features.' });
   }
   if (report.webdriver || /HeadlessChrome/.test(ua)) {

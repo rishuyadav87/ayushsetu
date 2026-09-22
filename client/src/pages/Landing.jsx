@@ -42,7 +42,7 @@ const Landing = () => {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-indigo-500/40 bg-indigo-500/10 text-indigo-300 font-semibold text-sm mb-8 backdrop-blur-sm">
             <Sparkles size={14} className="animate-pulse" />
-            Smart India Hackathon 2026 | PS ID 26044
+            The Premier AYUSH Career Ecosystem
           </div>
 
           {/* Headline */}

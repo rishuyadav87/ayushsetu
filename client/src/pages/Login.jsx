@@ -122,17 +122,6 @@ const Login = () => {
               Create account
             </Link>
           </div>
-        </div>
-
-        {/* Demo credentials hint */}
-        <div className="mt-4 bg-white/5 border border-white/10 rounded-2xl p-4 text-center backdrop-blur-sm">
-          <p className="text-xs text-gray-500 font-medium mb-2">Demo Credentials</p>
-          <div className="grid grid-cols-2 gap-2 text-xs text-gray-400">
-            <span>student@ayush.edu</span>
-            <span>industry@ayush.com</span>
-            <span className="col-span-2 text-gray-600">Password: password123</span>
-          </div>
-        </div>
       </div>
     </div>
   );

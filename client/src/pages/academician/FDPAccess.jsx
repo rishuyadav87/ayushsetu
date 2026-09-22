@@ -17,7 +17,7 @@ const FDPAccess = () => {
         org: o.postedBy?.name || 'Institution',
         duration: o.stipend || '4 Weeks',
         date: new Date(o.createdAt).toLocaleDateString(),
-        status: 'not_enrolled' // For demo, we just simulate status locally
+        status: 'not_enrolled'
       })));
     } catch (err) {
       toast.error('Failed to load FDPs');

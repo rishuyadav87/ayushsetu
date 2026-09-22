@@ -1,6 +1,6 @@
 # AYUSH-SETU 🌿
 ### AI-Powered Competency & Career Progression Platform for the AYUSH Sector
-**Smart India Hackathon 2026 | PS ID 26044 | Team Tenet**
+**The Premier AYUSH Career Ecosystem**
 
 AYUSH-SETU is a unified platform designed to bridge the gap between AYUSH graduates (Ayurveda, Yoga, Unani, Siddha, Homeopathy, Naturopathy) and industry requirements. By leveraging Generative AI, semantic vector search, and a robust NSQF-aligned competency framework, AYUSH-SETU ensures candidates are rigorously evaluated and perfectly matched to career opportunities.
 
@@ -76,4 +76,4 @@ When running locally after seeding the database (`npx prisma db seed`), you can 
 - **Admin:** `admin@ayush.gov.in` (Password: `admin123`)
 
 ---
-*Built with ❤️ for the Smart India Hackathon.*
+*Built with ❤️ for the AYUSH Community.*
